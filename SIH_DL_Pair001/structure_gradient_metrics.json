@@ -1,0 +1,14 @@
+{
+    "method": "SuperPoint + LightGlue",
+    "num_source_keypoints": 535,
+    "num_reference_keypoints": 759,
+    "num_raw_matches": 1,
+    "num_filtered_matches": 1,
+    "num_verified_inliers": 0,
+    "inlier_ratio": 0.0,
+    "rmse_px_independent": 0.0,
+    "spatial_coverage": 0.0,
+    "mean_inlier_confidence": 0.0,
+    "processing_time_sec": 2.0490951538085938,
+    "status": "UNRELIABLE"
+}

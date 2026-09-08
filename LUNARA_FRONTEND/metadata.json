@@ -1,0 +1,6 @@
+{
+  "name": "LUNARA — Lunar Surface Correspondence Engine",
+  "description": "Autonomous sub-pixel lunar surface image registration & optical correspondence workstation for Chandrayaan-2 OHRC and LROC NAC imagery (Team Vyom Drishti, SIH 2024 / ISRO SAC).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

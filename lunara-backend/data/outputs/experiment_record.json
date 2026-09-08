@@ -1,0 +1,10 @@
+{
+  "experiment_id": "EXP-LUNARA-TEST-001",
+  "method": "superpoint_lightglue",
+  "matches": 73,
+  "inliers": 2,
+  "inlier_ratio": 0.0273972602739726,
+  "rmse": 1.2862197421537486e-12,
+  "matching_runtime": 1.904552698135376,
+  "registration_runtime": 0.011481523513793945
+}
