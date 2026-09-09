@@ -1,4 +1,5 @@
 import os
+import ssl
 import uuid
 import json
 import cv2
@@ -8,6 +9,9 @@ import matplotlib.pyplot as plt
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
+
+# Fix for "SSL: CERTIFICATE_VERIFY_FAILED" when PyTorch downloads weights
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # Set up paths to import lunara-backend modules properly
 import sys

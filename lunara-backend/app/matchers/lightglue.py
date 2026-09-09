@@ -17,7 +17,7 @@ class LightGlueMatcher(MatcherInterface):
         image_b = load_image(image_b_path)
         
         # If model expects it on device, move it
-        device = next(self.model.parameters()).device
+        device = self.model.device
         image_a = image_a.to(device)
         image_b = image_b.to(device)
         

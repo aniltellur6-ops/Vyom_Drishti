@@ -39,38 +39,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
     <header className="bg-[#0f172a] text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
-      {/* Top Telemetry & Status Bar */}
-      <div className="px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs border-b border-slate-800/80 bg-slate-950/70">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="text-emerald-400 font-semibold tracking-wider">CUDA 12.2 / TENSORRT 8.6</span>
-            <span className="text-slate-500">|</span>
-            <span className="text-slate-300">VRAM: 680MB / 24576MB</span>
-            <span className="text-slate-500">|</span>
-            <span className="text-cyan-400">ISRO SAC / CH-2 OHRC ↔ LROC NAC</span>
-          </div>
-        </div>
 
-        <div className="flex items-center gap-4 font-mono text-slate-300">
-          <div className="flex items-center gap-1.5">
-            <span className="text-slate-400">TARGET:</span>
-            <span className="text-amber-300 font-semibold">Shackleton Rim (89.9°S, 0.0°E)</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-1.5">
-            <span className="text-slate-400">RMSE:</span>
-            <span className="text-emerald-400 font-bold">0.36 px</span>
-            <span className="text-slate-500">(Threshold: &lt;1.0 px)</span>
-          </div>
-          <div className="hidden md:flex items-center gap-1.5">
-            <span className="text-slate-400">STATUS:</span>
-            <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800 font-semibold">
-              <CheckCircle2 className="w-3 h-3" />
-              SUB-PIXEL VERIFIED
-            </span>
-          </div>
-        </div>
-      </div>
 
       {/* Main Title & Nav Bar */}
       <div className="px-4 py-2.5 flex flex-wrap items-center justify-between gap-4">
