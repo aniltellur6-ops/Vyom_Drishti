@@ -23,7 +23,7 @@ COPY requirements.txt .
 # Install dependencies. 
 # We install torch explicitly for CPU only to save massive amounts of Docker image space, 
 # as free hosting tiers do not provide GPUs.
-RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch==2.2.1 torchvision==0.17.1 --extra-index-url https://download.pytorch.org/whl/cpu
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project directory into the container
