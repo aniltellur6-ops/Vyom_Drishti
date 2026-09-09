@@ -1,4 +1,4 @@
-# Vyom Drishti (SIH 2k26)
+# Vyom Drishti (SIH 2026)
 **Autonomous Lunar Image Co-Registration System**
 
 Vyom Drishti is an advanced, multi-modal image registration pipeline designed to align high-resolution lunar surface images with extreme precision. Built for robustness against extreme illumination changes (shadow shifts), varying resolutions, and diverse textures encountered in orbital imagery.
