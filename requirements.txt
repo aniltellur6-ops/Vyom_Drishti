@@ -1,5 +1,6 @@
 fastapi==0.110.0
 uvicorn==0.28.0
+git+https://github.com/cvg/LightGlue.git
 python-multipart==0.0.9
 kornia==0.7.2
 kornia_moons==0.2.9

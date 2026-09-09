@@ -8,6 +8,7 @@ ENV PYTHONUNBUFFERED 1
 # Install system dependencies (needed for OpenCV and ML workloads)
 RUN apt-get update && apt-get install -y \
     build-essential \
+    git \
     libgl1 \
     libglib2.0-0 \
     libsm6 \
