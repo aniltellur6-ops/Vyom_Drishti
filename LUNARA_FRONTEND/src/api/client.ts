@@ -1,5 +1,7 @@
 // src/api/client.ts
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1";
+const ENV_URL = (import.meta as any).env.VITE_API_URL;
+const SERVER_BASE_URL = ENV_URL ? ENV_URL.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '') : "http://localhost:8000";
+const API_BASE_URL = `${SERVER_BASE_URL}/api/v1`;
 
 export interface SystemStatus {
   status: string;
@@ -100,6 +102,6 @@ export const LunaraClient = {
 
   getResultUrl: (path: string) => {
     // If the path already has the base url format handled by the backend, just prepend the server
-    return `http://localhost:8000${path}`;
+    return `${SERVER_BASE_URL}${path}`;
   }
 };
