@@ -54,3 +54,6 @@ jobs/
 .idea/
 *.swp
 *.swo
+
+.vercel
+.env*

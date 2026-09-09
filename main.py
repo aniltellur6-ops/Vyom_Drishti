@@ -13,6 +13,11 @@ from fastapi.responses import FileResponse, JSONResponse
 # Fix for "SSL: CERTIFICATE_VERIFY_FAILED" when PyTorch downloads weights
 ssl._create_default_https_context = ssl._create_unverified_context
 
+# Aggressive PyTorch memory optimizations for 512MB RAM constraints
+import torch
+torch.set_grad_enabled(False)
+torch.set_num_threads(1)
+
 # Set up paths to import lunara-backend modules properly
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lunara-backend')))
@@ -47,7 +52,7 @@ print("Initializing LightGlue model...")
 try:
     global_model = LightGlueModel({
         "extractor": "superpoint",
-        "max_num_keypoints": 2048,
+        "max_num_keypoints": 512,
         "filter_threshold": 0.0
     })
     global_matcher = LightGlueMatcher(global_model)

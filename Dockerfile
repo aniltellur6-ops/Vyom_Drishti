@@ -4,6 +4,7 @@ FROM python:3.10-slim
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV MALLOC_ARENA_MAX 2
 
 # Install system dependencies (needed for OpenCV and ML workloads)
 RUN apt-get update && apt-get install -y \
