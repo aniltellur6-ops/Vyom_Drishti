@@ -203,16 +203,16 @@ async def perform_matching(
         registered_image = result["registered_image"]
         metrics = result["metrics"]
         
-        # Save registered image
-        reg_img_path = os.path.join(job_dir, f"{prefix}_registered_moving.png")
-        cv2.imwrite(reg_img_path, registered_image)
+        # Save registered image as highly compressed JPEG
+        reg_img_path = os.path.join(job_dir, f"{prefix}_registered_moving.jpg")
+        cv2.imwrite(reg_img_path, registered_image, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
-        # Save overlay image
+        # Save overlay image as compressed JPEG
         image_a_cv = cv2.imread(ref_path, cv2.IMREAD_GRAYSCALE)
         alpha = 0.5
         overlay = cv2.addWeighted(image_a_cv, alpha, registered_image, 1 - alpha, 0)
-        overlay_path = os.path.join(job_dir, f"{prefix}_registration_overlay.png")
-        cv2.imwrite(overlay_path, overlay)
+        overlay_path = os.path.join(job_dir, f"{prefix}_registration_overlay.jpg")
+        cv2.imwrite(overlay_path, overlay, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
         # Save matches visualization (only inliers)
         inlier_matches = match_result.matches[geo_result.inlier_mask]
@@ -225,7 +225,7 @@ async def perform_matching(
         
         viz2d.plot_images([image_a_tensor.cpu(), image_b_tensor.cpu()])
         viz2d.plot_matches(kpts0, kpts1, color="lime", lw=0.2)
-        viz_path = os.path.join(job_dir, f"{prefix}_matches_viz.png")
+        viz_path = os.path.join(job_dir, f"{prefix}_matches_viz.jpg")
         viz2d.save_plot(viz_path)
         plt.close()
 
@@ -245,9 +245,9 @@ async def perform_matching(
             "status": "success",
             "metrics": metrics,
             "files": {
-                "registered_image": f"/api/v1/results/{job_id}/{prefix}_registered_moving.png",
-                "overlay_image": f"/api/v1/results/{job_id}/{prefix}_registration_overlay.png",
-                "matches_viz": f"/api/v1/results/{job_id}/{prefix}_matches_viz.png"
+                "registered_image": f"/api/v1/results/{job_id}/{prefix}_registered_moving.jpg",
+                "overlay_image": f"/api/v1/results/{job_id}/{prefix}_registration_overlay.jpg",
+                "matches_viz": f"/api/v1/results/{job_id}/{prefix}_matches_viz.jpg"
             }
         }
         
