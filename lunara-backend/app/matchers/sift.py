@@ -28,7 +28,12 @@ class SIFTMatcher(MatcherInterface):
                 method="sift",
                 keypoints_a=np.empty((0, 2)),
                 keypoints_b=np.empty((0, 2)),
-                matches=np.empty((0, 2), dtype=int)
+                matches=np.empty((0, 2), dtype=int),
+                confidence=np.empty((0,)),
+                num_keypoints_a=0,
+                num_keypoints_b=0,
+                num_matches=0,
+                runtime_seconds=time.time() - start_time
             )
 
         # 2. FLANN Matching
@@ -50,5 +55,10 @@ class SIFTMatcher(MatcherInterface):
             method="sift",
             keypoints_a=kpts0,
             keypoints_b=kpts1,
-            matches=matches_array
+            matches=matches_array,
+            confidence=np.ones(len(matches_array)), # SIFT doesn't output confidence natively, mock as 1.0
+            num_keypoints_a=len(kpts0),
+            num_keypoints_b=len(kpts1),
+            num_matches=len(matches_array),
+            runtime_seconds=time.time() - start_time
         )

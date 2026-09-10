@@ -21,5 +21,10 @@ class RIFT2Matcher(MatcherInterface):
             method="rift2",
             keypoints_a=np.empty((0, 2)),
             keypoints_b=np.empty((0, 2)),
-            matches=np.empty((0, 2), dtype=int)
+            matches=np.empty((0, 2), dtype=int),
+            confidence=np.empty((0,)),
+            num_keypoints_a=0,
+            num_keypoints_b=0,
+            num_matches=0,
+            runtime_seconds=0.0
         )

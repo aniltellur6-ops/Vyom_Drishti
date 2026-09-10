@@ -265,6 +265,16 @@ async def perform_matching(
             }
         }
         
+
+    except HTTPException as he:
+        # Don't double-wrap HTTP exceptions
+        registry.record_experiment(
+            job_id=job_id,
+            method=requested_method,
+            status="Failed",
+            metrics={}
+        )
+        raise he
     except Exception as e:
         import traceback
         traceback.print_exc()
@@ -274,7 +284,7 @@ async def perform_matching(
             status="Failed",
             metrics={}
         )
-        raise HTTPException(status_code=500, detail=f"Matching failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/v1/results/{job_id}/{filename}")
 async def get_result_file(job_id: str, filename: str):

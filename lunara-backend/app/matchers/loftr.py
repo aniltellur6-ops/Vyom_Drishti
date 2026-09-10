@@ -63,5 +63,10 @@ class LoFTRMatcher(MatcherInterface):
             method="loftr",
             keypoints_a=kpts0,
             keypoints_b=kpts1,
-            matches=matches
+            matches=matches,
+            confidence=confidence,
+            num_keypoints_a=len(kpts0),
+            num_keypoints_b=len(kpts1),
+            num_matches=len(matches),
+            runtime_seconds=time.time() - start_time
         )
