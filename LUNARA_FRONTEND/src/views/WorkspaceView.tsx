@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { TiePoint } from '../types';
 import { Play, UploadCloud, FileImage, Settings, Target, Layers } from 'lucide-react';
 import { ImageCondition, MatchingResult, LunaraClient } from '../api/client';
+
+// Helper component to bypass ngrok's warning page for images
+const NgrokImage = ({ src, alt, className }: { src: string, alt: string, className?: string }) => {
+  const [imgSrc, setImgSrc] = useState<string>('');
+  
+  useEffect(() => {
+    fetch(src, { headers: { 'ngrok-skip-browser-warning': 'true' } })
+      .then(res => res.blob())
+      .then(blob => setImgSrc(URL.createObjectURL(blob)))
+      .catch(console.error);
+  }, [src]);
+
+  if (!imgSrc) return <div className={`animate-pulse bg-slate-800/50 flex items-center justify-center text-xs text-slate-500 font-mono ${className}`}>LOADING IMAGE...</div>;
+  return <img src={imgSrc} alt={alt} className={className} />;
+};
 
 interface WorkspaceViewProps {
   tiePoints: TiePoint[];
@@ -197,7 +212,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                 <div className="bg-white border border-slate-200 rounded-lg overflow-hidden flex flex-col">
                   <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-bold text-slate-700">REGISTERED IMAGE (AFTER {(matchResult.method_used || analysisResult?.recommended_method || 'AUTO').toUpperCase()})</div>
                   <div className="bg-black flex-1 flex items-center justify-center relative min-h-[300px]">
-                    <img 
+                    <NgrokImage 
                       src={LunaraClient.getResultUrl(matchResult.files.registered_image)} 
                       alt="Registered" 
                       className="max-h-[500px] max-w-full object-contain"
@@ -208,14 +223,14 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
 
               <div className="bg-white border border-slate-200 p-5 rounded-lg">
                  <h2 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><Layers className="w-4 h-4 text-cyan-700" /> REGISTRATION RESULT</h2>
-                 <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-4">
                     <div className="aspect-video bg-black rounded-lg border border-slate-200 overflow-hidden relative">
-                      <img src={LunaraClient.getResultUrl(matchResult.files.overlay_image)} alt="Overlay" className="w-full h-full object-contain" />
+                      <NgrokImage src={LunaraClient.getResultUrl(matchResult.files.overlay_image)} alt="Overlay" className="w-full h-full object-contain" />
                       <div className="absolute top-2 left-2 bg-white/80 px-2 py-1 rounded text-xs font-mono text-cyan-700 border border-slate-700">OVERLAY (50/50 BLEND)</div>
                     </div>
                     
                     <div className="aspect-video bg-black rounded-lg border border-slate-200 overflow-hidden relative">
-                      <img src={LunaraClient.getResultUrl(matchResult.files.matches_viz)} alt="Matches" className="w-full h-full object-contain" />
+                      <NgrokImage src={LunaraClient.getResultUrl(matchResult.files.matches_viz)} alt="Matches" className="w-full h-full object-contain" />
                       <div className="absolute top-2 left-2 bg-white/80 px-2 py-1 rounded text-xs font-mono text-emerald-700 border border-slate-700">INLIER CORRESPONDENCES</div>
                     </div>
                  </div>
