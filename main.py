@@ -203,10 +203,8 @@ async def perform_matching(
         }
         
         orchestrator = LunaraOrchestrator(
-            matcher_model=global_matcher,
-            preprocessing_config=config,
-            jobs_dir=job_dir,
-            save_intermediates=True
+            matchers_registry=matchers_registry,
+            config={"preprocessing": config}
         )
         
         result = orchestrator.execute(raw_ref_path, raw_src_path, requested_method=requested_method)
