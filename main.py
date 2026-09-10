@@ -20,8 +20,9 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'luna
 from app.models.lightglue_model import LightGlueModel
 from app.matchers.lightglue import LightGlueMatcher
 from app.geometry.ransac import GeometricVerifier
-from app.registration.engine import RegistrationEngine
+from app.orchestrator.pipeline import LunaraOrchestrator
 from app.experiments.registry import ExperimentRegistry
+from app.experiments.condition_analyzer import ConditionAnalyzer
 from lightglue.utils import load_image
 from lightglue import viz2d
 from app.preprocessing.pipeline import PreprocessingPipeline
@@ -75,18 +76,36 @@ async def analyze_condition(
 ):
     """
     Analyzes the images to determine conditions (illumination, texture, etc).
-    This is currently a mocked response for the UI.
     """
-    return {
-        "illumination_difference": "HIGH",
-        "texture": "MODERATE",
-        "shadow_coverage": 38,
-        "resolution_difference": "3.2x",
-        "feature_density": "MODERATE",
-        "overall_difficulty": "HARD",
-        "recommended_method": "SuperPoint + LightGlue",
-        "reason": "High illumination difference, moderate feature density, cross-resolution imagery"
-    }
+    job_id = str(uuid.uuid4())
+    job_dir = os.path.join(JOBS_DIR, job_id)
+    os.makedirs(job_dir, exist_ok=True)
+
+    ref_path = os.path.join(job_dir, f"analyze_ref_{reference_img.filename}")
+    src_path = os.path.join(job_dir, f"analyze_src_{source_img.filename}")
+
+    with open(ref_path, "wb") as f:
+        f.write(await reference_img.read())
+    with open(src_path, "wb") as f:
+        f.write(await source_img.read())
+
+    analyzer = ConditionAnalyzer()
+    
+    try:
+        results = analyzer.analyze(ref_path, src_path)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+        
+    # Clean up temp analysis files to save space
+    try:
+        os.remove(ref_path)
+        os.remove(src_path)
+    except:
+        pass
+        
+    return results
 
 @app.get("/api/v1/experiments")
 async def list_experiments():
@@ -135,6 +154,7 @@ async def preview_preprocessing(
 async def perform_matching(
     reference_img: UploadFile = File(...),
     source_img: UploadFile = File(...),
+    requested_method: str = Form("auto"),
     prefix: str = Form("lunara"),
     conf_thresh: float = Form(0.0),
     percentile_norm: bool = Form(True),
@@ -160,8 +180,7 @@ async def perform_matching(
             "denoise": denoise,
             "denoise_ksize": denoise_ksize
         }
-        pipeline = PreprocessingPipeline(config)
-
+        
         # Save uploaded files temporarily
         raw_ref_path = os.path.join(job_dir, f"raw_ref_{reference_img.filename}")
         raw_src_path = os.path.join(job_dir, f"raw_src_{source_img.filename}")
@@ -171,20 +190,11 @@ async def perform_matching(
             
         with open(raw_src_path, "wb") as f:
             f.write(await source_img.read())
-            
-        ref_path = os.path.join(job_dir, f"ref_{reference_img.filename}")
-        src_path = os.path.join(job_dir, f"src_{source_img.filename}")
 
-        pipeline.process(raw_ref_path, ref_path)
-        pipeline.process(raw_src_path, src_path)
-        # Run Orchestrator Pipeline
-        from app.orchestrator.pipeline import LunaraOrchestrator
         from app.matchers.sift import SIFTMatcher
         from app.matchers.loftr import LoFTRMatcher
         from app.matchers.rift2 import RIFT2Matcher
         
-        # In a real app we'd load these once globally, but for now we instantiate fast ones
-        # and re-use global_matcher for the heavy lightglue model
         matchers_registry = {
             "lightglue": global_matcher,
             "sift": SIFTMatcher(),
@@ -192,8 +202,14 @@ async def perform_matching(
             "rift2": RIFT2Matcher()
         }
         
-        orchestrator = LunaraOrchestrator(matchers_registry, config={"preprocessing": config})
-        result = orchestrator.execute(ref_path, src_path, requested_method="auto")
+        orchestrator = LunaraOrchestrator(
+            matcher_model=global_matcher,
+            preprocessing_config=config,
+            jobs_dir=job_dir,
+            save_intermediates=True
+        )
+        
+        result = orchestrator.execute(raw_ref_path, raw_src_path, requested_method=requested_method)
         
         if result["status"] == "error":
             raise HTTPException(status_code=500, detail=result["message"])
@@ -208,7 +224,7 @@ async def perform_matching(
         cv2.imwrite(reg_img_path, registered_image, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
         # Save overlay image as compressed JPEG
-        image_a_cv = cv2.imread(ref_path, cv2.IMREAD_GRAYSCALE)
+        image_a_cv = cv2.imread(result.get("ref_processed_path", raw_ref_path), cv2.IMREAD_GRAYSCALE)
         alpha = 0.5
         overlay = cv2.addWeighted(image_a_cv, alpha, registered_image, 1 - alpha, 0)
         overlay_path = os.path.join(job_dir, f"{prefix}_registration_overlay.jpg")
@@ -220,8 +236,8 @@ async def perform_matching(
         kpts1 = match_result.keypoints_b[inlier_matches[:, 1]]
         
         # Load images for visualization
-        image_a_tensor = load_image(ref_path)
-        image_b_tensor = load_image(src_path)
+        image_a_tensor = load_image(result.get("ref_processed_path", raw_ref_path))
+        image_b_tensor = load_image(result.get("src_processed_path", raw_src_path))
         
         viz2d.plot_images([image_a_tensor.cpu(), image_b_tensor.cpu()])
         viz2d.plot_matches(kpts0, kpts1, color="lime", lw=0.2)
@@ -235,7 +251,7 @@ async def perform_matching(
         # Record in registry
         registry.record_experiment(
             job_id=job_id,
-            method="SuperPoint + LightGlue",
+            method=requested_method,
             status="Successful",
             metrics=metrics
         )
@@ -256,7 +272,7 @@ async def perform_matching(
         traceback.print_exc()
         registry.record_experiment(
             job_id=job_id,
-            method="SuperPoint + LightGlue",
+            method=requested_method,
             status="Failed",
             metrics={}
         )
