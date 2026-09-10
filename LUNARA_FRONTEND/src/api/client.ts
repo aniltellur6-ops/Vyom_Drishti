@@ -57,7 +57,9 @@ export interface Experiment {
 
 export const LunaraClient = {
   getSystemStatus: async (): Promise<SystemStatus> => {
-    const res = await fetch(`${API_BASE_URL}/system/status`);
+    const res = await fetch(`${API_BASE_URL}/system/status`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    });
     if (!res.ok) throw new Error("Failed to fetch system status");
     return res.json();
   },
@@ -69,6 +71,7 @@ export const LunaraClient = {
 
     const res = await fetch(`${API_BASE_URL}/analyze`, {
       method: "POST",
+      headers: { 'ngrok-skip-browser-warning': 'true' },
       body: formData,
     });
     if (!res.ok) throw new Error("Failed to analyze images");
@@ -84,6 +87,7 @@ export const LunaraClient = {
 
     const res = await fetch(`${API_BASE_URL}/match`, {
       method: "POST",
+      headers: { 'ngrok-skip-browser-warning': 'true' },
       body: formData,
     });
     
@@ -95,7 +99,9 @@ export const LunaraClient = {
   },
 
   getExperiments: async (): Promise<Experiment[]> => {
-    const res = await fetch(`${API_BASE_URL}/experiments`);
+    const res = await fetch(`${API_BASE_URL}/experiments`, {
+      headers: { 'ngrok-skip-browser-warning': 'true' }
+    });
     if (!res.ok) throw new Error("Failed to fetch experiments");
     return res.json();
   },
