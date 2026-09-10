@@ -2,6 +2,7 @@ import os
 import ssl
 import uuid
 import cv2
+import matplotlib.pyplot as plt
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
