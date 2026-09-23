@@ -10,7 +10,7 @@ class RIFT2Matcher(MatcherInterface):
     def __init__(self):
         pass
 
-    def match(self, image_a_path: str, image_b_path: str) -> MatchingResult:
+    def match(self, image_a: np.ndarray, image_b: np.ndarray) -> MatchingResult:
         # TODO: Import actual RIFT2 implementation and execute here.
         # import RIFT2
         # kpts1, kpts2, matches = RIFT2.match_images(image_a_path, image_b_path)

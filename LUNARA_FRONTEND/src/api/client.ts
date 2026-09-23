@@ -37,7 +37,12 @@ export interface MatchingResult {
     registered_image: string;
     overlay_image: string;
     matches_viz: string;
+    raw_reference: string;
+    raw_moving: string;
+    preprocessed_reference: string;
+    preprocessed_moving: string;
   };
+  preprocessing_metadata?: any;
 }
 
 export interface Experiment {
@@ -78,11 +83,14 @@ export const LunaraClient = {
     return res.json();
   },
 
-  runMatching: async (refFile: File, srcFile: File, method: string = "auto"): Promise<MatchingResult> => {
+  runMatching: async (refFile: File, srcFile: File, method: string = "auto", preprocessingMethod: string = "AUTO", referenceSensor: string = "AUTO", movingSensor: string = "AUTO"): Promise<MatchingResult> => {
     const formData = new FormData();
     formData.append("reference_img", refFile);
     formData.append("source_img", srcFile);
     formData.append("requested_method", method);
+    formData.append("preprocessing_method", preprocessingMethod);
+    formData.append("reference_sensor", referenceSensor);
+    formData.append("moving_sensor", movingSensor);
     // Add prefix and config if needed
 
     const res = await fetch(`${API_BASE_URL}/match`, {

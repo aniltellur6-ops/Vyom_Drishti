@@ -34,6 +34,12 @@ interface WorkspaceViewProps {
   matchResult: MatchingResult | null;
   selectedMethod: string;
   setSelectedMethod: (m: string) => void;
+  selectedPreprocessing: string;
+  setSelectedPreprocessing: (m: string) => void;
+  selectedReferenceSensor: string;
+  setSelectedReferenceSensor: (m: string) => void;
+  selectedMovingSensor: string;
+  setSelectedMovingSensor: (m: string) => void;
 }
 
 export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
@@ -46,7 +52,13 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
   analysisResult,
   matchResult,
   selectedMethod,
-  setSelectedMethod
+  setSelectedMethod,
+  selectedPreprocessing,
+  setSelectedPreprocessing,
+  selectedReferenceSensor,
+  setSelectedReferenceSensor,
+  selectedMovingSensor,
+  setSelectedMovingSensor
 }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (f: File | null) => void) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -102,6 +114,41 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
           </div>
 
           <div className="bg-white border border-slate-200 rounded-lg p-5">
+            <h2 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><Layers className="w-4 h-4 text-cyan-700" /> SENSORS</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-mono text-slate-600 mb-1">REFERENCE SENSOR</label>
+                <select 
+                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  value={selectedReferenceSensor}
+                  onChange={(e) => setSelectedReferenceSensor(e.target.value)}
+                >
+                  <option value="AUTO">Automatic (Detect)</option>
+                  <option value="OHRC">Chandrayaan-2 OHRC</option>
+                  <option value="TMC-2">Chandrayaan-2 TMC-2</option>
+                  <option value="IIRS">Chandrayaan-2 IIRS</option>
+                  <option value="LROC">LRO LROC (NAC)</option>
+                </select>
+              </div>
+              
+              <div>
+                <label className="block text-xs font-mono text-slate-600 mb-1">MOVING SENSOR</label>
+                <select 
+                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  value={selectedMovingSensor}
+                  onChange={(e) => setSelectedMovingSensor(e.target.value)}
+                >
+                  <option value="AUTO">Automatic (Detect)</option>
+                  <option value="OHRC">Chandrayaan-2 OHRC</option>
+                  <option value="TMC-2">Chandrayaan-2 TMC-2</option>
+                  <option value="IIRS">Chandrayaan-2 IIRS</option>
+                  <option value="LROC">LRO LROC (NAC)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-lg p-5">
             <h2 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><Settings className="w-4 h-4 text-cyan-700" /> METHOD & PREPROCESSING</h2>
             <div className="space-y-4">
               <div>
@@ -121,10 +168,18 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">PREPROCESSING</label>
-                <select className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800">
-                  <option>Automatic</option>
-                  <option>Raw</option>
-                  <option>Lunar Robust (CLAHE)</option>
+                <select 
+                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  value={selectedPreprocessing}
+                  onChange={(e) => setSelectedPreprocessing(e.target.value)}
+                >
+                  <option value="P0_RAW">P0 - Raw (No Preprocessing)</option>
+                  <option value="P1_ROBUST_NORMALIZED">P1 - Robust Normalized</option>
+                  <option value="P2_ILLUMINATION_CORRECTED">P2 - Illumination Corrected</option>
+                  <option value="P3_GRADIENT">P3 - Gradient Magnitude</option>
+                  <option value="P4_COMBINED">P4 - Combined (Norm+Illum+Grad)</option>
+                  <option value="P5_CLAHE">P5 - CLAHE Enhanced</option>
+                  <option value="P6_ILLUMINATION_CLAHE">P6 - Illumination + CLAHE (Recommended)</option>
                 </select>
               </div>
             </div>
@@ -196,9 +251,31 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                 </div>
                 <div className="bg-white border border-slate-200 p-4 rounded-lg flex flex-col items-center justify-center text-center">
                   <span className="text-slate-500 text-xs mb-1">METHOD</span>
-                  <span className="text-2xl font-bold text-cyan-700">{matchResult.status === "error" ? "FAILED" : (matchResult.method_used || analysisResult?.recommended_method || 'AUTO').toUpperCase()}</span>
+                  <span className="text-2xl font-bold text-cyan-700">{matchResult.status === "error" ? "FAILED" : (matchResult.method_used === "lightglue" ? "LIGHTGLUE" : matchResult.method_used || analysisResult?.recommended_method || 'AUTO').toUpperCase()}</span>
                 </div>
               </div>
+              
+              {matchResult.preprocessing_metadata && (
+                <div className="col-span-2 md:col-span-4 bg-slate-100 border border-slate-200 p-4 rounded-lg mt-2 font-mono text-xs">
+                  <div className="font-bold text-slate-700 mb-2 border-b border-slate-300 pb-1">
+                    PREPROCESSING METADATA ({matchResult.preprocessing_metadata.preprocessing?.representation})
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <div className="font-semibold text-cyan-800 mb-1">MOVING IMAGE</div>
+                      <div className="text-slate-600">Mean: {matchResult.preprocessing_metadata.moving_statistics?.mean?.toFixed(2)}</div>
+                      <div className="text-slate-600">Std: {matchResult.preprocessing_metadata.moving_statistics?.std?.toFixed(2)}</div>
+                      <div className="text-slate-600">Dark Fraction: {(matchResult.preprocessing_metadata.moving_statistics?.dark_fraction * 100)?.toFixed(1)}%</div>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-cyan-800 mb-1">REFERENCE IMAGE</div>
+                      <div className="text-slate-600">Mean: {matchResult.preprocessing_metadata.reference_statistics?.mean?.toFixed(2)}</div>
+                      <div className="text-slate-600">Std: {matchResult.preprocessing_metadata.reference_statistics?.std?.toFixed(2)}</div>
+                      <div className="text-slate-600">Dark Fraction: {(matchResult.preprocessing_metadata.reference_statistics?.dark_fraction * 100)?.toFixed(1)}%</div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {/* Visual Before/After Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -210,7 +287,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                 </div>
                 
                 <div className="bg-white border border-slate-200 rounded-lg overflow-hidden flex flex-col">
-                  <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-bold text-slate-700">REGISTERED IMAGE (AFTER {(matchResult.method_used || analysisResult?.recommended_method || 'AUTO').toUpperCase()})</div>
+                  <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-bold text-slate-700">REGISTERED IMAGE (AFTER {(matchResult.method_used === "lightglue" ? "LIGHTGLUE" : matchResult.method_used || analysisResult?.recommended_method || 'AUTO').toUpperCase()})</div>
                   <div className="bg-black flex-1 flex items-center justify-center relative min-h-[300px]">
                     <NgrokImage 
                       src={LunaraClient.getResultUrl(matchResult.files.registered_image)} 

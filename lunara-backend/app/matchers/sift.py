@@ -12,11 +12,8 @@ class SIFTMatcher(MatcherInterface):
         search_params = dict(checks=50)
         self.matcher = cv2.FlannBasedMatcher(index_params, search_params)
 
-    def match(self, image_a_path: str, image_b_path: str) -> MatchingResult:
+    def match(self, image_a: np.ndarray, image_b: np.ndarray) -> MatchingResult:
         start_time = time.time()
-        
-        image_a = cv2.imread(image_a_path, cv2.IMREAD_GRAYSCALE)
-        image_b = cv2.imread(image_b_path, cv2.IMREAD_GRAYSCALE)
         
         # 1. Extract SIFT features
         kp1, des1 = self.sift.detectAndCompute(image_a, None)

@@ -2,7 +2,8 @@ import time
 import cv2
 import numpy as np
 
-from app.preprocessing.pipeline import PreprocessingPipeline
+from app.preprocessing.production import ProcessedPair
+from app.schemas.matching import AlgorithmResult
 from app.orchestrator.analyzer import ConditionAnalyzer, MethodRecommender
 from app.geometry.filtering import MatchFilter
 from app.geometry.ransac import GeometricVerifier
@@ -23,7 +24,6 @@ class LunaraOrchestrator:
         self.config = config or {}
         self.matchers = matchers_registry
         
-        self.preprocessor = PreprocessingPipeline(self.config.get("preprocessing", {}))
         self.analyzer = ConditionAnalyzer()
         self.recommender = MethodRecommender()
         self.match_filter = MatchFilter()
@@ -32,17 +32,11 @@ class LunaraOrchestrator:
         self.refiner = SubpixelRefiner()
         self.reg_engine = RegistrationEngine()
         
-    def execute(self, ref_path: str, src_path: str, requested_method: str = "auto") -> dict:
+    def execute(self, processed_pair: ProcessedPair, original_moving: np.ndarray, original_reference: np.ndarray, requested_method: str = "auto") -> AlgorithmResult:
         total_start = time.time()
         
-        # 1. Preprocessing (Assumes paths are raw images, we output to same or memory)
-        # For orchestrator, we assume the caller handled saving raw. We just process in memory.
-        image_a_cv = cv2.imread(ref_path, cv2.IMREAD_GRAYSCALE)
-        image_b_cv = cv2.imread(src_path, cv2.IMREAD_GRAYSCALE)
-        
-        # Apply preprocessing
-        prep_a = self.preprocessor._apply_clahe(image_a_cv) if self.preprocessor.config.get("clahe") else image_a_cv
-        prep_b = self.preprocessor._apply_clahe(image_b_cv) if self.preprocessor.config.get("clahe") else image_b_cv
+        prep_a = processed_pair.reference_image
+        prep_b = processed_pair.moving_image
         
         # 2. Condition Analysis
         conditions = self.analyzer.analyze(prep_a, prep_b)
@@ -70,15 +64,35 @@ class LunaraOrchestrator:
         # or have the matcher convert cv2 to tensor.
         
         try:
-            match_result = matcher.match(ref_path, src_path) # Matchers should handle loading now
+            match_result = matcher.match(prep_a, prep_b) # Matchers handle np arrays now
         except Exception as e:
             print(f"Matcher {selected_method} failed: {e}")
-            return {"status": "error", "message": str(e)}
+            return AlgorithmResult(
+                status="error",
+                method_used=selected_method,
+                registered_image=None,
+                match_result=None,
+                geo_result=None,
+                refined_matrix=None,
+                metrics={},
+                preprocessing_metadata=processed_pair.preprocessing_metadata,
+                failure_reason=str(e)
+            )
             
         match_time = time.time() - match_start
         
         if match_result.num_matches < 4:
-            return {"status": "error", "message": "Not enough matches found."}
+            return AlgorithmResult(
+                status="error",
+                method_used=selected_method,
+                registered_image=None,
+                match_result=match_result,
+                geo_result=None,
+                refined_matrix=None,
+                metrics={},
+                preprocessing_metadata=processed_pair.preprocessing_metadata,
+                failure_reason="Not enough matches found."
+            )
             
         # Match Filtering
         valid_mask = self.match_filter.filter_matches(match_result)
@@ -93,13 +107,33 @@ class LunaraOrchestrator:
         )
         
         if not geo_result or geo_result.num_inliers < 4:
-            return {"status": "error", "message": "RANSAC failed to find reliable transformation."}
+            return AlgorithmResult(
+                status="error",
+                method_used=selected_method,
+                registered_image=None,
+                match_result=match_result,
+                geo_result=geo_result,
+                refined_matrix=None,
+                metrics={},
+                preprocessing_metadata=processed_pair.preprocessing_metadata,
+                failure_reason="RANSAC failed to find reliable transformation."
+            )
             
         # Spatial Validation
         is_valid = self.spatial_validator.validate(geo_result.transformation_matrix, model="affine")
         
         if not is_valid:
-            return {"status": "error", "message": "Spatial validation failed. Invalid warp matrix."}
+            return AlgorithmResult(
+                status="error",
+                method_used=selected_method,
+                registered_image=None,
+                match_result=match_result,
+                geo_result=geo_result,
+                refined_matrix=None,
+                metrics={},
+                preprocessing_metadata=processed_pair.preprocessing_metadata,
+                failure_reason="Spatial validation failed. Invalid warp matrix."
+            )
             
         # ECC Subpixel Refinement (Only if reliable enough)
         if geo_result.inlier_ratio > 0.1 and geo_result.num_inliers >= 10:
@@ -115,8 +149,8 @@ class LunaraOrchestrator:
         # Registration
         reg_start = time.time()
         registered_image = self.reg_engine.register(
-            image_b_cv, # we warp the original
-            image_a_cv.shape,
+            original_moving, # we warp the original
+            original_reference.shape,
             refined_matrix,
             model="affine"
         )
@@ -124,7 +158,7 @@ class LunaraOrchestrator:
         
         # Quality Assessment
         # Calculate coverage (intersection of valid warped pixels)
-        h, w = image_a_cv.shape
+        h, w = original_reference.shape
         corners = np.array([[0,0,1], [w,0,1], [w,h,1], [0,h,1]]).T
         warped_corners = refined_matrix[:2,:] @ corners
         
@@ -136,18 +170,19 @@ class LunaraOrchestrator:
         
         total_time = time.time() - total_start
         
-        return {
-            "status": "success",
-            "method_used": selected_method,
-            "registered_image": registered_image,
-            "match_result": match_result,
-            "geo_result": geo_result,
-            "refined_matrix": refined_matrix,
-            "metrics": {
+        return AlgorithmResult(
+            status="success",
+            method_used=selected_method,
+            registered_image=registered_image,
+            match_result=match_result,
+            geo_result=geo_result,
+            refined_matrix=refined_matrix,
+            preprocessing_metadata=processed_pair.preprocessing_metadata,
+            metrics={
                 "inliers": geo_result.num_inliers,
                 "inlier_ratio": geo_result.inlier_ratio,
                 "rmse": geo_result.rmse,
                 "coverage": coverage,
                 "runtime": total_time
             }
-        }
+        )

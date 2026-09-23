@@ -22,8 +22,6 @@ from app.experiments.condition_analyzer import ConditionAnalyzer
 from lightglue.utils import load_image
 from lightglue import viz2d
 from app.preprocessing.pipeline import PreprocessingPipeline
-from app.sensors.models import SensorMetadata
-from app.preprocessing.production import preprocess_pair, PreprocessingConfig
 
 app = FastAPI(title="Lunara Scientific Pipeline API", version="2.0")
 
@@ -156,13 +154,14 @@ async def perform_matching(
     reference_img: UploadFile = File(...),
     source_img: UploadFile = File(...),
     requested_method: str = Form("auto"),
-    preprocessing_method: str = Form("AUTO"),
-    reference_sensor: str = Form("AUTO"),
-    moving_sensor: str = Form("AUTO"),
     prefix: str = Form("lunara"),
     conf_thresh: float = Form(0.0),
+    percentile_norm: bool = Form(True),
+    clahe: bool = Form(False),
     clahe_clip_limit: float = Form(2.0),
     clahe_tile_grid: int = Form(8),
+    denoise: bool = Form(False),
+    denoise_ksize: int = Form(5),
 ):
     if not global_matcher:
         raise HTTPException(status_code=503, detail="Model is not loaded.")
@@ -172,10 +171,14 @@ async def perform_matching(
     os.makedirs(job_dir, exist_ok=True)
 
     try:
-        config = PreprocessingConfig(
-            clahe_clip_limit=float(clahe_clip_limit),
-            clahe_tile_grid_size=(int(clahe_tile_grid), int(clahe_tile_grid)),
-        )
+        config = {
+            "percentile_norm": percentile_norm,
+            "clahe": clahe,
+            "clahe_clip_limit": clahe_clip_limit,
+            "clahe_tile_grid": clahe_tile_grid,
+            "denoise": denoise,
+            "denoise_ksize": denoise_ksize,
+        }
 
         # Save uploaded files temporarily
         raw_ref_path = os.path.join(job_dir, f"raw_ref_{reference_img.filename}")
@@ -186,25 +189,6 @@ async def perform_matching(
 
         with open(raw_src_path, "wb") as f:
             f.write(await source_img.read())
-            
-        # Load images directly for preprocessing
-        image_a_cv = cv2.imread(raw_ref_path, cv2.IMREAD_GRAYSCALE)
-        image_b_cv = cv2.imread(raw_src_path, cv2.IMREAD_GRAYSCALE)
-        
-        # Build Sensor Metadata
-        ref_sensor = SensorMetadata(sensor_name=reference_sensor)
-        src_sensor = SensorMetadata(sensor_name=moving_sensor)
-        
-        # Input Manager / Preprocessing Engine
-        processed_pair = preprocess_pair(
-            moving=image_b_cv,
-            reference=image_a_cv,
-            pair_id=job_id,
-            representation=preprocessing_method,
-            config=config,
-            moving_sensor=src_sensor,
-            reference_sensor=ref_sensor
-        )
 
         from app.matchers.sift import SIFTMatcher
         from app.matchers.loftr import LoFTRMatcher
@@ -218,35 +202,29 @@ async def perform_matching(
         }
 
         orchestrator = LunaraOrchestrator(
-            matchers_registry=matchers_registry, config={}
+            matchers_registry=matchers_registry, config={"preprocessing": config}
         )
 
         result = orchestrator.execute(
-            processed_pair=processed_pair,
-            original_moving=image_b_cv,
-            original_reference=image_a_cv,
-            requested_method=requested_method
+            raw_ref_path, raw_src_path, requested_method=requested_method
         )
 
-        if result.status == "error":
-            raise HTTPException(status_code=500, detail=result.failure_reason)
+        if result["status"] == "error":
+            raise HTTPException(status_code=500, detail=result["message"])
 
-        match_result = result.match_result
-        geo_result = result.geo_result
-        registered_image = result.registered_image
-        metrics = result.metrics
-        
-        # Save preprocessed images to disk for visualization
-        prep_ref_path = os.path.join(job_dir, "prep_ref.png")
-        prep_src_path = os.path.join(job_dir, "prep_src.png")
-        cv2.imwrite(prep_ref_path, processed_pair.reference_image)
-        cv2.imwrite(prep_src_path, processed_pair.moving_image)
+        match_result = result["match_result"]
+        geo_result = result["geo_result"]
+        registered_image = result["registered_image"]
+        metrics = result["metrics"]
 
         # Save registered image as highly compressed JPEG
         reg_img_path = os.path.join(job_dir, f"{prefix}_registered_moving.jpg")
         cv2.imwrite(reg_img_path, registered_image, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
         # Save overlay image as compressed JPEG
+        image_a_cv = cv2.imread(
+            result.get("ref_processed_path", raw_ref_path), cv2.IMREAD_GRAYSCALE
+        )
         alpha = 0.5
         overlay = cv2.addWeighted(image_a_cv, alpha, registered_image, 1 - alpha, 0)
         overlay_path = os.path.join(job_dir, f"{prefix}_registration_overlay.jpg")
@@ -257,9 +235,9 @@ async def perform_matching(
         kpts0 = match_result.keypoints_a[inlier_matches[:, 0]]
         kpts1 = match_result.keypoints_b[inlier_matches[:, 1]]
 
-        # Load images for visualization (lightglue format)
-        image_a_tensor = load_image(prep_ref_path)
-        image_b_tensor = load_image(prep_src_path)
+        # Load images for visualization
+        image_a_tensor = load_image(result.get("ref_processed_path", raw_ref_path))
+        image_b_tensor = load_image(result.get("src_processed_path", raw_src_path))
 
         viz2d.plot_images([image_a_tensor.cpu(), image_b_tensor.cpu()])
         viz2d.plot_matches(kpts0, kpts1, color="lime", lw=0.2)
@@ -268,7 +246,7 @@ async def perform_matching(
         plt.close()
 
         # Build response dictionary
-        metrics["transformation"] = result.refined_matrix.tolist()
+        metrics["transformation"] = result["refined_matrix"].tolist()
 
         # Record in registry
         registry.record_experiment(
@@ -278,17 +256,11 @@ async def perform_matching(
         return {
             "job_id": job_id,
             "status": "success",
-            "method_used": result.method_used,
             "metrics": metrics,
-            "preprocessing_metadata": result.preprocessing_metadata,
             "files": {
                 "registered_image": f"/api/v1/results/{job_id}/{prefix}_registered_moving.jpg",
                 "overlay_image": f"/api/v1/results/{job_id}/{prefix}_registration_overlay.jpg",
                 "matches_viz": f"/api/v1/results/{job_id}/{prefix}_matches_viz.jpg",
-                "raw_reference": f"/api/v1/results/{job_id}/raw_ref_{reference_img.filename}",
-                "raw_moving": f"/api/v1/results/{job_id}/raw_src_{source_img.filename}",
-                "preprocessed_reference": f"/api/v1/results/{job_id}/prep_ref.png",
-                "preprocessed_moving": f"/api/v1/results/{job_id}/prep_src.png",
             },
         }
 

@@ -7,21 +7,21 @@ class LightGlueMatcher(MatcherInterface):
     def __init__(self, model):
         self.model = model
 
-    def match(self, image_a_path: str, image_b_path: str) -> MatchingResult:
+    def match(self, image_a: np.ndarray, image_b: np.ndarray) -> MatchingResult:
         import time
-        from lightglue.utils import load_image, rbd
+        from lightglue.utils import numpy_image_to_torch, rbd
         start_time = time.time()
         
-        # 1. Extract features and match
-        image_a = load_image(image_a_path)
-        image_b = load_image(image_b_path)
+        # 1. Convert to torch tensors
+        image_a_t = numpy_image_to_torch(image_a)
+        image_b_t = numpy_image_to_torch(image_b)
         
         # If model expects it on device, move it
         device = self.model.device
-        image_a = image_a.to(device)
-        image_b = image_b.to(device)
+        image_a_t = image_a_t.to(device)
+        image_b_t = image_b_t.to(device)
         
-        features_a, features_b, matches_output = self.model.match_images(image_a, image_b)
+        features_a, features_b, matches_output = self.model.match_images(image_a_t, image_b_t)
         
         # Remove batch dimension using rbd (remove batch dimension)
         features_a, features_b, matches_output = [rbd(x) for x in [features_a, features_b, matches_output]]

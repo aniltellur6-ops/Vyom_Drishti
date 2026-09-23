@@ -13,9 +13,9 @@ class LoFTRMatcher(MatcherInterface):
         self.matcher = kornia.feature.LoFTR(pretrained=pretrained).to(self.device)
         self.matcher.eval()
 
-    def load_kornia_image(self, path: str):
+    def load_kornia_image(self, img: np.ndarray):
         # Kornia expects images in [B, C, H, W] format, normalized 0-1, grayscale
-        img = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+
         # Ensure dimensions are divisible by 8 for LoFTR (padding if necessary)
         h, w = img.shape
         new_h = (h // 8) * 8
@@ -26,11 +26,11 @@ class LoFTRMatcher(MatcherInterface):
         tensor = torch.from_numpy(img).float()[None, None] / 255.0
         return tensor.to(self.device), (h, w), (new_h, new_w)
 
-    def match(self, image_a_path: str, image_b_path: str) -> MatchingResult:
+    def match(self, image_a: np.ndarray, image_b: np.ndarray) -> MatchingResult:
         start_time = time.time()
         
-        img_a_tensor, orig_shape_a, new_shape_a = self.load_kornia_image(image_a_path)
-        img_b_tensor, orig_shape_b, new_shape_b = self.load_kornia_image(image_b_path)
+        img_a_tensor, orig_shape_a, new_shape_a = self.load_kornia_image(image_a)
+        img_b_tensor, orig_shape_b, new_shape_b = self.load_kornia_image(image_b)
         
         input_dict = {
             "image0": img_a_tensor,
