@@ -9,9 +9,9 @@ import sys
 # CONFIGURATION
 # ==========================================
 # Update this to your deployed Vercel URL
-VERCEL_REGISTER_URL = os.environ.get("VERCEL_REGISTER_URL", "https://your-vercel-project.vercel.app/api/register")
+VERCEL_REGISTER_URL = os.environ.get("VERCEL_REGISTER_URL", "https://vyom-drishti.vercel.app/api/register")
 # Update this to your secret token
-SECRET = os.environ.get("SECRET", "my-super-secret-token")
+SECRET = os.environ.get("SECRET", "Sih@26166")
 
 def monitor_tunnel():
     print("Starting Cloudflare Tunnel...")
