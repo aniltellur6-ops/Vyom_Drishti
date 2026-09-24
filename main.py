@@ -1,7 +1,10 @@
 import os
 import ssl
 import uuid
+import asyncio
 import cv2
+import gc
+import torch
 import matplotlib.pyplot as plt
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,6 +42,9 @@ app.add_middleware(
 JOBS_DIR = "jobs"
 os.makedirs(JOBS_DIR, exist_ok=True)
 registry = ExperimentRegistry(JOBS_DIR)
+
+# Ensure only 1 job runs at a time to prevent GPU VRAM / RAM crashes
+pipeline_queue = asyncio.Semaphore(1)
 
 # Ensure models are loaded once to avoid high latency on each request
 # We instantiate this lazily or globally. For this demo, let's keep it global.
@@ -172,10 +178,11 @@ async def perform_matching(
     os.makedirs(job_dir, exist_ok=True)
 
     try:
-        config = PreprocessingConfig(
-            clahe_clip_limit=float(clahe_clip_limit),
-            clahe_tile_grid_size=(int(clahe_tile_grid), int(clahe_tile_grid)),
-        )
+        async with pipeline_queue:
+            config = PreprocessingConfig(
+                clahe_clip_limit=float(clahe_clip_limit),
+                clahe_tile_grid_size=(int(clahe_tile_grid), int(clahe_tile_grid)),
+            )
 
         # Save uploaded files temporarily
         raw_ref_path = os.path.join(job_dir, f"raw_ref_{reference_img.filename}")
@@ -306,6 +313,11 @@ async def perform_matching(
             job_id=job_id, method=requested_method, status="Failed", metrics={}
         )
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        # Step 2: Clean up VRAM and RAM at the end of every job
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
 
 @app.get("/api/v1/results/{job_id}/{filename}")

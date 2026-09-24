@@ -1,7 +1,8 @@
 // src/api/client.ts
-const ENV_URL = (import.meta as any).env.VITE_API_URL;
-const SERVER_BASE_URL = ENV_URL ? ENV_URL.replace(/\/api\/v1\/?$/, '').replace(/\/$/, '') : "http://localhost:8000";
-const API_BASE_URL = `${SERVER_BASE_URL}/api/v1`;
+// Wait, we don't need a static BASE_URL anymore, we fetch it dynamically.
+// We'll keep a fallback for local development
+const FALLBACK_URL = "http://localhost:8000";
+let CACHED_SERVER_URL = FALLBACK_URL;
 
 export interface SystemStatus {
   status: string;
@@ -61,8 +62,24 @@ export interface Experiment {
 }
 
 export const LunaraClient = {
+  getLiveUrl: async (): Promise<string> => {
+    try {
+      // Fetch the active Cloudflare URL from our Vercel Serverless Function
+      const res = await fetch("/api/url");
+      const data = await res.json();
+      if (data.backendUrl) {
+        CACHED_SERVER_URL = data.backendUrl.replace(/\/$/, '');
+        return `${CACHED_SERVER_URL}/api/v1`;
+      }
+    } catch (e) {
+      console.warn("Failed to fetch live URL, falling back to local", e);
+    }
+    return `${CACHED_SERVER_URL}/api/v1`;
+  },
+
   getSystemStatus: async (): Promise<SystemStatus> => {
-    const res = await fetch(`${API_BASE_URL}/system/status`, {
+    const baseUrl = await LunaraClient.getLiveUrl();
+    const res = await fetch(`${baseUrl}/system/status`, {
       headers: { 'ngrok-skip-browser-warning': 'true' }
     });
     if (!res.ok) throw new Error("Failed to fetch system status");
@@ -70,11 +87,12 @@ export const LunaraClient = {
   },
 
   analyzeImages: async (refFile: File, srcFile: File): Promise<ImageCondition> => {
+    const baseUrl = await LunaraClient.getLiveUrl();
     const formData = new FormData();
     formData.append("reference_img", refFile);
     formData.append("source_img", srcFile);
 
-    const res = await fetch(`${API_BASE_URL}/analyze`, {
+    const res = await fetch(`${baseUrl}/analyze`, {
       method: "POST",
       headers: { 'ngrok-skip-browser-warning': 'true' },
       body: formData,
@@ -84,6 +102,7 @@ export const LunaraClient = {
   },
 
   runMatching: async (refFile: File, srcFile: File, method: string = "auto", preprocessingMethod: string = "AUTO", referenceSensor: string = "AUTO", movingSensor: string = "AUTO"): Promise<MatchingResult> => {
+    const baseUrl = await LunaraClient.getLiveUrl();
     const formData = new FormData();
     formData.append("reference_img", refFile);
     formData.append("source_img", srcFile);
@@ -93,7 +112,7 @@ export const LunaraClient = {
     formData.append("moving_sensor", movingSensor);
     // Add prefix and config if needed
 
-    const res = await fetch(`${API_BASE_URL}/match`, {
+    const res = await fetch(`${baseUrl}/match`, {
       method: "POST",
       headers: { 'ngrok-skip-browser-warning': 'true' },
       body: formData,
@@ -107,15 +126,15 @@ export const LunaraClient = {
   },
 
   getExperiments: async (): Promise<Experiment[]> => {
-    const res = await fetch(`${API_BASE_URL}/experiments`, {
+    const baseUrl = await LunaraClient.getLiveUrl();
+    const res = await fetch(`${baseUrl}/experiments`, {
       headers: { 'ngrok-skip-browser-warning': 'true' }
     });
     if (!res.ok) throw new Error("Failed to fetch experiments");
     return res.json();
   },
 
-  getResultUrl: (path: string) => {
-    // If the path already has the base url format handled by the backend, just prepend the server
-    return `${SERVER_BASE_URL}${path}`;
+  getResultUrl: (path: string): string => {
+    return `${CACHED_SERVER_URL}${path}`;
   }
 };
