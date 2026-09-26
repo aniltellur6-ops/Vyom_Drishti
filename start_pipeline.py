@@ -5,6 +5,9 @@ import os
 import threading
 import sys
 
+# Windows flag to hide terminal popup windows for child processes
+CREATE_NO_WINDOW = 0x08000000 if os.name == 'nt' else 0
+
 # ==========================================
 # CONFIGURATION
 # ==========================================
@@ -22,7 +25,8 @@ def monitor_tunnel():
         stderr=subprocess.STDOUT,
         text=True,
         encoding='utf-8',
-        errors='replace'
+        errors='replace',
+        creationflags=CREATE_NO_WINDOW
     )
     
     url_found = False
@@ -61,6 +65,9 @@ if __name__ == "__main__":
     # 2. Start the FastAPI backend in the main thread
     print("Starting FastAPI Backend...")
     try:
-        subprocess.run([sys.executable, "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"])
+        subprocess.run(
+            [sys.executable, "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"],
+            creationflags=CREATE_NO_WINDOW
+        )
     except KeyboardInterrupt:
         print("\nShutting down pipeline...")
