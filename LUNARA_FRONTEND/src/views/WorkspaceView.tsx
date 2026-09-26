@@ -188,10 +188,18 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
           <button
             onClick={onTriggerRun}
             disabled={isRunningPipeline || !refFile || !srcFile}
-            className="w-full py-4 bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-500 text-slate-900 font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-lg shadow-cyan-900/20"
+            className={`w-full py-4 font-bold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg relative overflow-hidden ${
+              isRunningPipeline 
+                ? 'bg-indigo-900 text-indigo-300 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.5)] cursor-not-allowed' 
+                : 'bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-500 text-slate-900 shadow-cyan-900/20'
+            }`}
           >
             {isRunningPipeline ? (
-              <span className="animate-pulse">PROCESSING...</span>
+              <>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent w-[200%] animate-shimmer"></div>
+                <Layers className="w-5 h-5 animate-spin-slow relative z-10 text-indigo-400" />
+                <span className="animate-pulse tracking-widest relative z-10 font-mono">ANALYZING GEOMETRY...</span>
+              </>
             ) : (
               <>
                 <Play className="w-5 h-5" />
@@ -315,8 +323,28 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
 
             </div>
           ) : (
-            <div className="h-full min-h-[400px] border-2 border-dashed border-slate-200 rounded-xl flex items-center justify-center text-slate-600 font-mono text-sm">
-              {isRunningPipeline ? "PIPELINE RUNNING..." : "AWAITING REGISTRATION REQUEST"}
+            <div className={`h-full min-h-[400px] border-2 border-dashed ${isRunningPipeline ? 'border-indigo-500/50 bg-indigo-950/10' : 'border-slate-200'} rounded-xl flex items-center justify-center font-mono text-sm relative overflow-hidden transition-all duration-700`}>
+              {isRunningPipeline ? (
+                <>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/10 to-transparent scanline-active pointer-events-none"></div>
+                  <div className="absolute inset-0 pulse-ring-effect rounded-full border-2 border-indigo-500/30 m-auto w-32 h-32 pointer-events-none"></div>
+                  <div className="relative z-10 flex flex-col items-center gap-4">
+                    <div className="relative animate-float">
+                      <Target className="w-16 h-16 text-indigo-400 animate-spin-slow opacity-80" />
+                      <Layers className="w-6 h-6 text-cyan-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <span className="text-indigo-400 animate-pulse tracking-[0.2em] text-lg font-bold shadow-indigo-500/50 drop-shadow-md">COMPUTING CORRESPONDENCES</span>
+                      <span className="text-indigo-300/70 text-xs mt-2 max-w-xs uppercase">Running RANSAC spatial validation and Homography estimation matrix</span>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="text-slate-500 flex flex-col items-center gap-3">
+                  <Layers className="w-10 h-10 text-slate-300" />
+                  <span className="tracking-widest opacity-80">AWAITING REGISTRATION REQUEST</span>
+                </div>
+              )}
             </div>
           )}
 

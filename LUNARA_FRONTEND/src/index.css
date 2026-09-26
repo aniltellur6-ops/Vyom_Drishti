@@ -69,3 +69,23 @@
   cursor: ew-resize;
   box-shadow: 0 0 8px rgba(168, 85, 247, 0.8);
 }
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-15deg); }
+  100% { transform: translateX(150%) skewX(-15deg); }
+}
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+.animate-spin-slow {
+  animation: spin 3s linear infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
