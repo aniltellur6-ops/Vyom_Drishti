@@ -198,6 +198,17 @@ async def perform_matching(
         image_a_cv = cv2.imread(raw_ref_path, cv2.IMREAD_GRAYSCALE)
         image_b_cv = cv2.imread(raw_src_path, cv2.IMREAD_GRAYSCALE)
         
+        # DOWN-SCALE HUGE IMAGES TO PREVENT OOM CRASHES
+        def resize_to_max_dim(img, max_dim=1024):
+            h, w = img.shape
+            if max(h, w) > max_dim:
+                scale = max_dim / max(h, w)
+                return cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+            return img
+
+        image_a_cv = resize_to_max_dim(image_a_cv)
+        image_b_cv = resize_to_max_dim(image_b_cv)
+        
         # Build Sensor Metadata
         ref_sensor = SensorMetadata(sensor_name=reference_sensor)
         src_sensor = SensorMetadata(sensor_name=moving_sensor)
@@ -305,9 +316,14 @@ async def perform_matching(
             job_id=job_id, method=requested_method, status="Failed", metrics={}
         )
         raise he
+    except HTTPException as he:
+        # Don't double-wrap HTTP exceptions
+        registry.record_experiment(
+            job_id=job_id, method=requested_method, status="Failed", metrics={}
+        )
+        raise he
     except Exception as e:
         import traceback
-
         traceback.print_exc()
         registry.record_experiment(
             job_id=job_id, method=requested_method, status="Failed", metrics={}

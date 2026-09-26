@@ -67,7 +67,9 @@ if __name__ == "__main__":
     try:
         subprocess.run(
             [sys.executable, "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"],
-            creationflags=CREATE_NO_WINDOW
+            creationflags=CREATE_NO_WINDOW,
+            stdout=sys.stdout,
+            stderr=sys.stderr
         )
     except KeyboardInterrupt:
         print("\nShutting down pipeline...")

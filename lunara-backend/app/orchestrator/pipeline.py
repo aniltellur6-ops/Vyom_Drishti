@@ -103,7 +103,7 @@ class LunaraOrchestrator:
             match_result.keypoints_a,
             match_result.keypoints_b,
             match_result.matches,
-            model="affine"
+            model="homography"
         )
         
         if not geo_result or geo_result.num_inliers < 4:
@@ -120,7 +120,7 @@ class LunaraOrchestrator:
             )
             
         # Spatial Validation
-        is_valid = self.spatial_validator.validate(geo_result.transformation_matrix, model="affine")
+        is_valid = self.spatial_validator.validate(geo_result.transformation_matrix, model="homography")
         
         if not is_valid:
             return AlgorithmResult(
@@ -141,7 +141,7 @@ class LunaraOrchestrator:
                 prep_a, 
                 prep_b, 
                 geo_result.transformation_matrix, 
-                model="affine"
+                model="homography"
             )
         else:
             refined_matrix = geo_result.transformation_matrix
@@ -152,7 +152,7 @@ class LunaraOrchestrator:
             original_moving, # we warp the original
             original_reference.shape,
             refined_matrix,
-            model="affine"
+            model="homography"
         )
         reg_time = time.time() - reg_start
         
