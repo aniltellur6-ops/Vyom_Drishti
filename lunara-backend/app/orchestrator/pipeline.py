@@ -106,7 +106,7 @@ class LunaraOrchestrator:
             model="homography"
         )
         
-        if not geo_result or geo_result.num_inliers < 4:
+        if not geo_result or geo_result.num_inliers < 8:
             return AlgorithmResult(
                 status="error",
                 method_used=selected_method,

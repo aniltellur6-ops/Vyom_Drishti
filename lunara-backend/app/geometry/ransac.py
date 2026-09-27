@@ -21,7 +21,7 @@ class GeometricVerifier:
         dst_pts = keypoints_b[matches[:, 1]].astype(np.float32)
         
         if model == "homography":
-            M, mask = cv2.findHomography(src_pts, dst_pts, cv2.RANSAC, 3.0)
+            M, mask = cv2.findHomography(src_pts, dst_pts, cv2.USAC_MAGSAC, 5.0)
         elif model == "affine":
             M, mask = cv2.estimateAffinePartial2D(src_pts, dst_pts, method=cv2.RANSAC, ransacReprojThreshold=3.0)
             if M is not None:
