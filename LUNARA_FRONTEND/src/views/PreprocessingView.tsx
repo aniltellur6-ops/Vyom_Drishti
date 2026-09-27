@@ -122,7 +122,7 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
         <button
           onClick={handlePreview}
           disabled={isProcessing || (!refImg && !srcImg)}
-          className="mt-6 w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-md flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="mt-6 w-full py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-sm rounded-lg shadow-md shadow-amber-500/20 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Layers className="w-4 h-4" />}
           {isProcessing ? 'PROCESSING...' : 'PREVIEW PIPELINE'}

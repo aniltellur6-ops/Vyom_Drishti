@@ -190,8 +190,8 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
             disabled={isRunningPipeline || !refFile || !srcFile}
             className={`w-full py-4 font-bold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg relative overflow-hidden ${
               isRunningPipeline 
-                ? 'bg-indigo-900 text-indigo-300 border border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.5)] cursor-not-allowed' 
-                : 'bg-cyan-600 hover:bg-cyan-500 disabled:bg-slate-800 disabled:text-slate-500 text-slate-900 shadow-cyan-900/20'
+                ? 'bg-amber-500 text-slate-950 border border-amber-200/80 shadow-[0_0_18px_rgba(245,158,11,0.45)] cursor-not-allowed' 
+                : 'bg-cyan-400 hover:bg-cyan-300 disabled:bg-slate-300 disabled:text-slate-500 text-slate-950 shadow-cyan-500/25'
             }`}
           >
             {isRunningPipeline ? (

@@ -77,7 +77,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
+    <div className="lunara-page min-h-screen text-slate-900 flex flex-col font-sans selection:bg-cyan-500 selection:text-slate-950">
       <AppHeader
         currentTab={currentTab}
         onSelectTab={(tab) => setCurrentTab(tab)}
@@ -136,7 +136,7 @@ export default function App() {
         </div>
       )}
 
-      <footer className="border-t border-slate-200/80 bg-slate-50 text-slate-600 text-xs py-3 px-4 sm:px-6">
+      <footer className="border-t border-slate-200/80 bg-[#f7f5ef] text-slate-600 text-xs py-3 px-4 sm:px-6">
         <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3 font-mono">
           <div className="flex items-center gap-3">
             <span className="text-slate-800 font-bold">VYOM DRISHTI v2.0</span>

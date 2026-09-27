@@ -70,7 +70,7 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
             <button
               onClick={() => setFilter('all')}
               className={`px-2 py-0.5 rounded ${
-                filter === 'all' ? 'bg-cyan-600 text-slate-900 font-bold' : 'text-slate-600 hover:text-slate-800'
+                filter === 'all' ? 'bg-cyan-300 text-slate-950 font-bold' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
               All ({tiePoints.length})
@@ -79,7 +79,7 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
               onClick={() => setFilter('inliers')}
               className={`px-2 py-0.5 rounded ${
                 filter === 'inliers'
-                  ? 'bg-emerald-600 text-slate-900 font-bold'
+                  ? 'bg-emerald-300 text-slate-950 font-bold'
                   : 'text-slate-600 hover:text-emerald-800'
               }`}
             >

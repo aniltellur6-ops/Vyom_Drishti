@@ -70,7 +70,7 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={() => onChangeMode('dual')}
             className={`flex items-center gap-1 px-2.5 py-1 rounded transition-all ${
               mode === 'dual'
-                ? 'bg-cyan-600 text-slate-900 font-semibold'
+                ? 'bg-cyan-300 text-slate-950 font-semibold'
                 : 'text-slate-600 hover:text-slate-800'
             }`}
             title="Dual Viewport (CH-2 OHRC vs LROC NAC)"
@@ -83,7 +83,7 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={() => onChangeMode('4quad')}
             className={`flex items-center gap-1 px-2.5 py-1 rounded transition-all ${
               mode === '4quad'
-                ? 'bg-cyan-600 text-slate-900 font-semibold'
+                ? 'bg-amber-300 text-slate-950 font-semibold'
                 : 'text-slate-600 hover:text-slate-800'
             }`}
             title="4-Quadrant Verification (Moving, Warped, Ref, Diff)"
@@ -96,7 +96,7 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={() => onChangeMode('split')}
             className={`flex items-center gap-1 px-2.5 py-1 rounded transition-all ${
               mode === 'split'
-                ? 'bg-cyan-600 text-slate-900 font-semibold'
+                ? 'bg-amber-300 text-slate-950 font-semibold'
                 : 'text-slate-600 hover:text-slate-800'
             }`}
             title="Interactive Split Screen Swipe"
@@ -109,7 +109,7 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={() => onChangeMode('checker')}
             className={`flex items-center gap-1 px-2.5 py-1 rounded transition-all ${
               mode === 'checker'
-                ? 'bg-cyan-600 text-slate-900 font-semibold'
+                ? 'bg-emerald-300 text-slate-950 font-semibold'
                 : 'text-slate-600 hover:text-slate-800'
             }`}
             title="Checkerboard Interleave Test"
@@ -143,8 +143,8 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={onToggleTiePoints}
             className={`flex items-center gap-1 px-2 py-1 rounded border text-xs font-mono transition-all ${
               showTiePoints
-                ? 'bg-indigo-950 text-indigo-300 border-indigo-700'
-                : 'bg-slate-800 text-slate-600 border-slate-700'
+                ? 'bg-cyan-100 text-cyan-900 border-cyan-400'
+                : 'bg-white text-slate-600 border-slate-300 hover:bg-cyan-50'
             }`}
             title="Toggle Tie-Point Vector Overlays"
           >
@@ -156,8 +156,8 @@ export const FourQuadrantViewer: React.FC<FourQuadrantViewerProps> = ({
             onClick={() => setReticleActive(!reticleActive)}
             className={`p-1 rounded border ${
               reticleActive
-                ? 'bg-cyan-50 text-cyan-800 border-cyan-700'
-                : 'bg-slate-800 text-slate-600 border-slate-700'
+                ? 'bg-cyan-100 text-cyan-900 border-cyan-400'
+                : 'bg-white text-slate-600 border-slate-300 hover:bg-cyan-50'
             }`}
             title="Toggle Synchronized Crosshairs"
           >

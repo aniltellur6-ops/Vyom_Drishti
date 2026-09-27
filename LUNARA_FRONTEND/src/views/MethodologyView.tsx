@@ -50,7 +50,7 @@ export const MethodologyView: React.FC = () => {
           <button
             onClick={handleDownload}
             disabled={!!downloadingFormat}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold shadow transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded text-xs font-bold shadow shadow-amber-500/20 transition-all"
           >
             <Download className="w-4 h-4" />
             <span>{downloadingFormat === 'PDF' ? 'Compiling PDF...' : 'Download PDF Report'}</span>

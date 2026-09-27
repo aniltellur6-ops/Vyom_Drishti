@@ -38,14 +38,26 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   ];
 
   return (
-    <header className="bg-[#0f172a] text-white border-b border-slate-800 shadow-md sticky top-0 z-40">
-
+    <header className="lunara-header text-white border-b border-slate-800 shadow-md sticky top-0 z-40 overflow-hidden">
+      <div className="lunara-header-video" aria-hidden="true">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          poster="/lunar-landing-poster.jpg"
+        >
+          <source src="/lunar-landing-header.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div className="lunara-header-shade" aria-hidden="true" />
 
       {/* Main Title & Nav Bar */}
-      <div className="px-4 py-2.5 flex flex-wrap items-center justify-between gap-4">
+      <div className="relative z-10 px-4 py-3.5 flex flex-wrap items-center justify-between gap-4">
         {/* Brand & Mission Badge */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectTab('overview')}>
-          <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1.5 shadow-md shadow-cyan-900/30">
+          <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center p-1.5 shadow-lg shadow-amber-500/30 ring-1 ring-white/60">
             <img src="/logo.png" alt="Vyom Drishti Logo" className="w-full h-full object-contain" />
           </div>
           <div>
@@ -76,7 +88,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded text-xs font-semibold shadow transition-all ${
               isRunningPipeline
                 ? 'bg-amber-600 text-white cursor-wait'
-                : 'bg-cyan-600 hover:bg-cyan-500 text-white active:scale-95'
+                : 'bg-cyan-400 hover:bg-cyan-300 text-slate-950 active:scale-95 shadow-cyan-400/30'
             }`}
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRunningPipeline ? 'animate-spin' : ''}`} />
@@ -93,7 +105,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <button
               key={tab.id}
               onClick={() => onSelectTab(tab.id)}
-              className={`flex-1 flex justify-center items-center gap-2 px-3 py-2.5 text-xs font-medium border-b-2 transition-all whitespace-nowrap ${
+              className={`flex-1 flex justify-center items-center gap-2 px-3 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap ${
                 isActive
                   ? 'border-cyan-400 text-cyan-300 bg-cyan-950/30'
                   : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
