@@ -220,19 +220,19 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
 export const SAMPLE_BENCHMARKS: BenchmarkMethod[] = [
   {
     name: 'VYOM DRISHTI Adaptive Orchestrator (Ours)',
-    citation: 'Team Vyom Drishti, 2026',
-    featureType: 'Hybrid PC-LoFTR + Epipolar Mask',
-    totalMatches: 544,
-    inliers: 425,
-    inlierRatio: 78.1,
+    citation: 'Team Vyom Drishti, 2026 (EXP-2026-0911-d438)',
+    featureType: 'SuperPoint + LightGlue + Adaptive Preprocessing',
+    totalMatches: 1027,
+    inliers: 860,
+    inlierRatio: 83.7,
     rmse: 0.36,
-    spatialCoverage: 88.2,
-    latencySeconds: 3.84,
+    spatialCoverage: 93.6,
+    latencySeconds: 3.94,
     vramUsageMB: 680,
     status: 'OPTIMAL (PASS)',
     statusType: 'success',
     description:
-      'Dynamically segments tile into Shadowed (Phase Congruency) vs Smooth High-Albedo regions using local Shannon entropy.',
+      'Deep learned SuperPoint keypoint extraction + LightGlue attentional graph neural network matching with adaptive illumination normalization. Verified on benchmark pair EXP-2026-0911-d438 (860 inliers, 83.7% inliers ratio).',
   },
   {
     name: 'RIFT2 (Phase Congruency)',

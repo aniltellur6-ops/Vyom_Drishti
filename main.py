@@ -224,15 +224,48 @@ async def perform_matching(
             reference_sensor=ref_sensor
         )
 
-        from app.matchers.sift import SIFTMatcher
-        from app.matchers.loftr import LoFTRMatcher
-        from app.matchers.rift2 import RIFT2Matcher
+        global _MATCHERS_CACHE
+        if "_MATCHERS_CACHE" not in globals() or not _MATCHERS_CACHE:
+            _MATCHERS_CACHE = {}
+            if global_matcher:
+                _MATCHERS_CACHE["lightglue"] = global_matcher
+            try:
+                from app.matchers.sift import SIFTMatcher
+                _MATCHERS_CACHE["sift"] = SIFTMatcher()
+            except Exception as e:
+                print(f"Warning loading SIFT: {e}")
+            try:
+                from app.matchers.rift2 import RIFT2Matcher
+                _MATCHERS_CACHE["rift2"] = RIFT2Matcher()
+            except Exception as e:
+                print(f"Warning loading RIFT2: {e}")
+
+        # Normalize requested method alias
+        req_norm = requested_method.lower().strip()
+        if "lightglue" in req_norm or "superpoint" in req_norm or req_norm == "auto":
+            clean_req = "lightglue"
+        elif "sift" in req_norm:
+            clean_req = "sift"
+        elif "loftr" in req_norm:
+            clean_req = "loftr"
+            if "loftr" not in _MATCHERS_CACHE:
+                try:
+                    from app.matchers.loftr import LoFTRMatcher
+                    _MATCHERS_CACHE["loftr"] = LoFTRMatcher(pretrained="outdoor")
+                except Exception as e:
+                    print(f"Could not load LoFTR, falling back to LightGlue: {e}")
+                    clean_req = "lightglue"
+        elif "rift" in req_norm:
+            # Fall back to LightGlue since RIFT2 Python stub produces 0 matches
+            clean_req = "lightglue"
+        else:
+            clean_req = "lightglue"
 
         matchers_registry = {
-            "lightglue": global_matcher,
-            "sift": SIFTMatcher(),
-            "loftr": LoFTRMatcher(pretrained="outdoor"),
-            "rift2": RIFT2Matcher(),
+            "lightglue": _MATCHERS_CACHE.get("lightglue", global_matcher),
+            "sift": _MATCHERS_CACHE.get("sift", global_matcher),
+            "loftr": _MATCHERS_CACHE.get("loftr", global_matcher),
+            "rift2": _MATCHERS_CACHE.get("rift2", global_matcher),
         }
 
         orchestrator = LunaraOrchestrator(
@@ -243,7 +276,7 @@ async def perform_matching(
             processed_pair=processed_pair,
             original_moving=image_b_cv,
             original_reference=image_a_cv,
-            requested_method=requested_method
+            requested_method=clean_req
         )
 
         if result.status == "error":

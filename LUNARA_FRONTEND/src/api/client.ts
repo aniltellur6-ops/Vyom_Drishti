@@ -27,6 +27,7 @@ export interface ImageCondition {
   feature_density: string;
   overall_difficulty: string;
   recommended_method: string;
+  recommended_method_key?: string;
   recommended_preprocessing?: string;
   recommended_preprocessing_name?: string;
   preprocessing_reason?: string;
@@ -306,6 +307,49 @@ export const LunaraClient = {
       }
       return res2.json();
     }
+  },
+
+  previewPreprocessing: async (
+    file: File,
+    config: {
+      resize_scale?: number;
+      percentile_norm?: boolean;
+      clahe?: boolean;
+      denoise?: boolean;
+    } = {}
+  ): Promise<Blob> => {
+    const makeRequest = async (baseUrl: string) => {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("resize_scale", (config.resize_scale ?? 1.0).toString());
+      formData.append("percentile_norm", (config.percentile_norm ?? true).toString());
+      formData.append("clahe", (config.clahe ?? false).toString());
+      formData.append("denoise", (config.denoise ?? false).toString());
+
+      return fetch(`${baseUrl}/preprocess/preview`, {
+        method: "POST",
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        body: formData,
+      });
+    };
+
+    let res: Response;
+    try {
+      const baseUrl = await LunaraClient.getLiveUrl();
+      res = await makeRequest(baseUrl);
+    } catch (networkErr: any) {
+      console.warn("Preprocessing preview hit network drop, retrying...", networkErr);
+      LunaraClient.invalidateLiveUrl();
+      const freshBase = await LunaraClient.getLiveUrl(true);
+      res = await makeRequest(freshBase);
+    }
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Preprocessing preview failed with HTTP status ${res.status}`);
+    }
+
+    return res.blob();
   },
 
   runMatching: async (

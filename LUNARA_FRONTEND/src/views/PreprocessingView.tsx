@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Upload, Settings, RefreshCw, Layers } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Upload, Settings, RefreshCw, Layers, CheckCircle2, AlertCircle } from 'lucide-react';
+import { LunaraClient } from '../api/client';
 
 interface PreprocessingViewProps {
   onTriggerRun?: () => void;
@@ -9,6 +10,9 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
   const [refImg, setRefImg] = useState<File | null>(null);
   const [srcImg, setSrcImg] = useState<File | null>(null);
   
+  const [rawRefUrl, setRawRefUrl] = useState<string | null>(null);
+  const [rawSrcUrl, setRawSrcUrl] = useState<string | null>(null);
+
   const [resizeScale, setResizeScale] = useState<number>(1.0);
   const [percentileNorm, setPercentileNorm] = useState<boolean>(true);
   const [clahe, setClahe] = useState<boolean>(false);
@@ -18,46 +22,67 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
   const [previewSrc, setPreviewSrc] = useState<string | null>(null);
   
   const [isProcessing, setIsProcessing] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (refImg) {
+      const url = URL.createObjectURL(refImg);
+      setRawRefUrl(url);
+      setPreviewRef(null);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setRawRefUrl(null);
+      setPreviewRef(null);
+    }
+  }, [refImg]);
+
+  useEffect(() => {
+    if (srcImg) {
+      const url = URL.createObjectURL(srcImg);
+      setRawSrcUrl(url);
+      setPreviewSrc(null);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setRawSrcUrl(null);
+      setPreviewSrc(null);
+    }
+  }, [srcImg]);
 
   const handlePreview = async () => {
-    if (!refImg && !srcImg) return;
-    setIsProcessing(true);
-    try {
-      const formRef = new FormData();
-      if (refImg) {
-        formRef.append('image', refImg);
-        formRef.append('resize_scale', resizeScale.toString());
-        formRef.append('percentile_norm', percentileNorm.toString());
-        formRef.append('clahe', clahe.toString());
-        formRef.append('denoise', denoise.toString());
-        
-        const res = await fetch('http://localhost:8000/api/v1/preprocess/preview', {
-          method: 'POST',
-          body: formRef
-        });
-        const blob = await res.blob();
-        setPreviewRef(URL.createObjectURL(blob));
-      }
-
-      const formSrc = new FormData();
-      if (srcImg) {
-        formSrc.append('image', srcImg);
-        formSrc.append('resize_scale', resizeScale.toString());
-        formSrc.append('percentile_norm', percentileNorm.toString());
-        formSrc.append('clahe', clahe.toString());
-        formSrc.append('denoise', denoise.toString());
-
-        const res2 = await fetch('http://localhost:8000/api/v1/preprocess/preview', {
-          method: 'POST',
-          body: formSrc
-        });
-        const blob2 = await res2.blob();
-        setPreviewSrc(URL.createObjectURL(blob2));
-      }
-    } catch (e) {
-      console.error(e);
+    if (!refImg && !srcImg) {
+      setErrorMessage("Please select at least one image to preview preprocessing.");
+      return;
     }
-    setIsProcessing(false);
+    setIsProcessing(true);
+    setErrorMessage(null);
+    setStatusMessage("Running Phase 1 preprocessing transformations...");
+
+    try {
+      const config = {
+        resize_scale: resizeScale,
+        percentile_norm: percentileNorm,
+        clahe,
+        denoise
+      };
+
+      if (refImg) {
+        const blobRef = await LunaraClient.previewPreprocessing(refImg, config);
+        setPreviewRef(URL.createObjectURL(blobRef));
+      }
+
+      if (srcImg) {
+        const blobSrc = await LunaraClient.previewPreprocessing(srcImg, config);
+        setPreviewSrc(URL.createObjectURL(blobSrc));
+      }
+
+      setStatusMessage("Phase 1 enhancement complete. Ready for co-registration.");
+    } catch (e: any) {
+      console.error("Preview preprocessing error:", e);
+      setErrorMessage(e.message || "Failed to execute preprocessing preview. Check backend connection.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -119,6 +144,20 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
           </div>
         </div>
 
+        {statusMessage && (
+          <div className="mt-4 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <span>{statusMessage}</span>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div className="mt-4 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         <button
           onClick={handlePreview}
           disabled={isProcessing || (!refImg && !srcImg)}
@@ -134,13 +173,17 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
         <div className="bg-white border border-slate-200 rounded-lg p-2 flex flex-col shadow-sm">
            <div className="text-xs font-mono text-slate-500 mb-2 px-2 py-1 bg-slate-50 rounded flex justify-between border border-slate-100">
               <span>REFERENCE PREVIEW</span>
-              {previewRef && <span className="text-blue-600 font-bold">PROCESSED</span>}
+              {previewRef ? (
+                <span className="text-emerald-700 font-bold">PROCESSED (PHASE 1)</span>
+              ) : rawRefUrl ? (
+                <span className="text-slate-600 font-medium">RAW INPUT</span>
+              ) : null}
            </div>
-           <div className="flex-1 bg-slate-50 rounded flex items-center justify-center overflow-hidden border border-slate-200">
+           <div className="flex-1 bg-slate-900 rounded flex items-center justify-center overflow-hidden border border-slate-200 relative min-h-[300px]">
              {previewRef ? (
                <img src={previewRef} alt="Reference Preview" className="w-full h-full object-contain" />
-             ) : refImg ? (
-               <img src={URL.createObjectURL(refImg)} alt="Reference Raw" className="w-full h-full object-contain opacity-50 grayscale" />
+             ) : rawRefUrl ? (
+               <img src={rawRefUrl} alt="Reference Raw" className="w-full h-full object-contain" />
              ) : (
                <div className="text-slate-400 text-sm flex flex-col items-center gap-2">
                  <Upload className="w-6 h-6 opacity-50" />
@@ -153,13 +196,17 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
         <div className="bg-white border border-slate-200 rounded-lg p-2 flex flex-col shadow-sm">
            <div className="text-xs font-mono text-slate-500 mb-2 px-2 py-1 bg-slate-50 rounded flex justify-between border border-slate-100">
               <span>SOURCE PREVIEW</span>
-              {previewSrc && <span className="text-blue-600 font-bold">PROCESSED</span>}
+              {previewSrc ? (
+                <span className="text-emerald-700 font-bold">PROCESSED (PHASE 1)</span>
+              ) : rawSrcUrl ? (
+                <span className="text-slate-600 font-medium">RAW INPUT</span>
+              ) : null}
            </div>
-           <div className="flex-1 bg-slate-50 rounded flex items-center justify-center overflow-hidden border border-slate-200">
+           <div className="flex-1 bg-slate-900 rounded flex items-center justify-center overflow-hidden border border-slate-200 relative min-h-[300px]">
              {previewSrc ? (
                <img src={previewSrc} alt="Source Preview" className="w-full h-full object-contain" />
-             ) : srcImg ? (
-               <img src={URL.createObjectURL(srcImg)} alt="Source Raw" className="w-full h-full object-contain opacity-50 grayscale" />
+             ) : rawSrcUrl ? (
+               <img src={rawSrcUrl} alt="Source Raw" className="w-full h-full object-contain" />
              ) : (
                <div className="text-slate-400 text-sm flex flex-col items-center gap-2">
                  <Upload className="w-6 h-6 opacity-50" />

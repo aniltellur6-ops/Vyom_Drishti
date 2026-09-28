@@ -64,23 +64,52 @@ class LunaraOrchestrator:
         # or have the matcher convert cv2 to tensor.
         
         try:
-            match_result = matcher.match(prep_a, prep_b) # Matchers handle np arrays now
+            match_result = matcher.match(prep_a, prep_b)
         except Exception as e:
             print(f"Matcher {selected_method} failed: {e}")
-            return AlgorithmResult(
-                status="error",
-                method_used=selected_method,
-                registered_image=None,
-                match_result=None,
-                geo_result=None,
-                refined_matrix=None,
-                metrics={},
-                preprocessing_metadata=processed_pair.preprocessing_metadata,
-                failure_reason=str(e)
-            )
-            
+            if selected_method != "lightglue" and "lightglue" in self.matchers:
+                print("Auto-falling back to LightGlue model...")
+                selected_method = "lightglue"
+                matcher = self.matchers.get("lightglue")
+                try:
+                    match_result = matcher.match(prep_a, prep_b)
+                except Exception as fb_err:
+                    return AlgorithmResult(
+                        status="error",
+                        method_used=selected_method,
+                        registered_image=None,
+                        match_result=None,
+                        geo_result=None,
+                        refined_matrix=None,
+                        metrics={},
+                        preprocessing_metadata=processed_pair.preprocessing_metadata,
+                        failure_reason=str(fb_err)
+                    )
+            else:
+                return AlgorithmResult(
+                    status="error",
+                    method_used=selected_method,
+                    registered_image=None,
+                    match_result=None,
+                    geo_result=None,
+                    refined_matrix=None,
+                    metrics={},
+                    preprocessing_metadata=processed_pair.preprocessing_metadata,
+                    failure_reason=str(e)
+                )
+
         match_time = time.time() - match_start
-        
+
+        if match_result.num_matches < 4:
+            if selected_method != "lightglue" and "lightglue" in self.matchers:
+                print(f"Matcher {selected_method} found only {match_result.num_matches} matches. Auto-falling back to LightGlue...")
+                selected_method = "lightglue"
+                matcher = self.matchers.get("lightglue")
+                try:
+                    match_result = matcher.match(prep_a, prep_b)
+                except Exception as fb_err:
+                    print(f"Fallback LightGlue also failed: {fb_err}")
+
         if match_result.num_matches < 4:
             return AlgorithmResult(
                 status="error",

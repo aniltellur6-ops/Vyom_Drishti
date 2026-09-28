@@ -52,7 +52,9 @@ export default function App() {
       const condition = await LunaraClient.analyzeImages(refFile, srcFile);
       setAnalysisResult(condition);
       
-      const methodToRun = selectedMethod === 'auto' ? condition.recommended_method : selectedMethod;
+      const methodToRun = selectedMethod === 'auto' 
+        ? (condition.recommended_method_key || condition.recommended_method || 'lightglue') 
+        : selectedMethod;
       const prepToRun = (selectedPreprocessing === 'AUTO' || !selectedPreprocessing)
         ? (condition.recommended_preprocessing || 'P6_ILLUMINATION_CLAHE')
         : selectedPreprocessing;

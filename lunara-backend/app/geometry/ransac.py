@@ -22,6 +22,13 @@ class GeometricVerifier:
         
         if model == "homography":
             M, mask = cv2.findHomography(src_pts, dst_pts, cv2.USAC_MAGSAC, 5.0)
+            if M is None or (mask is not None and np.sum(mask) < 4):
+                # Fallback to robust similarity affine
+                aff_M, aff_mask = cv2.estimateAffinePartial2D(src_pts, dst_pts, method=cv2.RANSAC, ransacReprojThreshold=4.0)
+                if aff_M is not None and (aff_mask is not None and np.sum(aff_mask) >= 3):
+                    M = np.vstack([aff_M, [0, 0, 1]])
+                    mask = aff_mask
+                    model = "affine"
         elif model == "affine":
             M, mask = cv2.estimateAffinePartial2D(src_pts, dst_pts, method=cv2.RANSAC, ransacReprojThreshold=3.0)
             if M is not None:
@@ -30,7 +37,7 @@ class GeometricVerifier:
         else:
             raise ValueError(f"Unknown transformation model: {model}")
             
-        if M is None:
+        if M is None or mask is None:
             return None
             
         inlier_mask = mask.ravel().astype(bool)

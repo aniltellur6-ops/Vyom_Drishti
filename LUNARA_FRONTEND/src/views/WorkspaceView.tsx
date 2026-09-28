@@ -161,7 +161,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   <option value="P1_ROBUST_NORMALIZED">P1 - Robust Normalized</option>
                   <option value="P2_ILLUMINATION_CORRECTED">P2 - Illumination Corrected</option>
                   <option value="P3_GRADIENT">P3 - Gradient Magnitude</option>
-                  <option value="P4_HYBRID">HYBRID (NORM + GRADIENT + ILLU + CLAHE)</option>
+                  <option value="P4_HYBRID">P4 - HYBRID (NORM + GRADIENT + ILLU + CLAHE)</option>
                   <option value="P5_CLAHE">P5 - CLAHE Enhanced</option>
                   <option value="P6_ILLUMINATION_CLAHE">P6 - Illumination + CLAHE</option>
                 </select>

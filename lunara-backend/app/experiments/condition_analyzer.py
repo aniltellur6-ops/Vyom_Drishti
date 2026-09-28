@@ -46,14 +46,13 @@ class ConditionAnalyzer:
         if ref_img is None or src_img is None:
             raise ValueError("Could not read one or both images for analysis.")
 
-        ref_gray = cv2.cvtColor(ref_img, cv2.COLOR_BGR2GRAY) if len(ref_img.shape) == 3 else ref_img
-        src_gray = cv2.cvtColor(src_img, cv2.COLOR_BGR2GRAY) if len(src_img.shape) == 3 else src_img
-
-        # Resolution Difference
-        ref_area = ref_img.shape[0] * ref_img.shape[1]
-        src_area = src_img.shape[0] * src_img.shape[1]
+        # Compute resolution difference on full dimensions
+        ref_h, ref_w = ref_img.shape[:2]
+        src_h, src_w = src_img.shape[:2]
+        ref_area = ref_h * ref_w
+        src_area = src_h * src_w
         area_ratio = max(ref_area, src_area) / max(min(ref_area, src_area), 1)
-        
+
         if area_ratio > 2.0:
             res_diff = "HIGH"
         elif area_ratio > 1.2:
@@ -63,9 +62,23 @@ class ConditionAnalyzer:
             
         res_str = f"{area_ratio:.1f}x"
 
+        # Downsample for lightning-fast analysis if max dimension exceeds 1024
+        def quick_scale(img, max_dim=1024):
+            h, w = img.shape[:2]
+            if max(h, w) > max_dim:
+                scale = max_dim / max(h, w)
+                return cv2.resize(img, (int(w * scale), int(h * scale)), interpolation=cv2.INTER_AREA)
+            return img
+
+        ref_analysis = quick_scale(ref_img)
+        src_analysis = quick_scale(src_img)
+
+        ref_gray = cv2.cvtColor(ref_analysis, cv2.COLOR_BGR2GRAY) if len(ref_analysis.shape) == 3 else ref_analysis
+        src_gray = cv2.cvtColor(src_analysis, cv2.COLOR_BGR2GRAY) if len(src_analysis.shape) == 3 else src_analysis
+
         # Illumination & Shadow Analysis
-        ref_ill = self._get_illumination(ref_img)
-        src_ill = self._get_illumination(src_img)
+        ref_ill = self._get_illumination(ref_gray)
+        src_ill = self._get_illumination(src_gray)
         ill_diff_val = abs(ref_ill - src_ill)
 
         if ill_diff_val > 55:
@@ -86,8 +99,8 @@ class ConditionAnalyzer:
         min_contrast = min(ref_contrast, src_contrast)
 
         # Texture Variance (Laplacian variance)
-        ref_tex = self._get_texture_variance(ref_img)
-        src_tex = self._get_texture_variance(src_img)
+        ref_tex = self._get_texture_variance(ref_gray)
+        src_tex = self._get_texture_variance(src_gray)
         avg_tex = (ref_tex + src_tex) / 2.0
 
         if avg_tex < 300:
@@ -98,8 +111,8 @@ class ConditionAnalyzer:
             texture = "MODERATE"
 
         # Feature Density (FAST keypoints)
-        ref_feat = self._get_feature_density(ref_img)
-        src_feat = self._get_feature_density(src_img)
+        ref_feat = self._get_feature_density(ref_gray)
+        src_feat = self._get_feature_density(src_gray)
         avg_feat = (ref_feat + src_feat) / 2.0
 
         if avg_feat < 500:
@@ -134,19 +147,23 @@ class ConditionAnalyzer:
         # Dynamic Matching Method Recommendation
         difficulty = "MEDIUM"
         if texture == "LOW" or feat_den == "LOW":
-            method = "LoFTR"
+            method_key = "loftr"
+            method_display = "LoFTR"
             method_reason = "Low crater texture/sparse features detected. LoFTR semi-dense transformer resolves correspondences across smooth lunar mare without explicit keypoint detection."
             difficulty = "HARD"
         elif res_diff == "HIGH":
-            method = "SuperPoint + LightGlue"
+            method_key = "lightglue"
+            method_display = "SuperPoint + LightGlue"
             method_reason = f"Significant scale/resolution difference ({res_str}). SuperPoint + LightGlue graph neural network achieves optimal scale invariance."
             difficulty = "HARD"
         elif ill_diff == "HIGH" or shadow_coverage > 35.0:
-            method = "RIFT2 (Phase Congruency)"
-            method_reason = "Extreme illumination angle disparity (>35% shadow shift). Log-Gabor phase congruency frequency analysis is invariant to solar illumination changes."
+            method_key = "lightglue"
+            method_display = "SuperPoint + LightGlue"
+            method_reason = f"Heavy shadow disparity ({shadow_coverage:.1f}%). SuperPoint + LightGlue coupled with illumination-homomorphic preprocessing guarantees robust keypoint matching across extreme solar incidence."
             difficulty = "HARD"
         else:
-            method = "SuperPoint + LightGlue"
+            method_key = "lightglue"
+            method_display = "SuperPoint + LightGlue"
             method_reason = "Standard lunar lighting with distinct crater landmarks; deep learned LightGlue provides high inlier precision."
             difficulty = "EASY"
 
@@ -159,7 +176,8 @@ class ConditionAnalyzer:
             "resolution_difference": res_str,
             "feature_density": feat_den,
             "overall_difficulty": difficulty,
-            "recommended_method": method,
+            "recommended_method": method_display,
+            "recommended_method_key": method_key,
             "recommended_preprocessing": recommended_prep,
             "recommended_preprocessing_name": prep_name,
             "preprocessing_reason": prep_reason,
