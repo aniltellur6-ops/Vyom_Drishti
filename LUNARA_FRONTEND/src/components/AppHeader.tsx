@@ -38,20 +38,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     // Explicitly enforce muted properties on DOM node for autoplay policy compliance
     video.defaultMuted = true;
     video.muted = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
     
     const playPromise = video.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Fallback: listen for initial user interaction to start playback if blocked by browser policy
+        // Fallback: listen for user interaction to start playback if blocked by mobile browser policy
         const startPlayback = () => {
           video.play().catch(() => {});
-          window.removeEventListener('click', startPlayback);
-          window.removeEventListener('touchstart', startPlayback);
-          window.removeEventListener('keydown', startPlayback);
+          ['click', 'touchstart', 'touchend', 'scroll'].forEach((evt) => {
+            window.removeEventListener(evt, startPlayback);
+          });
         };
-        window.addEventListener('click', startPlayback, { once: true });
-        window.addEventListener('touchstart', startPlayback, { once: true });
-        window.addEventListener('keydown', startPlayback, { once: true });
+        ['click', 'touchstart', 'touchend', 'scroll'].forEach((evt) => {
+          window.addEventListener(evt, startPlayback, { once: true, passive: true });
+        });
       });
     }
   }, []);
@@ -75,6 +77,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           playsInline
           preload="auto"
           poster="/lunar-landing-poster.jpg"
+          onCanPlay={(e) => {
+            e.currentTarget.play().catch(() => {});
+          }}
           onEnded={(e) => {
             // Unconditional manual loop restart to handle browsers that pause at loop boundary
             const v = e.currentTarget;
@@ -82,6 +87,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             v.play().catch(() => {});
           }}
         >
+          <source src="/lunar-landing-header-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
           <source src="/lunar-landing-header.mp4" type="video/mp4" />
         </video>
       </div>

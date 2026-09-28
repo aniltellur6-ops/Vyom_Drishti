@@ -398,7 +398,7 @@ export const LunaraClient = {
     try {
       const newExp: Experiment = {
         id: result.job_id,
-        name: `EXP-${new Date().toISOString().slice(0, 10).replace(/-/g, '')}-${result.job_id.slice(0, 4)}`,
+        name: `EXP-${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${result.job_id.slice(0, 4)}`,
         method: result.method_used || method,
         status: result.status === 'success' ? 'Successful' : 'Failed',
         created_at: new Date().toISOString(),

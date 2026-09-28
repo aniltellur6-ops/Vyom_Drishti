@@ -1,5 +1,227 @@
 [
   {
+    "id": "c1400f97-1766-4072-a1c4-33efb49a5095",
+    "name": "EXP-2026-0928-c140",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-28T22:40:48.109144",
+    "metrics": {
+      "inliers": 2017,
+      "inlier_ratio": 1.0,
+      "rmse": 0.0,
+      "coverage": 99.99999999801751,
+      "runtime": 1.0091485977172852,
+      "transformation": [
+        [
+          1.0,
+          1.84009696369003e-10,
+          -1.1083341178164119e-07
+        ],
+        [
+          1.859458143016468e-10,
+          1.0,
+          -2.6036943268081814e-08
+        ],
+        [
+          3.7273553384412073e-13,
+          6.134036844679088e-15,
+          1.0
+        ]
+      ]
+    },
+    "files": {
+      "registered_image": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/lunara_matches_viz.jpg",
+      "raw_reference": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/raw_ref_greetings.png",
+      "raw_moving": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/raw_src_greetings.png",
+      "preprocessed_reference": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/c1400f97-1766-4072-a1c4-33efb49a5095/prep_src.png"
+    }
+  },
+  {
+    "id": "be0079e5-277a-4fe6-9acf-5eb6b81689dc",
+    "name": "EXP-2026-0928-be00",
+    "method": "auto",
+    "status": "Successful",
+    "created_at": "2026-09-28T22:29:00.051755",
+    "metrics": {
+      "inliers": 5,
+      "inlier_ratio": 0.05434782608695652,
+      "rmse": 1.6796838053740908,
+      "coverage": 2.371916510196772,
+      "runtime": 7.120445251464844,
+      "transformation": [
+        [
+          0.9209582180056062,
+          -0.05284110233041008,
+          -827.0679605982274
+        ],
+        [
+          0.05284110233041008,
+          0.9209582180056062,
+          396.88363422313347
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "files": {
+      "registered_image": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/lunara_matches_viz.jpg",
+      "raw_reference": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/raw_ref_ref.png",
+      "raw_moving": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/raw_src_src.png",
+      "preprocessed_reference": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/be0079e5-277a-4fe6-9acf-5eb6b81689dc/prep_src.png"
+    }
+  },
+  {
+    "id": "e9de3136-50b2-4d81-8593-73aabf4014f4",
+    "name": "EXP-2026-0928-e9de",
+    "method": "auto",
+    "status": "Successful",
+    "created_at": "2026-09-28T22:28:51.358053",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.027972027972027972,
+      "rmse": 1.192231202368842,
+      "coverage": 20.16297158361692,
+      "runtime": 7.160629510879517,
+      "transformation": [
+        [
+          0.46014432890627915,
+          -0.5741179699308563,
+          9.958784913027742
+        ],
+        [
+          0.5741179699308563,
+          0.46014432890627915,
+          286.5825846693157
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "files": {
+      "registered_image": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/lunara_matches_viz.jpg",
+      "raw_reference": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/raw_ref_ref.png",
+      "raw_moving": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/raw_src_src.png",
+      "preprocessed_reference": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/e9de3136-50b2-4d81-8593-73aabf4014f4/prep_src.png"
+    }
+  },
+  {
+    "id": "0923fde6-d757-4f6a-8356-6128c7a201e1",
+    "name": "EXP-2026-0928-0923",
+    "method": "auto",
+    "status": "Failed",
+    "created_at": "2026-09-28T22:17:04.736250",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0,
+      "transformation": []
+    },
+    "files": {
+      "registered_image": "/api/v1/results/0923fde6-d757-4f6a-8356-6128c7a201e1/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/0923fde6-d757-4f6a-8356-6128c7a201e1/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/0923fde6-d757-4f6a-8356-6128c7a201e1/lunara_matches_viz.jpg",
+      "preprocessed_reference": "/api/v1/results/0923fde6-d757-4f6a-8356-6128c7a201e1/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/0923fde6-d757-4f6a-8356-6128c7a201e1/prep_src.png"
+    }
+  },
+  {
+    "id": "3a3614a8-7fe3-4793-ad87-37b22a8c7eee",
+    "name": "EXP-2026-0928-3a36",
+    "method": "auto",
+    "status": "Successful",
+    "created_at": "2026-09-28T22:10:58.533526",
+    "metrics": {
+      "inliers": 68,
+      "inlier_ratio": 0.8607594936708861,
+      "rmse": 0.816177316260678,
+      "coverage": 93.44448494210036,
+      "runtime": 22.536208629608154,
+      "transformation": [
+        [
+          1.0000004768371582,
+          -1.7187176126753911e-07,
+          -10.000033378601074
+        ],
+        [
+          3.9668884710408747e-07,
+          0.9999997615814209,
+          -10.000031471252441
+        ],
+        [
+          1.8171704141423106e-09,
+          -1.6959376125669223e-09,
+          1.0
+        ]
+      ]
+    },
+    "files": {
+      "registered_image": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/lunara_matches_viz.jpg",
+      "raw_reference": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/raw_ref_test_ref.png",
+      "raw_moving": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/raw_src_test_src.png",
+      "preprocessed_reference": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/3a3614a8-7fe3-4793-ad87-37b22a8c7eee/prep_src.png"
+    }
+  },
+  {
+    "id": "2f172095-ad21-4dd0-b291-cd2c040b450a",
+    "name": "EXP-2026-0928-2f17",
+    "method": "RIFT2 (Phase Congruency)",
+    "status": "Successful",
+    "created_at": "2026-09-28T21:27:31.981755",
+    "metrics": {
+      "inliers": 1395,
+      "inlier_ratio": 0.9680777238029147,
+      "rmse": 1.976286740756039,
+      "coverage": 93.43885723217937,
+      "runtime": 23.08888292312622,
+      "transformation": [
+        [
+          0.9851983785629272,
+          0.2309170514345169,
+          39.92715072631836
+        ],
+        [
+          -0.09098422527313232,
+          0.9242609739303589,
+          106.15921020507812
+        ],
+        [
+          3.52358038071543e-05,
+          8.801099465927109e-05,
+          1.0
+        ]
+      ]
+    },
+    "files": {
+      "registered_image": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/lunara_registered_moving.jpg",
+      "overlay_image": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/lunara_registration_overlay.jpg",
+      "matches_viz": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/lunara_matches_viz.jpg",
+      "raw_reference": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/raw_ref_BM_IMG reference.jpeg",
+      "raw_moving": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/raw_src_BM IMG moving.jpeg",
+      "preprocessed_reference": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/prep_ref.png",
+      "preprocessed_moving": "/api/v1/results/2f172095-ad21-4dd0-b291-cd2c040b450a/prep_src.png"
+    }
+  },
+  {
     "id": "269dd615-8189-4882-b0b3-432dd4701806",
     "name": "EXP-2026-0928-269d",
     "method": "auto",

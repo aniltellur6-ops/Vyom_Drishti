@@ -113,6 +113,7 @@ async def analyze_condition(
 
 
 @app.get("/api/v1/experiments")
+@app.get("/experiments")
 async def list_experiments():
     """Returns past experiments from the registry."""
     return registry.get_experiments()
