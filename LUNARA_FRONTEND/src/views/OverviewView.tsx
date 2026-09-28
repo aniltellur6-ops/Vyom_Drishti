@@ -45,6 +45,17 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
     LunaraClient.getExperiments()
       .then(setRecentExperiments)
       .catch(e => console.warn("Experiments update standby:", e));
+
+    const handleNewExperiment = () => {
+      LunaraClient.getExperiments()
+        .then(setRecentExperiments)
+        .catch(e => console.warn("Experiments update standby:", e));
+    };
+
+    window.addEventListener('lunara_experiment_added', handleNewExperiment);
+    return () => {
+      window.removeEventListener('lunara_experiment_added', handleNewExperiment);
+    };
   }, []);
 
   const totalExperiments = recentExperiments.length;

@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SAMPLE_BENCHMARKS, LUNARA_ASSETS } from '../data/sampleData';
 import { BenchmarkMethod } from '../types';
-import { LunaraClient } from '../api/client';
+import { LunaraClient, Experiment } from '../api/client';
 import {
   BarChart3,
   CheckCircle2,
@@ -15,8 +15,25 @@ import {
 
 export const ComparisonView: React.FC = () => {
   // Pull live experiment ledger records to compute dynamic empirical averages
-  const cachedExperiments = useMemo(() => {
-    return LunaraClient.getCachedExperiments();
+  const [cachedExperiments, setCachedExperiments] = useState<Experiment[]>(() => 
+    LunaraClient.getCachedExperiments()
+  );
+
+  useEffect(() => {
+    LunaraClient.getExperiments()
+      .then(setCachedExperiments)
+      .catch(e => console.warn("Comparison experiments load standby:", e));
+
+    const handleNewExperiment = () => {
+      LunaraClient.getExperiments()
+        .then(setCachedExperiments)
+        .catch(e => console.warn("Comparison experiments refresh standby:", e));
+    };
+
+    window.addEventListener('lunara_experiment_added', handleNewExperiment);
+    return () => {
+      window.removeEventListener('lunara_experiment_added', handleNewExperiment);
+    };
   }, []);
 
   // Compute live empirical running averages if user has executed experiments

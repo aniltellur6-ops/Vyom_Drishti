@@ -52,6 +52,15 @@ export const ExperimentsView: React.FC = () => {
 
   useEffect(() => {
     loadExperiments(false);
+
+    const handleNewExperiment = () => {
+      loadExperiments(false);
+    };
+
+    window.addEventListener('lunara_experiment_added', handleNewExperiment);
+    return () => {
+      window.removeEventListener('lunara_experiment_added', handleNewExperiment);
+    };
   }, []);
 
   const handleResetCache = () => {

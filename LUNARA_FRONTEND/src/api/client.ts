@@ -1,11 +1,14 @@
 // src/api/client.ts
 import fallbackExperimentsData from '../data/fallbackExperiments.json';
 
-const FALLBACK_URL = "http://localhost:8000";
+const LOCAL_URL_IPV4 = "http://127.0.0.1:8000";
+const LOCAL_URL_NAME = "http://localhost:8000";
+const FALLBACK_URL = LOCAL_URL_IPV4;
+
 let CACHED_SERVER_URL = FALLBACK_URL;
 let LAST_VERIFIED_URL = "";
 let LAST_VERIFIED_TIME = 0;
-const URL_CACHE_TTL_MS = 15000; // 15 seconds
+const URL_CACHE_TTL_MS = 20000; // 20 seconds cache for verified URL
 
 export interface SystemStatus {
   status: string;
@@ -85,7 +88,7 @@ const STORAGE_KEY_LAST_SYNC = 'lunara_experiments_last_sync';
 /**
  * Check if a candidate backend URL is responsive and healthy
  */
-async function checkUrlHealth(url: string, timeoutMs: number = 2200): Promise<boolean> {
+async function checkUrlHealth(url: string, timeoutMs: number = 2500): Promise<boolean> {
   if (!url) return false;
   const cleanUrl = url.replace(/\/$/, '');
   try {
@@ -103,6 +106,67 @@ async function checkUrlHealth(url: string, timeoutMs: number = 2200): Promise<bo
   }
 }
 
+/**
+ * Intelligent deduplicating 3-way merge between:
+ * 1) Incoming live server records
+ * 2) Current localStorage records
+ * 3) Bundled static fallback archive
+ * Guarantees zero lost records across refreshes or cache wipes!
+ */
+function mergeExperimentLists(
+  primary: Experiment[],
+  secondary: Experiment[],
+  tertiary: Experiment[] = []
+): Experiment[] {
+  const map = new Map<string, Experiment>();
+
+  // 1. Add bundled tertiary historical data
+  tertiary.forEach(exp => {
+    if (exp && exp.id) map.set(exp.id, exp);
+  });
+
+  // 2. Add local storage records (preserves local runs)
+  secondary.forEach(exp => {
+    if (exp && exp.id) {
+      const existing = map.get(exp.id);
+      map.set(exp.id, {
+        ...existing,
+        ...exp,
+        files: exp.files || existing?.files,
+        metrics: {
+          ...existing?.metrics,
+          ...exp.metrics,
+          transformation: exp.metrics?.transformation || existing?.metrics?.transformation
+        }
+      });
+    }
+  });
+
+  // 3. Add live server records (highest authority for updated metrics)
+  primary.forEach(exp => {
+    if (exp && exp.id) {
+      const existing = map.get(exp.id);
+      map.set(exp.id, {
+        ...existing,
+        ...exp,
+        files: exp.files || existing?.files,
+        metrics: {
+          ...existing?.metrics,
+          ...exp.metrics,
+          transformation: exp.metrics?.transformation || existing?.metrics?.transformation
+        }
+      });
+    }
+  });
+
+  // Convert to array and sort descending by created_at
+  return Array.from(map.values()).sort((a, b) => {
+    const timeA = new Date(a.created_at || 0).getTime();
+    const timeB = new Date(b.created_at || 0).getTime();
+    return timeB - timeA;
+  });
+}
+
 export const LunaraClient = {
   /**
    * Clears cached server URL so the next call performs full discovery
@@ -114,6 +178,8 @@ export const LunaraClient = {
 
   /**
    * Intelligently resolves the active backend base URL (/api/v1)
+   * Tries local IPv4 127.0.0.1:8000 first on local host, then localhost:8000,
+   * then remote Cloudflare tunnel from Vercel.
    */
   getLiveUrl: async (forceRefresh: boolean = false): Promise<string> => {
     const now = Date.now();
@@ -128,18 +194,26 @@ export const LunaraClient = {
       window.location.hostname === '[::1]'
     );
 
-    // If running in local environment, check localhost:8000 first
+    // 1. If running on local machine, check local endpoints first
     if (isLocalhost) {
-      const localOk = await checkUrlHealth(FALLBACK_URL, 1200);
-      if (localOk) {
-        CACHED_SERVER_URL = FALLBACK_URL;
-        LAST_VERIFIED_URL = FALLBACK_URL;
+      const localIpv4Ok = await checkUrlHealth(LOCAL_URL_IPV4, 2000);
+      if (localIpv4Ok) {
+        CACHED_SERVER_URL = LOCAL_URL_IPV4;
+        LAST_VERIFIED_URL = LOCAL_URL_IPV4;
         LAST_VERIFIED_TIME = now;
-        return `${FALLBACK_URL}/api/v1`;
+        return `${LOCAL_URL_IPV4}/api/v1`;
+      }
+
+      const localNameOk = await checkUrlHealth(LOCAL_URL_NAME, 2000);
+      if (localNameOk) {
+        CACHED_SERVER_URL = LOCAL_URL_NAME;
+        LAST_VERIFIED_URL = LOCAL_URL_NAME;
+        LAST_VERIFIED_TIME = now;
+        return `${LOCAL_URL_NAME}/api/v1`;
       }
     }
 
-    // Try fetching the dynamic Cloudflare/tunnel URL registered in Vercel/Redis
+    // 2. Query dynamic Cloudflare tunnel registered in Vercel
     try {
       let res = await fetch(`/api/url?_t=${Date.now()}`, { cache: 'no-store' }).catch(() => null);
       if (!res || !res.ok) {
@@ -150,7 +224,7 @@ export const LunaraClient = {
         const data = await res.json();
         if (data.backendUrl) {
           const candidateUrl = data.backendUrl.replace(/\/$/, '');
-          const isHealthy = await checkUrlHealth(candidateUrl, 2500);
+          const isHealthy = await checkUrlHealth(candidateUrl, 3000);
           if (isHealthy) {
             CACHED_SERVER_URL = candidateUrl;
             LAST_VERIFIED_URL = candidateUrl;
@@ -164,8 +238,8 @@ export const LunaraClient = {
       console.warn("Failed to query dynamic tunnel URL:", e);
     }
 
-    // If remote tunnel is not healthy or unreachable, try localhost as fallback
-    const localOk = await checkUrlHealth(FALLBACK_URL, 1200);
+    // 3. Fallback to local IPv4 check
+    const localOk = await checkUrlHealth(FALLBACK_URL, 1500);
     if (localOk) {
       CACHED_SERVER_URL = FALLBACK_URL;
       LAST_VERIFIED_URL = FALLBACK_URL;
@@ -173,7 +247,7 @@ export const LunaraClient = {
       return `${FALLBACK_URL}/api/v1`;
     }
 
-    // Default fallback
+    // 4. Default fallback
     CACHED_SERVER_URL = FALLBACK_URL;
     return `${FALLBACK_URL}/api/v1`;
   },
@@ -185,30 +259,53 @@ export const LunaraClient = {
         headers: { 'ngrok-skip-browser-warning': 'true' },
         cache: 'no-store'
       });
-      if (!res.ok) throw new Error("Failed to fetch system status");
+      if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to fetch system status`);
       return res.json();
     } catch (err) {
       LunaraClient.invalidateLiveUrl();
-      throw err;
+      // Try once more with fresh URL resolution
+      const freshBase = await LunaraClient.getLiveUrl(true);
+      const res2 = await fetch(`${freshBase}/system/status?_t=${Date.now()}`, {
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        cache: 'no-store'
+      });
+      if (!res2.ok) throw err;
+      return res2.json();
     }
   },
 
   analyzeImages: async (refFile: File, srcFile: File): Promise<ImageCondition> => {
-    const baseUrl = await LunaraClient.getLiveUrl();
-    const formData = new FormData();
-    formData.append("reference_img", refFile);
-    formData.append("source_img", srcFile);
+    const makeRequest = async (baseUrl: string) => {
+      const formData = new FormData();
+      formData.append("reference_img", refFile);
+      formData.append("source_img", srcFile);
 
-    const res = await fetch(`${baseUrl}/analyze`, {
-      method: "POST",
-      headers: { 'ngrok-skip-browser-warning': 'true' },
-      body: formData,
-    });
-    if (!res.ok) {
+      return fetch(`${baseUrl}/analyze`, {
+        method: "POST",
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        body: formData,
+      });
+    };
+
+    try {
+      const baseUrl = await LunaraClient.getLiveUrl();
+      const res = await makeRequest(baseUrl);
+      if (!res.ok) {
+        const errorDetail = await res.json().catch(() => ({ detail: `HTTP ${res.status}` }));
+        throw new Error(errorDetail.detail || "Analysis failed on backend");
+      }
+      return res.json();
+    } catch (err: any) {
+      console.warn("First analysis attempt failed, retrying with fresh live URL...", err);
       LunaraClient.invalidateLiveUrl();
-      throw new Error("Failed to analyze images");
+      const freshBase = await LunaraClient.getLiveUrl(true);
+      const res2 = await makeRequest(freshBase);
+      if (!res2.ok) {
+        const errorDetail = await res2.json().catch(() => ({ detail: `HTTP ${res2.status}` }));
+        throw new Error(errorDetail.detail || err.message || "Failed to analyze image conditions");
+      }
+      return res2.json();
     }
-    return res.json();
   },
 
   runMatching: async (
@@ -219,29 +316,41 @@ export const LunaraClient = {
     referenceSensor: string = "AUTO",
     movingSensor: string = "AUTO"
   ): Promise<MatchingResult> => {
-    const baseUrl = await LunaraClient.getLiveUrl();
-    const formData = new FormData();
-    formData.append("reference_img", refFile);
-    formData.append("source_img", srcFile);
-    formData.append("requested_method", method);
-    formData.append("preprocessing_method", preprocessingMethod);
-    formData.append("reference_sensor", referenceSensor);
-    formData.append("moving_sensor", movingSensor);
+    const makeRequest = async (baseUrl: string) => {
+      const formData = new FormData();
+      formData.append("reference_img", refFile);
+      formData.append("source_img", srcFile);
+      formData.append("requested_method", method);
+      formData.append("preprocessing_method", preprocessingMethod);
+      formData.append("reference_sensor", referenceSensor);
+      formData.append("moving_sensor", movingSensor);
 
-    const res = await fetch(`${baseUrl}/match`, {
-      method: "POST",
-      headers: { 'ngrok-skip-browser-warning': 'true' },
-      body: formData,
-    });
+      return fetch(`${baseUrl}/match`, {
+        method: "POST",
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        body: formData,
+      });
+    };
+
+    let res: Response;
+    try {
+      const baseUrl = await LunaraClient.getLiveUrl();
+      res = await makeRequest(baseUrl);
+    } catch (networkErr: any) {
+      console.warn("Matching request hit network drop. Invalidate URL and retry...", networkErr);
+      LunaraClient.invalidateLiveUrl();
+      const freshBase = await LunaraClient.getLiveUrl(true);
+      res = await makeRequest(freshBase);
+    }
     
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
-      throw new Error(err.detail || "Failed to run matching pipeline");
+      throw new Error(err.detail || `Matching pipeline failed with HTTP status ${res.status}`);
     }
 
     const result: MatchingResult = await res.json();
 
-    // Optimistically record the new experiment in local cache so ledger shows it immediately
+    // Optimistically record the new experiment with full file provenance
     try {
       const newExp: Experiment = {
         id: result.job_id,
@@ -255,13 +364,19 @@ export const LunaraClient = {
           rmse: result.metrics.rmse,
           coverage: result.metrics.coverage,
           runtime: result.metrics.runtime,
+          transformation: result.metrics.transformation,
         },
+        files: result.files,
       };
 
       const existing = LunaraClient.getCachedExperiments();
-      const updated = [newExp, ...existing.filter(e => e.id !== newExp.id)];
-      localStorage.setItem(STORAGE_KEY_EXPERIMENTS, JSON.stringify(updated));
-      localStorage.setItem(STORAGE_KEY_LAST_SYNC, Date.now().toString());
+      const merged = mergeExperimentLists([newExp], existing, fallbackExperimentsData as Experiment[]);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(STORAGE_KEY_EXPERIMENTS, JSON.stringify(merged));
+        localStorage.setItem(STORAGE_KEY_LAST_SYNC, Date.now().toString());
+        // Broadcast custom event so ExperimentsView updates immediately
+        window.dispatchEvent(new CustomEvent('lunara_experiment_added', { detail: newExp }));
+      }
     } catch (e) {
       console.warn("Could not cache new experiment locally:", e);
     }
@@ -273,27 +388,33 @@ export const LunaraClient = {
    * Synchronously returns cached or bundled experiment records for instant hydration
    */
   getCachedExperiments: (): Experiment[] => {
+    const fallbackList = (fallbackExperimentsData || []) as Experiment[];
     if (typeof window === 'undefined') {
-      return fallbackExperimentsData as Experiment[];
+      return fallbackList;
     }
     try {
       const cached = localStorage.getItem(STORAGE_KEY_EXPERIMENTS);
       if (cached) {
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          // Merge with fallback to ensure bundled historical records are never missing
+          return mergeExperimentLists(parsed, [], fallbackList);
         }
       }
     } catch (e) {
       console.warn("Failed reading cached experiments:", e);
     }
-    return fallbackExperimentsData as Experiment[];
+    return fallbackList;
   },
 
   /**
-   * Fetches experiments from the backend with automatic caching & fallback
+   * Fetches experiments from the backend with deduplicating 3-way merge
+   * NEVER drops historical records or newly created experiments!
    */
   getExperiments: async (forceRefresh: boolean = false): Promise<Experiment[]> => {
+    const cachedLocal = LunaraClient.getCachedExperiments();
+    const fallbackList = (fallbackExperimentsData || []) as Experiment[];
+
     // 1. Try fetching from live backend
     try {
       const baseUrl = await LunaraClient.getLiveUrl(forceRefresh);
@@ -302,17 +423,19 @@ export const LunaraClient = {
         cache: 'no-store'
       });
       if (res.ok) {
-        const data: Experiment[] = await res.json();
-        if (Array.isArray(data) && data.length > 0) {
+        const serverData: Experiment[] = await res.json();
+        if (Array.isArray(serverData)) {
+          // Merge server data with local cache and fallback
+          const merged = mergeExperimentLists(serverData, cachedLocal, fallbackList);
           if (typeof window !== 'undefined') {
             try {
-              localStorage.setItem(STORAGE_KEY_EXPERIMENTS, JSON.stringify(data));
+              localStorage.setItem(STORAGE_KEY_EXPERIMENTS, JSON.stringify(merged));
               localStorage.setItem(STORAGE_KEY_LAST_SYNC, Date.now().toString());
             } catch (e) {
               console.warn("Could not persist experiments to localStorage:", e);
             }
           }
-          return data;
+          return merged;
         }
       }
     } catch (e) {
@@ -320,8 +443,8 @@ export const LunaraClient = {
       LunaraClient.invalidateLiveUrl();
     }
 
-    // 2. Fallback to localStorage or bundled experiments
-    return LunaraClient.getCachedExperiments();
+    // 2. Return merged cached records
+    return cachedLocal;
   },
 
   /**
@@ -349,7 +472,17 @@ export const LunaraClient = {
     };
   },
 
-  getResultUrl: (path: string): string => {
-    return `${CACHED_SERVER_URL}${path}`;
+  /**
+   * Normalizes image and artifact URLs so both relative and absolute paths load cleanly
+   */
+  getResultUrl: (path?: string): string => {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+    const base = CACHED_SERVER_URL || FALLBACK_URL;
+    const cleanBase = base.replace(/\/$/, '');
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    return `${cleanBase}${cleanPath}`;
   }
 };

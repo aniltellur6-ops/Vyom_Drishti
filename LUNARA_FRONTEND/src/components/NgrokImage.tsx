@@ -8,16 +8,33 @@ export const NgrokImage = ({ src, alt, className }: { src: string; alt: string; 
   useEffect(() => {
     if (!src) return;
     setHasError(false);
+    let objectUrl = '';
+    let isCancelled = false;
+
     fetch(src, { headers: { 'ngrok-skip-browser-warning': 'true' } })
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         return res.blob();
       })
-      .then((blob) => setImgSrc(URL.createObjectURL(blob)))
+      .then((blob) => {
+        if (!isCancelled) {
+          objectUrl = URL.createObjectURL(blob);
+          setImgSrc(objectUrl);
+        }
+      })
       .catch((err) => {
-        console.warn('NgrokImage load warning:', err);
-        setHasError(true);
+        if (!isCancelled) {
+          console.warn('NgrokImage load warning:', err);
+          setHasError(true);
+        }
       });
+
+    return () => {
+      isCancelled = true;
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
+    };
   }, [src]);
 
   if (hasError) {
