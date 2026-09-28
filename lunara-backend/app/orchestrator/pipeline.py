@@ -127,15 +127,35 @@ class LunaraOrchestrator:
         valid_mask = self.match_filter.filter_matches(match_result)
         # Filter matches (just identity for now)
         
-        # RANSAC Transformation Estimation
+        # RANSAC Transformation Estimation (Two-stage Homography -> Affine Fallback)
         geo_result = self.verifier.verify(
             match_result.keypoints_a,
             match_result.keypoints_b,
             match_result.matches,
             model="homography"
         )
-        
-        if not geo_result or geo_result.num_inliers < 8:
+        used_model = "homography"
+        is_valid = False
+
+        if geo_result and geo_result.num_inliers >= 4:
+            is_valid = self.spatial_validator.validate(geo_result.transformation_matrix, model="homography")
+
+        # If homography failed, produced < 4 inliers, or produced a degenerate reflection matrix, fallback to Affine
+        if not is_valid or not geo_result or geo_result.num_inliers < 4:
+            print("Homography degenerated or < 4 inliers. Attempting robust similarity Affine fallback...")
+            geo_result_aff = self.verifier.verify(
+                match_result.keypoints_a,
+                match_result.keypoints_b,
+                match_result.matches,
+                model="affine"
+            )
+            if geo_result_aff and geo_result_aff.num_inliers >= 3:
+                if self.spatial_validator.validate(geo_result_aff.transformation_matrix, model="affine"):
+                    geo_result = geo_result_aff
+                    used_model = "affine"
+                    is_valid = True
+
+        if not is_valid or not geo_result or geo_result.num_inliers < 3:
             return AlgorithmResult(
                 status="error",
                 method_used=selected_method,
@@ -145,43 +165,30 @@ class LunaraOrchestrator:
                 refined_matrix=None,
                 metrics={},
                 preprocessing_metadata=processed_pair.preprocessing_metadata,
-                failure_reason="RANSAC failed to find reliable transformation."
+                failure_reason="Geometric verification failed. Invariant correspondences insufficient to solve transformation."
             )
-            
-        # Spatial Validation
-        is_valid = self.spatial_validator.validate(geo_result.transformation_matrix, model="homography")
-        
-        if not is_valid:
-            return AlgorithmResult(
-                status="error",
-                method_used=selected_method,
-                registered_image=None,
-                match_result=match_result,
-                geo_result=geo_result,
-                refined_matrix=None,
-                metrics={},
-                preprocessing_metadata=processed_pair.preprocessing_metadata,
-                failure_reason="Spatial validation failed. Invalid warp matrix."
-            )
-            
-        # ECC Subpixel Refinement (Only if reliable enough)
-        if geo_result.inlier_ratio > 0.1 and geo_result.num_inliers >= 10:
-            refined_matrix = self.refiner.refine_ecc(
-                prep_a, 
-                prep_b, 
-                geo_result.transformation_matrix, 
-                model="homography"
-            )
-        else:
-            refined_matrix = geo_result.transformation_matrix
-            
-        # Registration
+
+        # ECC Subpixel Refinement (Only if reliable enough and not extreme strip)
+        refined_matrix = geo_result.transformation_matrix
+        if geo_result.inlier_ratio > 0.15 and geo_result.num_inliers >= 10:
+            try:
+                refined_matrix = self.refiner.refine_ecc(
+                    prep_a, 
+                    prep_b, 
+                    geo_result.transformation_matrix, 
+                    model=used_model
+                )
+            except Exception as ecc_err:
+                print(f"ECC refinement skipped: {ecc_err}")
+                refined_matrix = geo_result.transformation_matrix
+
+        # Registration (Warping original moving image to reference space)
         reg_start = time.time()
         registered_image = self.reg_engine.register(
-            original_moving, # we warp the original
+            original_moving,
             original_reference.shape,
             refined_matrix,
-            model="homography"
+            model=used_model
         )
         reg_time = time.time() - reg_start
         
