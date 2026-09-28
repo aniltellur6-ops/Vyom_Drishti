@@ -1,0 +1,2438 @@
+[
+  {
+    "id": "f78e2847-7093-4d51-a5bb-de1062c70a10",
+    "name": "EXP-2026-0928-f78e",
+    "method": "loftr",
+    "status": "Successful",
+    "created_at": "2026-09-28T00:29:43.446287",
+    "metrics": {
+      "inliers": 8,
+      "inlier_ratio": 0.0449438202247191,
+      "rmse": 0.8399242178732751,
+      "coverage": 53.32581376102436,
+      "runtime": 43.799951791763306
+    }
+  },
+  {
+    "id": "15fde45e-5b54-4a38-99ed-3e7014a1cb97",
+    "name": "EXP-2026-0928-15fd",
+    "method": "LoFTR",
+    "status": "Successful",
+    "created_at": "2026-09-28T00:27:18.438318",
+    "metrics": {
+      "inliers": 21,
+      "inlier_ratio": 0.04285714285714286,
+      "rmse": 1.8988170758983356,
+      "coverage": 80.26149583346584,
+      "runtime": 36.530516386032104
+    }
+  },
+  {
+    "id": "69c14580-f965-4512-8840-c4f816e45638",
+    "name": "EXP-2026-0926-69c1",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-26T15:25:45.090722",
+    "metrics": {
+      "inliers": 8,
+      "inlier_ratio": 0.05970149253731343,
+      "rmse": 1.2653552493535059,
+      "coverage": 4.737244115554068,
+      "runtime": 6.699912071228027
+    }
+  },
+  {
+    "id": "1232233a-60bd-47f5-8ca0-a9ad9e1a0fdb",
+    "name": "EXP-2026-0926-1232",
+    "method": "loftr",
+    "status": "Successful",
+    "created_at": "2026-09-26T15:19:09.161898",
+    "metrics": {
+      "inliers": 7,
+      "inlier_ratio": 0.0875,
+      "rmse": 1.2251827660920187,
+      "coverage": 1.3444518102234018,
+      "runtime": 13.112907648086548
+    }
+  },
+  {
+    "id": "8f824352-90d4-4256-80f4-424ace545370",
+    "name": "EXP-2026-0926-8f82",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-26T15:18:04.167863",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.15789473684210525,
+      "rmse": 0.8373040086755819,
+      "coverage": 12.961956765620089,
+      "runtime": 0.9805779457092285
+    }
+  },
+  {
+    "id": "959408ff-6f48-45e5-a8c4-26d92dd8b1e4",
+    "name": "EXP-2026-0926-9594",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-26T15:06:15.291254",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "1ffe2d06-f03e-4733-acd5-2dd0cef4867f",
+    "name": "EXP-2026-0926-1ffe",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-26T13:42:30.136433",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.05194805194805195,
+      "rmse": 1.375284983017713,
+      "coverage": 1.277756850616927,
+      "runtime": 4.409864664077759
+    }
+  },
+  {
+    "id": "be173957-03e5-47d2-ba21-3f2f3a0b5f62",
+    "name": "EXP-2026-0926-be17",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-26T13:41:35.969896",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.0379746835443038,
+      "rmse": 1.5749937123187043,
+      "coverage": 0.0,
+      "runtime": 6.17847752571106
+    }
+  },
+  {
+    "id": "85c342de-8af5-44f2-b9af-4fa2ae0d91aa",
+    "name": "EXP-2026-0926-85c3",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-26T13:39:28.706881",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.01509433962264151,
+      "rmse": 1.147289359587296,
+      "coverage": 38.09634813082036,
+      "runtime": 4.482829570770264
+    }
+  },
+  {
+    "id": "5880dd12-33b1-4721-9684-2180d70254ad",
+    "name": "EXP-2026-0926-5880",
+    "method": "loftr",
+    "status": "Successful",
+    "created_at": "2026-09-26T13:27:32.014304",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.07017543859649122,
+      "rmse": 1.6933253976619262,
+      "coverage": 7.142611678445346,
+      "runtime": 9.579344749450684
+    }
+  },
+  {
+    "id": "c106ae8b-e0ec-4355-8c9b-e73d0f004fcb",
+    "name": "EXP-2026-0926-c106",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-26T12:09:19.071760",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "2fe2fc54-8e0e-418e-ad2c-c9bfe0b931f4",
+    "name": "EXP-2026-0926-2fe2",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-26T11:35:11.868629",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "36da7351-c714-4109-965c-10f9fa20ebcd",
+    "name": "EXP-2026-0925-36da",
+    "method": "loftr",
+    "status": "Successful",
+    "created_at": "2026-09-25T00:11:12.149469",
+    "metrics": {
+      "inliers": 27656,
+      "inlier_ratio": 1.0,
+      "rmse": 0.2489878605401476,
+      "coverage": 99.99999465298926,
+      "runtime": 16322.458924531937
+    }
+  },
+  {
+    "id": "c2ef79dc-c5b8-4ab8-8bc1-697addb87eda",
+    "name": "EXP-2026-0924-c2ef",
+    "method": "LoFTR",
+    "status": "Successful",
+    "created_at": "2026-09-24T19:35:38.550467",
+    "metrics": {
+      "inliers": 2048,
+      "inlier_ratio": 1.0,
+      "rmse": 0.0,
+      "coverage": 100.0,
+      "runtime": 18.20650553703308
+    }
+  },
+  {
+    "id": "1169057d-2a22-44a5-b180-fa9b1d637a60",
+    "name": "EXP-2026-0924-1169",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-24T19:33:39.552654",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "b8096b60-cdc5-4628-96cb-a586acd87a20",
+    "name": "EXP-2026-0924-b809",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-24T08:33:31.770686",
+    "metrics": {
+      "inliers": 2653,
+      "inlier_ratio": 0.990294886151549,
+      "rmse": 0.27896420044708214,
+      "coverage": 89.6502296673134,
+      "runtime": 2.472555637359619
+    }
+  },
+  {
+    "id": "6960cebd-d4b6-4ce5-8e7c-c31559d231fd",
+    "name": "EXP-2026-0924-6960",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-24T08:32:52.906588",
+    "metrics": {
+      "inliers": 1049,
+      "inlier_ratio": 0.7450284090909091,
+      "rmse": 1.4963716145442603,
+      "coverage": 94.50608825683594,
+      "runtime": 15.368829727172852
+    }
+  },
+  {
+    "id": "a1fdace3-3e7b-411a-adb3-11c7d505b809",
+    "name": "EXP-2026-0923-a1fd",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-23T22:12:10.701005",
+    "metrics": {
+      "inliers": 2147,
+      "inlier_ratio": 0.9736961451247166,
+      "rmse": 0.33320059934823093,
+      "coverage": 94.50534248352051,
+      "runtime": 3.5518805980682373
+    }
+  },
+  {
+    "id": "67b735b6-1739-4f34-8ccd-be48997b085c",
+    "name": "EXP-2026-0923-67b7",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-23T22:10:42.706767",
+    "metrics": {
+      "inliers": 1076,
+      "inlier_ratio": 0.7604240282685513,
+      "rmse": 1.476893023796438,
+      "coverage": 94.58908271789551,
+      "runtime": 26.670321464538574
+    }
+  },
+  {
+    "id": "64772704-55f6-4996-b41d-cf1bea155379",
+    "name": "EXP-2026-0923-6477",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-23T15:17:40.875076",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 9.52106785774231
+    }
+  },
+  {
+    "id": "85151b16-150f-4a20-a93b-f88b522b169d",
+    "name": "EXP-2026-0922-8515",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-22T16:44:45.051150",
+    "metrics": {
+      "inliers": 1076,
+      "inlier_ratio": 0.7604240282685513,
+      "rmse": 1.476893023796438,
+      "coverage": 94.58908271789551,
+      "runtime": 12.893390893936157
+    }
+  },
+  {
+    "id": "dcca109d-3c31-4400-9843-7cb63e0e88ba",
+    "name": "EXP-2026-0922-dcca",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-22T16:42:47.154847",
+    "metrics": {
+      "inliers": 1076,
+      "inlier_ratio": 0.7604240282685513,
+      "rmse": 1.476893023796438,
+      "coverage": 94.58908271789551,
+      "runtime": 13.595332384109497
+    }
+  },
+  {
+    "id": "c3f9c3ac-3cf7-4ff6-9478-bf11cc380182",
+    "name": "EXP-2026-0911-c3f9",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T15:38:53.579437",
+    "metrics": {
+      "inliers": 1076,
+      "inlier_ratio": 0.7604240282685513,
+      "rmse": 1.476893023796438,
+      "coverage": 94.58908271789551,
+      "runtime": 25.635409593582153
+    }
+  },
+  {
+    "id": "3ab316f4-fc28-4ef0-b603-35e243372f33",
+    "name": "EXP-2026-0911-3ab3",
+    "method": "rift2",
+    "status": "Failed",
+    "created_at": "2026-09-11T14:03:44.102612",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "926502f6-5a40-4a3b-9b05-5b79a7dcf325",
+    "name": "EXP-2026-0911-9265",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T14:03:42.901683",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.015957446808510637,
+      "rmse": 0.8935002747782399,
+      "coverage": 100.0,
+      "runtime": 13.950356483459473
+    }
+  },
+  {
+    "id": "fe891994-f22e-42b4-b7cb-6ebc96efbeec",
+    "name": "EXP-2026-0911-fe89",
+    "method": "loftr",
+    "status": "Successful",
+    "created_at": "2026-09-11T14:03:14.707315",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.033707865168539325,
+      "rmse": 1.2222495300201415,
+      "coverage": 35.40862643278818,
+      "runtime": 11.33059549331665
+    }
+  },
+  {
+    "id": "b6a3dce2-0e8d-4630-a624-aca75712128d",
+    "name": "EXP-2026-0911-b6a3",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T14:02:54.696127",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "22a25b5e-1411-49b8-8685-b259dcb0ce46",
+    "name": "EXP-2026-0911-22a2",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T14:02:36.607946",
+    "metrics": {
+      "inliers": 13,
+      "inlier_ratio": 0.026530612244897958,
+      "rmse": 1.7829590608509318,
+      "coverage": 50.95745004045682,
+      "runtime": 20.91554021835327
+    }
+  },
+  {
+    "id": "e57c6947-988b-4d5f-8d8b-81ab88de1250",
+    "name": "EXP-2026-0911-e57c",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T14:01:43.104827",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "a3dfe0aa-e444-4c33-95b3-6f74f725c512",
+    "name": "EXP-2026-0911-a3df",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T14:01:19.385522",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.015957446808510637,
+      "rmse": 0.8935002747782399,
+      "coverage": 100.0,
+      "runtime": 14.281121730804443
+    }
+  },
+  {
+    "id": "8d754bf4-9137-41fa-9142-885931154197",
+    "name": "EXP-2026-0911-8d75",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T14:00:57.957795",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "457f716b-59f0-4854-8c45-760cabf7682d",
+    "name": "EXP-2026-0911-457f",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T14:00:46.267727",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "4d923ebe-aa09-44d1-a2ec-577c387561c2",
+    "name": "EXP-2026-0911-4d92",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-11T12:14:30.626825",
+    "metrics": {
+      "inliers": 981,
+      "inlier_ratio": 0.6923076923076923,
+      "rmse": 1.4581760467286942,
+      "coverage": 94.58795738220215,
+      "runtime": 12.282944440841675
+    }
+  },
+  {
+    "id": "aa8f33c2-547f-4382-85c7-15346857f8a6",
+    "name": "EXP-2026-0911-aa8f",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-11T12:13:31.917255",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.014652014652014652,
+      "rmse": 1.504565243797011,
+      "coverage": 60.59321732055203,
+      "runtime": 9.040526390075684
+    }
+  },
+  {
+    "id": "1605259c-fb43-4e04-88ec-ef5e70d3e98f",
+    "name": "EXP-2026-0911-1605",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T11:10:39.047444",
+    "metrics": {
+      "inliers": 2708,
+      "inlier_ratio": 0.9762076423936553,
+      "rmse": 0.3875850655285795,
+      "coverage": 94.58764584859213,
+      "runtime": 4.425816535949707
+    }
+  },
+  {
+    "id": "e16f912c-7109-4601-abbb-712e2c9456b2",
+    "name": "EXP-2026-0911-e16f",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T10:44:59.588016",
+    "metrics": {
+      "inliers": 1076,
+      "inlier_ratio": 0.7604240282685513,
+      "rmse": 1.476893023796438,
+      "coverage": 94.58908271789551,
+      "runtime": 25.722214698791504
+    }
+  },
+  {
+    "id": "a2a377c7-3df9-4c6b-b0c8-e21c04e6f855",
+    "name": "EXP-2026-0911-a2a3",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T06:46:46.502936",
+    "metrics": {
+      "inliers": 2691,
+      "inlier_ratio": 0.972885032537961,
+      "rmse": 0.35987723543048544,
+      "coverage": 94.58768272399902,
+      "runtime": 2.548189640045166
+    }
+  },
+  {
+    "id": "8a6a1392-bd61-4908-aa49-9885f36609ef",
+    "name": "EXP-2026-0911-8a6a",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:40:39.223363",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "a5849fa1-dd5c-4f7f-b4be-8d4eeaf03abf",
+    "name": "EXP-2026-0911-a584",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:40:24.626400",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "7b8a46cf-798c-4ba3-b18f-539b5f6876b9",
+    "name": "EXP-2026-0911-7b8a",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:40:17.974066",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "1b21b022-1044-48f5-af4e-53c251fdd120",
+    "name": "EXP-2026-0911-1b21",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:39:47.981458",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "cb22c42f-6565-4ede-8be2-7753a223dc0d",
+    "name": "EXP-2026-0911-cb22",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:39:39.282067",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "80aa26d7-198d-4da6-82f0-edbe86c2f1c9",
+    "name": "EXP-2026-0911-80aa",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T06:39:28.656699",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "0b31a566-b82e-431c-b9e4-4eb022d9fd0d",
+    "name": "EXP-2026-0911-0b31",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:46:35.711847",
+    "metrics": {
+      "inliers": 45,
+      "inlier_ratio": 0.40540540540540543,
+      "rmse": 1.7938745181461853,
+      "coverage": 100.0,
+      "runtime": 1.5352399349212646
+    }
+  },
+  {
+    "id": "37c45748-520b-4fce-bb7b-0b0508fcadd7",
+    "name": "EXP-2026-0911-37c4",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:45:41.655787",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 7.445200204849243
+    }
+  },
+  {
+    "id": "93f983cf-17cd-4765-aeb9-9884d6e3b3f1",
+    "name": "EXP-2026-0911-93f9",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:27:50.658349",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.17391304347826086,
+      "rmse": 0.8129747873988155,
+      "coverage": 88.77295731855156,
+      "runtime": 0.7929904460906982
+    }
+  },
+  {
+    "id": "14ef8908-f316-4746-84aa-0610e7043891",
+    "name": "EXP-2026-0911-14ef",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T05:26:49.528459",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "4835d359-08d3-4029-bfa7-3e5502cb72e5",
+    "name": "EXP-2026-0911-4835",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:24:36.990422",
+    "metrics": {
+      "inliers": 28,
+      "inlier_ratio": 0.05313092979127135,
+      "rmse": 1.8186354122827224,
+      "coverage": 90.68073297635944,
+      "runtime": 6.660630464553833
+    }
+  },
+  {
+    "id": "9d7ac805-ee78-4012-bf05-92f26ba7930a",
+    "name": "EXP-2026-0911-9d7a",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:22:28.507495",
+    "metrics": {
+      "inliers": 28,
+      "inlier_ratio": 0.05313092979127135,
+      "rmse": 1.8186354122827224,
+      "coverage": 90.68073297635944,
+      "runtime": 21.544984579086304
+    }
+  },
+  {
+    "id": "e1209230-a5e2-4702-be05-d52f07515db0",
+    "name": "EXP-2026-0911-e120",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:18:17.940658",
+    "metrics": {
+      "inliers": 28,
+      "inlier_ratio": 0.05313092979127135,
+      "rmse": 1.8186354122827224,
+      "coverage": 90.68073297635944,
+      "runtime": 8.441742181777954
+    }
+  },
+  {
+    "id": "e5c68c56-5ac6-4fd9-99da-ebfee8bf17f4",
+    "name": "EXP-2026-0911-e5c6",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:11:02.828846",
+    "metrics": {
+      "inliers": 2171,
+      "inlier_ratio": 0.9895168641750228,
+      "rmse": 0.2539351724583285,
+      "coverage": 91.08723097791275,
+      "runtime": 2.339775323867798
+    }
+  },
+  {
+    "id": "d438c2c4-e10d-46c1-9567-f22ea3933a75",
+    "name": "EXP-2026-0911-d438",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T05:08:02.961696",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 3.935328483581543
+    }
+  },
+  {
+    "id": "5081fbee-825b-4370-be9a-19c6717e6b84",
+    "name": "EXP-2026-0911-5081",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-11T04:38:00.883272",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "8bfbfcf4-4872-4f95-9cd1-1acc39f9440a",
+    "name": "EXP-2026-0911-8bfb",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-11T04:34:47.819313",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "ca73cd73-77b7-40f0-a5f5-c012952eb3f4",
+    "name": "EXP-2026-0911-ca73",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T04:11:53.088262",
+    "metrics": {
+      "inliers": 2168,
+      "inlier_ratio": 0.9890510948905109,
+      "rmse": 0.24835924574662396,
+      "coverage": 91.08641701750457,
+      "runtime": 6.098283052444458
+    }
+  },
+  {
+    "id": "138ded32-0cf3-47b6-b230-98f790e79ab3",
+    "name": "EXP-2026-0911-138d",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-11T04:08:57.597098",
+    "metrics": {
+      "inliers": 751,
+      "inlier_ratio": 0.7399014778325124,
+      "rmse": 1.2798828196470602,
+      "coverage": 91.15932324590781,
+      "runtime": 19.153894901275635
+    }
+  },
+  {
+    "id": "ea773d75-16a3-42f8-a038-2454a2221cf7",
+    "name": "EXP-2026-0911-ea77",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T04:08:10.123527",
+    "metrics": {
+      "inliers": 2161,
+      "inlier_ratio": 0.9876599634369287,
+      "rmse": 0.24642060019169346,
+      "coverage": 91.0886628398051,
+      "runtime": 4.030996799468994
+    }
+  },
+  {
+    "id": "8211e60d-e3a7-442d-b33f-adf32d20d3a7",
+    "name": "EXP-2026-0911-8211",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-11T03:57:25.361220",
+    "metrics": {
+      "inliers": 751,
+      "inlier_ratio": 0.7399014778325124,
+      "rmse": 1.2798828196470602,
+      "coverage": 91.15932324590781,
+      "runtime": 10.17616319656372
+    }
+  },
+  {
+    "id": "1d34fb85-7028-484f-a531-9fa3026dc034",
+    "name": "EXP-2026-0911-1d34",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T03:38:24.019005",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3873442a-5055-46d8-a52c-46be1d320052",
+    "name": "EXP-2026-0911-3873",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-11T03:28:15.762044",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "d2b3be45-0798-4282-81c9-773cdeac57b9",
+    "name": "EXP-2026-0911-d2b3",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T03:22:10.125199",
+    "metrics": {
+      "inliers": 2164,
+      "inlier_ratio": 0.9881278538812786,
+      "rmse": 0.24674842180352943,
+      "coverage": 91.08682197208205,
+      "runtime": 4.455001592636108
+    }
+  },
+  {
+    "id": "cc656c32-d572-4aa0-a5d1-a5988dbe70d0",
+    "name": "EXP-2026-0911-cc65",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T03:21:04.551265",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.18181818181818182,
+      "rmse": 0.8622336593557005,
+      "coverage": 87.92838186977056,
+      "runtime": 1.546219825744629
+    }
+  },
+  {
+    "id": "248a74f3-fb81-40dc-9a2d-fd840edbe937",
+    "name": "EXP-2026-0911-248a",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-11T03:20:10.407009",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 17.362488985061646
+    }
+  },
+  {
+    "id": "c9b82105-05e6-43ea-96e6-6505682a4587",
+    "name": "EXP-2026-0911-c9b8",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-11T03:17:20.334802",
+    "metrics": {
+      "inliers": 2168,
+      "inlier_ratio": 0.9881494986326345,
+      "rmse": 0.25471106445306885,
+      "coverage": 91.0872666320453,
+      "runtime": 4.665869951248169
+    }
+  },
+  {
+    "id": "d9074eb4-1c1b-458d-8dd2-cb7955d1be0e",
+    "name": "EXP-2026-0910-d907",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T22:43:04.128482",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 18.1775906085968
+    }
+  },
+  {
+    "id": "f6639b8f-9b45-4308-8b64-bbed06e8b63f",
+    "name": "EXP-2026-0910-f663",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:41:24.756366",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "5b771b5f-a4ad-4ff3-9aa1-da70477573bd",
+    "name": "EXP-2026-0910-5b77",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:39:04.306335",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "e0d782fb-4a57-4608-83ab-06df9d637389",
+    "name": "EXP-2026-0910-e0d7",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:38:30.756875",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3ac12fdc-29c5-48fd-927e-e61e61437e5d",
+    "name": "EXP-2026-0910-3ac1",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:38:23.534997",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "716c64a6-510c-4e09-ba16-3784878a5cb3",
+    "name": "EXP-2026-0910-716c",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:38:10.522610",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "7045dcc1-0d99-4478-b638-18ebba7fe563",
+    "name": "EXP-2026-0910-7045",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:38:00.464412",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "1f9a63c1-9a77-4da9-983c-cfacb51ba9c7",
+    "name": "EXP-2026-0910-1f9a",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:37:54.828764",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "d9a4effe-1b9c-4b01-98e1-e77b2f70b698",
+    "name": "EXP-2026-0910-d9a4",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:37:37.402597",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3a1dc554-19a0-490f-ae50-15ef2748273a",
+    "name": "EXP-2026-0910-3a1d",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:36:59.952825",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "0dca48f6-9f00-4920-942c-0f8a294dbc2e",
+    "name": "EXP-2026-0910-0dca",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T21:36:02.182550",
+    "metrics": {
+      "inliers": 20,
+      "inlier_ratio": 0.04739336492890995,
+      "rmse": 2.039889962787966,
+      "coverage": 78.42197848119365,
+      "runtime": 5.9032135009765625
+    }
+  },
+  {
+    "id": "7a156b25-4a23-419b-820a-fa30c108ce94",
+    "name": "EXP-2026-0910-7a15",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:34:39.777512",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3f352e15-da0c-47d8-8133-84c18edf525b",
+    "name": "EXP-2026-0910-3f35",
+    "method": "sift",
+    "status": "Successful",
+    "created_at": "2026-09-10T21:10:50.239117",
+    "metrics": {
+      "inliers": 2168,
+      "inlier_ratio": 0.9881494986326345,
+      "rmse": 0.25471106445306885,
+      "coverage": 91.0872666320453,
+      "runtime": 1.2794334888458252
+    }
+  },
+  {
+    "id": "5714aa08-d46f-40a5-9274-32b2307fae6f",
+    "name": "EXP-2026-0910-5714",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T21:03:47.697976",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "433a6e97-54be-4e7b-9fda-bb9b8d934eb2",
+    "name": "EXP-2026-0910-433a",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T17:23:08.470948",
+    "metrics": {
+      "inliers": 6,
+      "inlier_ratio": 0.008902077151335312,
+      "rmse": 1.2167769488049873,
+      "coverage": 100.0,
+      "runtime": 18.561726331710815
+    }
+  },
+  {
+    "id": "7006589e-ce0c-4541-abd2-7d29f4613bdf",
+    "name": "EXP-2026-0910-7006",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T17:12:01.512113",
+    "metrics": {
+      "inliers": 5,
+      "inlier_ratio": 0.008305647840531562,
+      "rmse": 1.5065197385115352,
+      "coverage": 58.61866446765085,
+      "runtime": 16.421616315841675
+    }
+  },
+  {
+    "id": "d2416a3a-27be-4aa5-9b41-76e094c3de68",
+    "name": "EXP-2026-0910-d241",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T17:10:22.524044",
+    "metrics": {
+      "inliers": 18,
+      "inlier_ratio": 0.022058823529411766,
+      "rmse": 1.8729797988410535,
+      "coverage": 93.58682656972495,
+      "runtime": 10.98245620727539
+    }
+  },
+  {
+    "id": "2e539913-e9cc-4de2-acca-41488feea492",
+    "name": "EXP-2026-0910-2e53",
+    "method": "rift2",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:05:01.365505",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "ffa25ede-136a-4dda-96d3-96e4407749f7",
+    "name": "EXP-2026-0910-ffa2",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:04:11.650099",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "b5eaf053-8815-4138-8316-6ca77ca85e94",
+    "name": "EXP-2026-0910-b5ea",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:03:41.309913",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "e46dc63d-8404-465c-ba67-b4ff8ec13635",
+    "name": "EXP-2026-0910-e46d",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:03:18.258640",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "f76bd654-76a6-4206-b66e-3d7ae87169b3",
+    "name": "EXP-2026-0910-f76b",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T17:01:41.579529",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 23.230087995529175
+    }
+  },
+  {
+    "id": "e4e094f0-5fe2-420e-bc6c-bb0ad8bdb129",
+    "name": "EXP-2026-0910-e4e0",
+    "method": "rift2",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:01:08.805230",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "68a17004-e2c3-43cf-b711-968938b016ba",
+    "name": "EXP-2026-0910-68a1",
+    "method": "rift2",
+    "status": "Failed",
+    "created_at": "2026-09-10T17:00:08.535159",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "185d3fc8-ac6d-43ab-9e45-ebee744b245f",
+    "name": "EXP-2026-0910-185d",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:59:56.081472",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "374c4bd2-50c6-4b35-8786-7240853fbcab",
+    "name": "EXP-2026-0910-374c",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:59:20.720242",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "122c5117-eb4d-46ec-b282-dae87c95c710",
+    "name": "EXP-2026-0910-122c",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:56:18.006633",
+    "metrics": {
+      "inliers": 28,
+      "inlier_ratio": 0.05313092979127135,
+      "rmse": 1.8186354122827224,
+      "coverage": 90.68073297635944,
+      "runtime": 18.77167510986328
+    }
+  },
+  {
+    "id": "8263a242-a277-4364-b029-247217a1ee71",
+    "name": "EXP-2026-0910-8263",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:55:34.807340",
+    "metrics": {
+      "inliers": 51,
+      "inlier_ratio": 0.0498046875,
+      "rmse": 1.8786160922954032,
+      "coverage": 77.56539144809358,
+      "runtime": 22.1722469329834
+    }
+  },
+  {
+    "id": "e2e8842d-73be-4d03-b982-0e753e3b74f7",
+    "name": "EXP-2026-0910-e2e8",
+    "method": "rift2",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:53:59.738060",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "1f23b4e8-8703-4d3d-ab4a-fc355e1c659a",
+    "name": "EXP-2026-0910-1f23",
+    "method": "loftr",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:53:40.441316",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "f74ff6a3-f449-48a6-af5e-56556aa5dc53",
+    "name": "EXP-2026-0910-f74f",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:52:12.134954",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "a82574a9-2ea9-4d9e-bb96-19970e09229f",
+    "name": "EXP-2026-0910-a825",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:52:04.684999",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "f5ed7a0a-58a8-4466-bb43-cf53408f980c",
+    "name": "EXP-2026-0910-f5ed",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:49:18.418588",
+    "metrics": {
+      "inliers": 838,
+      "inlier_ratio": 0.815968841285297,
+      "rmse": 1.3266170746970811,
+      "coverage": 100.0,
+      "runtime": 10.691097497940063
+    }
+  },
+  {
+    "id": "d18c5e26-0dd4-44b7-9371-9fe7a0dbd139",
+    "name": "EXP-2026-0910-d18c",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:44:33.071085",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 9.143049955368042
+    }
+  },
+  {
+    "id": "04499f2d-a63b-4674-a41f-0a0c4103ae25",
+    "name": "EXP-2026-0910-0449",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:37:05.683188",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 9.958845853805542
+    }
+  },
+  {
+    "id": "54e2f3a2-59bb-4028-8b42-78fff591776b",
+    "name": "EXP-2026-0910-54e2",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:36:47.613941",
+    "metrics": {
+      "inliers": 860,
+      "inlier_ratio": 0.8373904576436222,
+      "rmse": 1.2923432396278876,
+      "coverage": 93.60813331604004,
+      "runtime": 10.15179967880249
+    }
+  },
+  {
+    "id": "b83c3dd5-f98c-4268-a0fa-4d2a5bdb0ad7",
+    "name": "EXP-2026-0910-b83c",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:35:39.882324",
+    "metrics": {
+      "inliers": 28,
+      "inlier_ratio": 0.05313092979127135,
+      "rmse": 1.8186354122827224,
+      "coverage": 90.68073297635944,
+      "runtime": 20.566798210144043
+    }
+  },
+  {
+    "id": "fc9ffbe8-c89c-4826-bc6d-d694ae5e2b2d",
+    "name": "EXP-2026-0910-fc9f",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:33:57.711434",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 25.67826771736145
+    }
+  },
+  {
+    "id": "6cfab653-9a57-4324-8533-430561a976b9",
+    "name": "EXP-2026-0910-6cfa",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:32:18.817170",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "e7fd0d50-671f-447b-a10f-3a4b7c0a9687",
+    "name": "EXP-2026-0910-e7fd",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:32:07.432610",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 23.055450677871704
+    }
+  },
+  {
+    "id": "b1c14a4d-d06b-43f2-93ed-4fc266f6a9e8",
+    "name": "EXP-2026-0910-b1c1",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:30:36.356698",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3dd12b3f-e4fb-43b1-8478-a7f7befd0c2f",
+    "name": "EXP-2026-0910-3dd1",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:29:47.491680",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "f98d8be6-d7eb-4843-8add-60bc17c79157",
+    "name": "EXP-2026-0910-f98d",
+    "method": "sift",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:28:38.848168",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "ea22d0c8-e8bd-41b0-862e-84a270b1c1d0",
+    "name": "EXP-2026-0910-ea22",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:27:07.712065",
+    "metrics": {
+      "inliers": 4,
+      "inlier_ratio": 0.013986013986013986,
+      "rmse": 1.435268533669906,
+      "coverage": 100.0,
+      "runtime": 20.860448122024536
+    }
+  },
+  {
+    "id": "1e35222a-b5f4-4d5f-8505-332616fd8e91",
+    "name": "EXP-2026-0910-1e35",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:25:22.881998",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "e10e2b9d-6199-4d6e-a6c5-7018e63939af",
+    "name": "EXP-2026-0910-e10e",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-10T16:25:00.463362",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "8ba02d0b-6d2a-44e5-872c-30f3a0496e54",
+    "name": "EXP-2026-0910-8ba0",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T16:03:47.154464",
+    "metrics": {
+      "inliers": 14,
+      "inlier_ratio": 0.015151515151515152,
+      "rmse": 1.9231972458874687,
+      "coverage": 100.0,
+      "runtime": 21.314761638641357
+    }
+  },
+  {
+    "id": "0293625a-fa8b-403b-85e0-47c9b161b2bf",
+    "name": "EXP-2026-0910-0293",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T11:45:46.371636",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 8.965328216552734
+    }
+  },
+  {
+    "id": "204c4c71-2182-48f3-8209-71daa6650f77",
+    "name": "EXP-2026-0910-204c",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T10:44:32.391512",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 6.838715314865112
+    }
+  },
+  {
+    "id": "d0ffef22-3997-4562-b5d3-e7775790b5df",
+    "name": "EXP-2026-0910-d0ff",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T09:41:21.972566",
+    "metrics": {
+      "inliers": 335,
+      "inlier_ratio": 0.1949941792782305,
+      "rmse": 2.1821436552054263,
+      "coverage": 98.44328634289201,
+      "runtime": 63.15580749511719
+    }
+  },
+  {
+    "id": "d8333ebf-f085-4775-8f24-fe4c47b24234",
+    "name": "EXP-2026-0910-d833",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T09:37:59.936180",
+    "metrics": {
+      "inliers": 14,
+      "inlier_ratio": 0.015151515151515152,
+      "rmse": 1.9231972458874687,
+      "coverage": 100.0,
+      "runtime": 19.67785930633545
+    }
+  },
+  {
+    "id": "f06999d2-6c0a-45eb-956e-48cbe29027cc",
+    "name": "EXP-2026-0910-f069",
+    "method": "lightglue",
+    "status": "Successful",
+    "created_at": "2026-09-10T09:36:57.331023",
+    "metrics": {
+      "inliers": 12,
+      "inlier_ratio": 0.027777777777777776,
+      "rmse": 1.8070607140338295,
+      "coverage": 91.57832564696669,
+      "runtime": 22.26076054573059
+    }
+  },
+  {
+    "id": "3a05cb8e-7ab3-4e60-8d0d-c679dfabffb0",
+    "name": "EXP-2026-0910-3a05",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:54.822649",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "9ff41bc9-3a84-4f6a-a274-98d6f424609b",
+    "name": "EXP-2026-0910-9ff4",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:42.325458",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "bb7415e7-7f3b-4024-a8fe-06b4da7c8a1a",
+    "name": "EXP-2026-0910-bb74",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:35.935693",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "2a0d2745-0ad1-4b47-878e-273e303d80b6",
+    "name": "EXP-2026-0910-2a0d",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:24.464929",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "3bb670b6-14ba-46ab-8f85-82543fac07d8",
+    "name": "EXP-2026-0910-3bb6",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:14.206371",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "4e34331f-1486-4983-9a77-73bb59898631",
+    "name": "EXP-2026-0910-4e34",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:31:02.566529",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "2c6d4634-96c9-4ecc-8396-f31bad23dc95",
+    "name": "EXP-2026-0910-2c6d",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:30:47.345914",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "5ed81ae5-4827-43ed-84b0-51d8b20decc5",
+    "name": "EXP-2026-0910-5ed8",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:30:25.435700",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "77501b38-0735-4923-bf39-e34cb00acb9e",
+    "name": "EXP-2026-0910-7750",
+    "method": "lightglue",
+    "status": "Failed",
+    "created_at": "2026-09-10T09:30:11.672682",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "721225b1-9683-4159-9824-e1c49361ee69",
+    "name": "EXP-2026-0910-7212",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T09:11:27.984995",
+    "metrics": {
+      "inliers": 13,
+      "inlier_ratio": 0.013948497854077254,
+      "rmse": 1.3781972327402274,
+      "coverage": 100.0,
+      "runtime": 36.912397146224976
+    }
+  },
+  {
+    "id": "53e1ffd0-97db-4856-bff1-9eb0bf1825e3",
+    "name": "EXP-2026-0910-53e1",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T09:08:39.465844",
+    "metrics": {
+      "inliers": 242,
+      "inlier_ratio": 0.13687782805429866,
+      "rmse": 1.9197625769213624,
+      "coverage": 97.6481733441025,
+      "runtime": 49.2313597202301
+    }
+  },
+  {
+    "id": "53ca4f1b-dbc5-49e2-a6d7-0ebcea6e0239",
+    "name": "EXP-2026-0910-53ca",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:51:37.745160",
+    "metrics": {
+      "inliers": 2048,
+      "inlier_ratio": 1.0,
+      "rmse": 3.415627794581857e-15,
+      "coverage": 99.99999999935278,
+      "runtime": 18.391021490097046
+    }
+  },
+  {
+    "id": "e5ac1456-83ed-4b3a-a71f-df7e3da1ff68",
+    "name": "EXP-2026-0910-e5ac",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:40:09.813773",
+    "metrics": {
+      "inliers": 23,
+      "inlier_ratio": 0.017678708685626442,
+      "rmse": 1.830449236796562,
+      "coverage": 92.38851475232693,
+      "runtime": 16.58209204673767
+    }
+  },
+  {
+    "id": "924b436c-19bb-4ba5-9aa9-55e828ebe50e",
+    "name": "EXP-2026-0910-924b",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:32:19.938220",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 91.16559997200966,
+      "runtime": 10.570568561553955
+    }
+  },
+  {
+    "id": "7a90c9d1-8366-4f78-8ebd-b789ee2516b5",
+    "name": "EXP-2026-0910-7a90",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:32:01.778157",
+    "metrics": {
+      "inliers": 242,
+      "inlier_ratio": 0.13687782805429866,
+      "rmse": 1.9197625769213624,
+      "coverage": 97.6481733441025,
+      "runtime": 63.99019408226013
+    }
+  },
+  {
+    "id": "be5c8722-6246-498e-a031-2d3fc314aa83",
+    "name": "EXP-2026-0910-be5c",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:24:08.549282",
+    "metrics": {
+      "inliers": 10,
+      "inlier_ratio": 0.023752969121140142,
+      "rmse": 1.898223888717126,
+      "coverage": 90.0224706767495,
+      "runtime": 16.367833614349365
+    }
+  },
+  {
+    "id": "c40c3975-6e26-4e07-9be5-41954fddf4ce",
+    "name": "EXP-2026-0910-c40c",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-10T08:23:12.633804",
+    "metrics": {
+      "inliers": 10,
+      "inlier_ratio": 0.023752969121140142,
+      "rmse": 1.898223888717126,
+      "coverage": 90.0224706767495,
+      "runtime": 33.39036774635315
+    }
+  },
+  {
+    "id": "9cfb12e9-4b61-40df-95c2-42b6741445a1",
+    "name": "EXP-2026-0909-9cfb",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-09T15:08:51.863121",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 91.16559997200966,
+      "runtime": 5.348766088485718
+    }
+  },
+  {
+    "id": "d491fa7a-68f9-46be-a6a7-a07808346eec",
+    "name": "EXP-2026-0909-d491",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-09T14:57:48.302619",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 91.16559997200966,
+      "runtime": 10.85318636894226
+    }
+  },
+  {
+    "id": "670f36b3-ee6f-4ac7-86fa-3b9ddbeadc4a",
+    "name": "EXP-2026-0909-670f",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-09T14:53:25.378798",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 91.16559997200966,
+      "runtime": 10.852869272232056
+    }
+  },
+  {
+    "id": "7bdbeea1-0d69-45d9-96c5-f0cc7d50beb2",
+    "name": "EXP-2026-0909-7bdb",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-09T14:45:21.249973",
+    "metrics": {
+      "inliers": 10,
+      "inlier_ratio": 0.023752969121140142,
+      "rmse": 1.898223888717126,
+      "coverage": 90.0224706767495,
+      "runtime": 23.27984380722046
+    }
+  },
+  {
+    "id": "0bb89763-6a4d-4755-84b1-be24f9aacba7",
+    "name": "EXP-2026-0909-0bb8",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-09T14:43:28.317196",
+    "metrics": {
+      "inliers": 36,
+      "inlier_ratio": 0.06349206349206349,
+      "rmse": 1.8025640941833077,
+      "coverage": 89.42840814086763,
+      "runtime": 21.18049192428589
+    }
+  },
+  {
+    "id": "f4ddbef5-b3a9-4e80-bf36-6e9a11c13cfd",
+    "name": "EXP-2026-0908-f4dd",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T15:40:23.843844",
+    "metrics": {
+      "inliers": 36,
+      "inlier_ratio": 0.06349206349206349,
+      "rmse": 1.8025640941833077,
+      "coverage": 89.42840814086763,
+      "runtime": 37.78217053413391
+    }
+  },
+  {
+    "id": "983bfb47-6cb3-4a18-9848-1034927a79e0",
+    "name": "EXP-2026-0908-983b",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:32:34.663157",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "f035b264-cb2f-4d00-bb5d-ef7c27a48915",
+    "name": "EXP-2026-0908-f035",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:25:57.470296",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "126b4d4e-3193-4300-a013-e812a4187f77",
+    "name": "EXP-2026-0908-126b",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:25:49.631213",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "569e7c99-a8c7-4169-9f72-b86b27ee0b9a",
+    "name": "EXP-2026-0908-569e",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:25:44.847585",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "8a2ba790-9a7b-4117-924a-69de0b30db7d",
+    "name": "EXP-2026-0908-8a2b",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:25:37.967303",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "ab66e2bc-0b0b-4312-a8e0-a8e68d7c362a",
+    "name": "EXP-2026-0908-ab66",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:25:28.191485",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "7222d7b5-1e42-4023-abf6-750f3247bced",
+    "name": "EXP-2026-0908-7222",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-08T15:08:17.834465",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "00754d17-967d-40de-9047-f4ef8772769f",
+    "name": "EXP-2026-0908-0075",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T14:21:04.833920",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 16.455132246017456
+    }
+  },
+  {
+    "id": "7398fb06-313e-49e6-8b87-e063bf7685a7",
+    "name": "EXP-2026-0908-7398",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T14:11:41.859875",
+    "metrics": {
+      "inliers": 36,
+      "inlier_ratio": 0.06349206349206349,
+      "rmse": 1.8025640941833077,
+      "coverage": 82.1,
+      "runtime": 38.71213674545288
+    }
+  },
+  {
+    "id": "102d8b9e-097b-4ba0-be4a-50c5d1131516",
+    "name": "EXP-2026-0908-102d",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T13:04:48.038414",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 19.322614669799805
+    }
+  },
+  {
+    "id": "93b448b8-6016-4984-8bd6-0b1a377ff5d9",
+    "name": "EXP-2026-0908-93b4",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:47:36.005779",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 16.789696216583252
+    }
+  },
+  {
+    "id": "a2d87fa1-d161-43a2-9d2f-cd6329bf844c",
+    "name": "EXP-2026-0908-a2d8",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:46:38.520836",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 17.61038875579834
+    }
+  },
+  {
+    "id": "fb879e90-83e4-4acb-887f-24a4cd1336d4",
+    "name": "EXP-2026-0908-fb87",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:45:59.459556",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 19.681099891662598
+    }
+  },
+  {
+    "id": "8ea2c292-95f5-4cf1-8db4-c6841ee2b1c8",
+    "name": "EXP-2026-0908-8ea2",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:43:39.407811",
+    "metrics": {
+      "inliers": 889,
+      "inlier_ratio": 0.8339587242026266,
+      "rmse": 1.2912948521642216,
+      "coverage": 82.1,
+      "runtime": 17.126606702804565
+    }
+  },
+  {
+    "id": "f9b2dc1d-5949-46e6-a0c8-e92e286451ca",
+    "name": "EXP-2026-0908-f9b2",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:35:40.035815",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.03333333333333333,
+      "rmse": 0.9460996190397807,
+      "coverage": 82.1,
+      "runtime": 10.087732315063477
+    }
+  },
+  {
+    "id": "0eb32c6d-015d-4114-a994-9882906b79ed",
+    "name": "EXP-2026-0908-0eb3",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:32:20.038922",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.021897810218978103,
+      "rmse": 0.8425664736530224,
+      "coverage": 82.1,
+      "runtime": 10.20476508140564
+    }
+  },
+  {
+    "id": "74a12d81-a42d-4e90-b384-cde37f17eb9b",
+    "name": "EXP-2026-0908-74a1",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:31:36.178588",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.021897810218978103,
+      "rmse": 0.8425664736530224,
+      "coverage": 82.1,
+      "runtime": 10.951785564422607
+    }
+  },
+  {
+    "id": "5388fbc1-43a7-445f-987e-8d9592a7ffbb",
+    "name": "EXP-2026-0908-5388",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T10:30:47.710475",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.021897810218978103,
+      "rmse": 0.8425664736530224,
+      "coverage": 82.1,
+      "runtime": 7.232289791107178
+    }
+  },
+  {
+    "id": "b9fcfedb-1326-4e2f-9b50-9ac7d881a136",
+    "name": "EXP-2026-0908-b9fc",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-08T09:30:02.449904",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.015625,
+      "rmse": 0.0,
+      "coverage": 82.1,
+      "runtime": 6.400428056716919
+    }
+  },
+  {
+    "id": "23d9556b-913e-41c0-bfc2-186307ecc730",
+    "name": "EXP-2026-0907-23d9",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T17:53:18.764903",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.025210084033613446,
+      "rmse": 0.6819604355325591,
+      "coverage": 82.1,
+      "runtime": 5.944706678390503
+    }
+  },
+  {
+    "id": "160dd3e4-bb06-4dcf-a57c-d35e16ab655e",
+    "name": "EXP-2026-0907-160d",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T17:50:14.373204",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.025210084033613446,
+      "rmse": 0.6819604355325591,
+      "coverage": 82.1,
+      "runtime": 6.2475786209106445
+    }
+  },
+  {
+    "id": "f2fc3528-42d8-444d-9c50-8fc36cccc557",
+    "name": "EXP-2026-0907-f2fc",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T16:28:51.454617",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.025210084033613446,
+      "rmse": 0.6819604355325591,
+      "coverage": 82.1,
+      "runtime": 6.407753944396973
+    }
+  },
+  {
+    "id": "954a5a01-d1f8-460f-8b32-34e135a890f3",
+    "name": "EXP-2026-0907-954a",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T14:30:35.279404",
+    "metrics": {
+      "inliers": 854,
+      "inlier_ratio": 0.821944177093359,
+      "rmse": 1.3107941039071749,
+      "coverage": 82.1,
+      "runtime": 3.9712460041046143
+    }
+  },
+  {
+    "id": "59afb6f9-1a56-499d-bee8-9d2c473b5385",
+    "name": "EXP-2026-0907-59af",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T12:37:02.789083",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.020833333333333332,
+      "rmse": 0.0,
+      "coverage": 82.1,
+      "runtime": 5.737270832061768
+    }
+  },
+  {
+    "id": "1ccba70d-b0ca-475d-9766-246bd940bae2",
+    "name": "EXP-2026-0907-1ccb",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T12:01:34.365949",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.020833333333333332,
+      "rmse": 0.0,
+      "coverage": 82.1,
+      "runtime": 5.851247072219849
+    }
+  },
+  {
+    "id": "21bba386-6c3f-4b7c-a94d-e902f93e3456",
+    "name": "EXP-2026-0907-21bb",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T11:59:05.706765",
+    "metrics": {
+      "inliers": 5,
+      "inlier_ratio": 0.05434782608695652,
+      "rmse": 1.6796838053740908,
+      "coverage": 82.1,
+      "runtime": 2.6136116981506348
+    }
+  },
+  {
+    "id": "0e88d54b-3f7c-4285-ae2b-18ce7902d6d5",
+    "name": "EXP-2026-0907-0e88",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T11:50:32.172950",
+    "metrics": {
+      "inliers": 3,
+      "inlier_ratio": 0.03260869565217391,
+      "rmse": 0.37704981064133725,
+      "coverage": 82.1,
+      "runtime": 3.376554012298584
+    }
+  },
+  {
+    "id": "67163d44-a796-4e37-a81c-1a2f466bf6ad",
+    "name": "EXP-2026-0907-6716",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T11:50:21.170268",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.0273972602739726,
+      "rmse": 1.2862197421537486e-12,
+      "coverage": 82.1,
+      "runtime": 3.504134178161621
+    }
+  },
+  {
+    "id": "aa8aef2c-3dfa-46bf-b31e-cf6703aa313b",
+    "name": "EXP-2026-0907-aa8a",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T11:50:10.001111",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.03125,
+      "rmse": 9.094947017729282e-13,
+      "coverage": 82.1,
+      "runtime": 4.441080808639526
+    }
+  },
+  {
+    "id": "a74a3ba0-90cf-4852-a605-53b3a38a7945",
+    "name": "EXP-2026-0907-a74a",
+    "method": "SuperPoint + LightGlue",
+    "status": "Successful",
+    "created_at": "2026-09-07T11:26:10.820392",
+    "metrics": {
+      "inliers": 2,
+      "inlier_ratio": 0.020833333333333332,
+      "rmse": 0.0,
+      "coverage": 82.1,
+      "runtime": 8.50177526473999
+    }
+  },
+  {
+    "id": "cb8bafd2-fc30-4927-baf4-706f5d8cb1c6",
+    "name": "EXP-2026-0907-cb8b",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-07T11:09:20.616464",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "bffec9eb-4950-4d5f-a3c0-e8b83d05d063",
+    "name": "EXP-2026-0907-bffe",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-07T11:03:45.062794",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "da92d21d-14d7-4693-8491-5e82753a4107",
+    "name": "EXP-2026-0907-da92",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-07T11:03:21.595962",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "7bb763de-59ba-45d2-9b13-a3007d03385a",
+    "name": "EXP-2026-0907-7bb7",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-07T01:40:59.441810",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  },
+  {
+    "id": "0b3fcad4-48bd-4a13-ac4c-3e5e942f688a",
+    "name": "EXP-2026-0907-0b3f",
+    "method": "SuperPoint + LightGlue",
+    "status": "Failed",
+    "created_at": "2026-09-07T01:40:35.408987",
+    "metrics": {
+      "inliers": 0,
+      "inlier_ratio": 0.0,
+      "rmse": 0.0,
+      "coverage": 0.0,
+      "runtime": 0.0
+    }
+  }
+]

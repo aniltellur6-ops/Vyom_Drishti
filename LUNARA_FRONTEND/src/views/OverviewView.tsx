@@ -35,16 +35,16 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const [solarViewMode, setSolarViewMode] = useState<'low' | 'opposing'>('low');
   
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
-  const [recentExperiments, setRecentExperiments] = useState<Experiment[]>([]);
+  const [recentExperiments, setRecentExperiments] = useState<Experiment[]>(() => LunaraClient.getCachedExperiments());
 
   useEffect(() => {
     LunaraClient.getSystemStatus()
       .then(setSystemStatus)
-      .catch(e => console.error("Failed to load status", e));
+      .catch(e => console.warn("System status standby:", e));
       
     LunaraClient.getExperiments()
       .then(setRecentExperiments)
-      .catch(e => console.error("Failed to load experiments", e));
+      .catch(e => console.warn("Experiments update standby:", e));
   }, []);
 
   const totalExperiments = recentExperiments.length;

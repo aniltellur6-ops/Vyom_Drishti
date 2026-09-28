@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { NavigationTab } from '../types';
 import {
   Orbit,
@@ -29,6 +29,33 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onTriggerRun,
   onExportReport,
 }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Explicitly enforce muted properties on DOM node for autoplay policy compliance
+    video.defaultMuted = true;
+    video.muted = true;
+    
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback: listen for initial user interaction to start playback if blocked by browser policy
+        const startPlayback = () => {
+          video.play().catch(() => {});
+          window.removeEventListener('click', startPlayback);
+          window.removeEventListener('touchstart', startPlayback);
+          window.removeEventListener('keydown', startPlayback);
+        };
+        window.addEventListener('click', startPlayback, { once: true });
+        window.addEventListener('touchstart', startPlayback, { once: true });
+        window.addEventListener('keydown', startPlayback, { once: true });
+      });
+    }
+  }, []);
+
   const tabs: { id: NavigationTab; label: string; icon: React.ReactNode; badge?: string }[] = [
     { id: 'overview', label: 'Executive Overview', icon: <Orbit className="w-4 h-4" /> },
     { id: 'preprocessing', label: 'Preprocessing Phase 1', icon: <Settings className="w-4 h-4" /> },
@@ -38,20 +65,27 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   ];
 
   return (
-    <header className="lunara-header text-white border-b border-slate-800 shadow-md sticky top-0 z-40 overflow-hidden">
-      <div className="lunara-header-video" aria-hidden="true">
+    <header className="lunara-header text-white border-b border-slate-800 shadow-md sticky top-0 z-40 overflow-hidden select-none">
+      <div className="lunara-header-video pointer-events-none" aria-hidden="true">
         <video
+          ref={videoRef}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
           poster="/lunar-landing-poster.jpg"
+          onEnded={(e) => {
+            // Unconditional manual loop restart to handle browsers that pause at loop boundary
+            const v = e.currentTarget;
+            v.currentTime = 0;
+            v.play().catch(() => {});
+          }}
         >
           <source src="/lunar-landing-header.mp4" type="video/mp4" />
         </video>
       </div>
-      <div className="lunara-header-shade" aria-hidden="true" />
+      <div className="lunara-header-shade pointer-events-none" aria-hidden="true" />
 
       {/* Main Title & Nav Bar */}
       <div className="relative z-10 px-4 py-3.5 flex flex-wrap items-center justify-between gap-4">
@@ -98,7 +132,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       </div>
 
       {/* Primary Tab Navigation */}
-      <nav className="flex items-center w-full border-t border-slate-800/80 bg-slate-900/60 overflow-x-auto scrollbar-none">
+      <nav className="relative z-10 flex items-center w-full border-t border-slate-800/80 bg-slate-900/60 overflow-x-auto scrollbar-none">
         {tabs.map((tab) => {
           const isActive = currentTab === tab.id;
           return (

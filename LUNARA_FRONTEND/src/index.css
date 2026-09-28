@@ -98,21 +98,24 @@
 .lunara-header-video {
   position: absolute;
   z-index: -2;
-  inset: 0 0 0 46%;
+  inset: 0;
   overflow: hidden;
   pointer-events: none;
-  background: #0b101a url('/lunar-landing-poster.jpg') center / cover no-repeat;
+  user-select: none;
+  background: #0b101a url('/lunar-landing-poster.jpg') center right / cover no-repeat;
 }
 
 .lunara-header-video video {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: max(100%, 42rem);
-  height: max(100%, 42rem);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 85% center;
   border: 0;
-  transform: translate(-50%, -50%) scale(1.16);
-  opacity: 0.86;
+  opacity: 0.88;
+  pointer-events: none;
+  user-select: none;
 }
 
 .lunara-header-shade {
@@ -120,6 +123,7 @@
   z-index: -1;
   inset: 0;
   pointer-events: none;
+  user-select: none;
   background:
     linear-gradient(90deg, rgba(7, 12, 24, 0.98) 0%, rgba(7, 12, 24, 0.86) 35%, rgba(7, 12, 24, 0.34) 66%, rgba(7, 12, 24, 0.22) 100%),
     linear-gradient(180deg, rgba(6, 10, 20, 0.35), rgba(6, 10, 20, 0.78));
@@ -127,14 +131,14 @@
 
 @media (max-width: 640px) {
   .lunara-header-video {
-    inset: 0;
-    opacity: 0.26;
+    opacity: 0.28;
   }
 
   .lunara-header-shade {
     background: linear-gradient(180deg, rgba(7, 12, 24, 0.92), rgba(7, 12, 24, 0.96));
   }
 }
+
 
 .lunara-page {
   position: relative;
