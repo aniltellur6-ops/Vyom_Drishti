@@ -17,9 +17,29 @@ VERCEL_REGISTER_URL = os.environ.get("VERCEL_REGISTER_URL", "https://vyom-drisht
 # Update this to your secret token
 SECRET = os.environ.get("SECRET", "Sih@26166")
 
+def kill_tunnel_tree(proc=None):
+    if proc:
+        try:
+            if os.name == 'nt':
+                subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
+            else:
+                proc.kill()
+        except Exception:
+            pass
+    if os.name == 'nt':
+        try:
+            subprocess.run(["taskkill", "/F", "/IM", "cloudflared.exe"], capture_output=True)
+        except Exception:
+            pass
+
 def monitor_tunnel():
     while True:
+        process = None
         try:
+            print("[Tunnel] Cleaning any stale tunnel instances...")
+            kill_tunnel_tree()
+            time.sleep(1)
+
             print("[Tunnel] Starting Cloudflare Tunnel...")
             # using npx.cmd for Windows support
             process = subprocess.Popen(
@@ -40,10 +60,7 @@ def monitor_tunnel():
                 # If Cloudflare edge revokes the quick tunnel, terminate so loop provisions a fresh one
                 if "Unauthorized: Tunnel not found" in clean_line or "control stream error" in clean_line:
                     print("[Tunnel] Detected revoked tunnel session. Killing dead process to request a new session...")
-                    try:
-                        process.kill()
-                    except Exception:
-                        pass
+                    kill_tunnel_tree(process)
                     break
 
                 if not url_found:
@@ -57,21 +74,28 @@ def monitor_tunnel():
                         
                         # Register with Vercel (Step 3 workaround)
                         if "your-vercel-project" not in VERCEL_REGISTER_URL:
-                            try:
-                                print(f"[*] Registering URL with Vercel API...")
-                                res = requests.post(
-                                    VERCEL_REGISTER_URL,
-                                    json={"url": tunnel_url},
-                                    headers={"Authorization": f"Bearer {SECRET}"},
-                                    timeout=10
-                                )
-                                print(f"[*] Vercel Response: {res.status_code} - {res.text}")
-                            except Exception as e:
-                                print(f"[*] Failed to register URL: {e}")
+                            for attempt in range(3):
+                                try:
+                                    print(f"[*] Registering URL with Vercel API (attempt {attempt + 1})...")
+                                    res = requests.post(
+                                        VERCEL_REGISTER_URL,
+                                        json={"url": tunnel_url},
+                                        headers={"Authorization": f"Bearer {SECRET}"},
+                                        timeout=10
+                                    )
+                                    print(f"[*] Vercel Response: {res.status_code} - {res.text}")
+                                    if res.status_code == 200:
+                                        break
+                                except Exception as e:
+                                    print(f"[*] Failed to register URL: {e}")
+                                    time.sleep(1)
 
             process.wait()
         except Exception as e:
             print(f"[Tunnel] Monitor error: {e}")
+        finally:
+            if process:
+                kill_tunnel_tree(process)
 
         print("[Tunnel] Cloudflared exited or was terminated. Spawning fresh tunnel in 3 seconds...")
         time.sleep(3)

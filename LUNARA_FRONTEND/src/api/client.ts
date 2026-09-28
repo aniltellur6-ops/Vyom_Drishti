@@ -89,7 +89,7 @@ const STORAGE_KEY_LAST_SYNC = 'lunara_experiments_last_sync';
 /**
  * Check if a candidate backend URL is responsive and healthy
  */
-async function checkUrlHealth(url: string, timeoutMs: number = 2500): Promise<boolean> {
+async function checkUrlHealth(url: string, timeoutMs: number = 5000): Promise<boolean> {
   if (!url) return false;
   const cleanUrl = url.replace(/\/$/, '');
   try {
@@ -215,6 +215,7 @@ export const LunaraClient = {
     }
 
     // 2. Query dynamic Cloudflare tunnel registered in Vercel
+    let resolvedTunnelUrl: string | null = null;
     try {
       let res = await fetch(`/api/url?_t=${Date.now()}`, { cache: 'no-store' }).catch(() => null);
       if (!res || !res.ok) {
@@ -225,30 +226,41 @@ export const LunaraClient = {
         const data = await res.json();
         if (data.backendUrl) {
           const candidateUrl = data.backendUrl.replace(/\/$/, '');
-          const isHealthy = await checkUrlHealth(candidateUrl, 3000);
+          resolvedTunnelUrl = candidateUrl;
+          const isHealthy = await checkUrlHealth(candidateUrl, 5000);
           if (isHealthy) {
             CACHED_SERVER_URL = candidateUrl;
             LAST_VERIFIED_URL = candidateUrl;
             LAST_VERIFIED_TIME = now;
             return `${candidateUrl}/api/v1`;
           }
-          console.warn(`Remote tunnel ${candidateUrl} is offline or unreachable.`);
+          console.warn(`Remote tunnel ${candidateUrl} did not respond within 5s.`);
         }
       }
     } catch (e) {
       console.warn("Failed to query dynamic tunnel URL:", e);
     }
 
-    // 3. Fallback to local IPv4 check
-    const localOk = await checkUrlHealth(FALLBACK_URL, 1500);
-    if (localOk) {
-      CACHED_SERVER_URL = FALLBACK_URL;
-      LAST_VERIFIED_URL = FALLBACK_URL;
-      LAST_VERIFIED_TIME = now;
-      return `${FALLBACK_URL}/api/v1`;
+    // 3. Fallback to local IPv4 check ONLY IF on localhost / non-HTTPS
+    const isHttps = isBrowser && window.location.protocol === 'https:';
+    if (!isHttps) {
+      const localOk = await checkUrlHealth(FALLBACK_URL, 1500);
+      if (localOk) {
+        CACHED_SERVER_URL = FALLBACK_URL;
+        LAST_VERIFIED_URL = FALLBACK_URL;
+        LAST_VERIFIED_TIME = now;
+        return `${FALLBACK_URL}/api/v1`;
+      }
     }
 
-    // 4. Default fallback
+    // 4. Default fallback: on HTTPS, always prefer the secure tunnel URL to prevent browser Mixed Content block
+    if (isHttps && resolvedTunnelUrl && resolvedTunnelUrl.startsWith('https://')) {
+      CACHED_SERVER_URL = resolvedTunnelUrl;
+      LAST_VERIFIED_URL = resolvedTunnelUrl;
+      LAST_VERIFIED_TIME = now;
+      return `${resolvedTunnelUrl}/api/v1`;
+    }
+
     CACHED_SERVER_URL = FALLBACK_URL;
     return `${FALLBACK_URL}/api/v1`;
   },
@@ -299,13 +311,20 @@ export const LunaraClient = {
     } catch (err: any) {
       console.warn("First analysis attempt failed, retrying with fresh live URL...", err);
       LunaraClient.invalidateLiveUrl();
-      const freshBase = await LunaraClient.getLiveUrl(true);
-      const res2 = await makeRequest(freshBase);
-      if (!res2.ok) {
-        const errorDetail = await res2.json().catch(() => ({ detail: `HTTP ${res2.status}` }));
-        throw new Error(errorDetail.detail || err.message || "Failed to analyze image conditions");
+      try {
+        const freshBase = await LunaraClient.getLiveUrl(true);
+        const res2 = await makeRequest(freshBase);
+        if (!res2.ok) {
+          const errorDetail = await res2.json().catch(() => ({ detail: `HTTP ${res2.status}` }));
+          throw new Error(errorDetail.detail || err.message || "Failed to analyze image conditions");
+        }
+        return res2.json();
+      } catch (retryErr: any) {
+        if (retryErr.message && !retryErr.message.includes('fetch')) {
+          throw retryErr;
+        }
+        throw new Error("Unable to reach Lunara backend service. Please check that the Python tunnel is running and responsive.");
       }
-      return res2.json();
     }
   },
 
@@ -340,8 +359,12 @@ export const LunaraClient = {
     } catch (networkErr: any) {
       console.warn("Preprocessing preview hit network drop, retrying...", networkErr);
       LunaraClient.invalidateLiveUrl();
-      const freshBase = await LunaraClient.getLiveUrl(true);
-      res = await makeRequest(freshBase);
+      try {
+        const freshBase = await LunaraClient.getLiveUrl(true);
+        res = await makeRequest(freshBase);
+      } catch (retryErr: any) {
+        throw new Error("Unable to reach backend for preprocessing preview.");
+      }
     }
 
     if (!res.ok) {
@@ -383,8 +406,15 @@ export const LunaraClient = {
     } catch (networkErr: any) {
       console.warn("Matching request hit network drop. Invalidate URL and retry...", networkErr);
       LunaraClient.invalidateLiveUrl();
-      const freshBase = await LunaraClient.getLiveUrl(true);
-      res = await makeRequest(freshBase);
+      try {
+        const freshBase = await LunaraClient.getLiveUrl(true);
+        res = await makeRequest(freshBase);
+      } catch (retryErr: any) {
+        if (retryErr.message && !retryErr.message.includes('fetch')) {
+          throw retryErr;
+        }
+        throw new Error("Connection lost during matching. The backend tunnel may be reconnecting; please try again in a few seconds.");
+      }
     }
     
     if (!res.ok) {

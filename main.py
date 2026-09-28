@@ -5,10 +5,25 @@ import asyncio
 import cv2
 import gc
 import torch
+import numpy as np
 import matplotlib.pyplot as plt
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+
+def load_cv2_image(path: str, flags=cv2.IMREAD_GRAYSCALE):
+    """Safely loads an image handling Unicode paths and tricky file encodings on Windows"""
+    try:
+        img = cv2.imread(path, flags)
+        if img is not None:
+            return img
+    except Exception:
+        pass
+    try:
+        raw_data = np.fromfile(path, dtype=np.uint8)
+        return cv2.imdecode(raw_data, flags)
+    except Exception:
+        return None
 
 # Set up paths to import lunara-backend modules properly
 import sys
@@ -196,8 +211,11 @@ async def perform_matching(
             f.write(await source_img.read())
             
         # Load images directly for preprocessing
-        image_a_cv = cv2.imread(raw_ref_path, cv2.IMREAD_GRAYSCALE)
-        image_b_cv = cv2.imread(raw_src_path, cv2.IMREAD_GRAYSCALE)
+        image_a_cv = load_cv2_image(raw_ref_path, cv2.IMREAD_GRAYSCALE)
+        image_b_cv = load_cv2_image(raw_src_path, cv2.IMREAD_GRAYSCALE)
+
+        if image_a_cv is None or image_b_cv is None:
+            raise HTTPException(status_code=400, detail="Unable to decode uploaded image. Please ensure files are valid PNG/JPG images.")
         
         # DOWN-SCALE HUGE IMAGES TO PREVENT OOM CRASHES
         def resize_to_max_dim(img, max_dim=1024):

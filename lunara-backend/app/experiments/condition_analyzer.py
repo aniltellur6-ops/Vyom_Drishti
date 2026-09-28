@@ -41,7 +41,18 @@ class ConditionAnalyzer:
 
     def analyze(self, ref_path: str, src_path: str) -> Dict[str, Any]:
         ref_img = cv2.imread(ref_path)
+        if ref_img is None:
+            try:
+                ref_img = cv2.imdecode(np.fromfile(ref_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+            except Exception:
+                pass
+
         src_img = cv2.imread(src_path)
+        if src_img is None:
+            try:
+                src_img = cv2.imdecode(np.fromfile(src_path, dtype=np.uint8), cv2.IMREAD_COLOR)
+            except Exception:
+                pass
 
         if ref_img is None or src_img is None:
             raise ValueError("Could not read one or both images for analysis.")
