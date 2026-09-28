@@ -111,7 +111,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <span className="text-slate-600">•</span>
               <span className="text-cyan-400 font-medium">ISRO Space Applications Centre (SAC)</span>
               <span className="text-slate-600 hidden sm:inline">•</span>
-              <span className="text-slate-300">Designed for Scientists, Researchers & Students</span>
+              <span className="text-cyan-400 font-medium">Designed for Scientists, Researchers & Students</span>
             </div>
           </div>
         </div>
