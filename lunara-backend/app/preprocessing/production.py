@@ -42,6 +42,7 @@ RepresentationName = Literal[
     "P2_ILLUMINATION_CORRECTED",
     "P3_GRADIENT",
     "P4_COMBINED",
+    "P4_HYBRID",
     "P5_CLAHE",
     "P6_ILLUMINATION_CLAHE",
     "AUTO",
@@ -54,6 +55,7 @@ ALL_REPRESENTATIONS = [
     "P2_ILLUMINATION_CORRECTED",
     "P3_GRADIENT",
     "P4_COMBINED",
+    "P4_HYBRID",
     "P5_CLAHE",
     "P6_ILLUMINATION_CLAHE",
     "AUTO",
@@ -164,13 +166,36 @@ def representation_metadata(name: str, config: PreprocessingConfig) -> dict:
         return {**common, "method": "division_by_gaussian_background"}
     if name == "P3_GRADIENT":
         return {**common, "method": "gradient_magnitude"}
-    if name == "P4_COMBINED":
-        return {**common, "method": "normalization+illumination_correction+gradient_magnitude"}
+    if name in ("P4_HYBRID", "P4_COMBINED"):
+        return {**common, "method": "HYBRID (NORM + GRADIENT + ILLU + CLAHE)"}
     if name == "P5_CLAHE":
         return {**common, "method": "CLAHE"}
     if name == "P6_ILLUMINATION_CLAHE":
         return {**common, "method": "illumination_correction+CLAHE"}
     raise ValueError(f"Unknown representation: {name}")
+
+def hybrid_preprocess(image: np.ndarray, config: PreprocessingConfig) -> np.ndarray:
+    """
+    HYBRID PREPROCESSING PIPELINE:
+    Combines all four core preprocessing modalities:
+    1. Robust Percentile Normalization: equalizes dynamic range and removes outlier pixels.
+    2. Homomorphic / Gaussian background division: removes steep solar incidence lighting gradients.
+    3. Adaptive CLAHE: accentuates subtle high-frequency lunar crater micro-relief and local topography.
+    4. Sobel Gradient Magnitude: amplifies morphological crater rims and structural boundary transitions.
+    Blends local CLAHE structural radiance (70%) with edge gradient magnitude (30%).
+    """
+    validate_gray_uint8(image, "input image")
+    # Step 1: Robust Normalization
+    normalized = robust_normalize(image, config)
+    # Step 2: Illumination Correction
+    illuminated = illumination_correct(normalized, config)
+    # Step 3: Adaptive CLAHE
+    clahe_img = clahe_enhance(illuminated, config)
+    # Step 4: Gradient Magnitude on CLAHE image
+    grad_img = gradient_magnitude(clahe_img, config)
+    # Step 5: Weighted hybrid blend (70% texture-enhanced radiance + 30% structural boundary edges)
+    hybrid = cv2.addWeighted(clahe_img, 0.70, grad_img, 0.30, 0)
+    return hybrid
 
 def preprocess_image(image: np.ndarray, representation: RepresentationName, config: PreprocessingConfig | None = None) -> np.ndarray:
     validate_gray_uint8(image, "input image")
@@ -185,10 +210,8 @@ def preprocess_image(image: np.ndarray, representation: RepresentationName, conf
         return illumination_correct(image, config)
     if representation == "P3_GRADIENT":
         return gradient_magnitude(image, config)
-    if representation == "P4_COMBINED":
-        normalized = robust_normalize(image, config)
-        corrected = illumination_correct(normalized, config)
-        return gradient_magnitude(corrected, config)
+    if representation in ("P4_HYBRID", "P4_COMBINED"):
+        return hybrid_preprocess(image, config)
     if representation == "P5_CLAHE":
         return clahe_enhance(image, config)
     if representation == "P6_ILLUMINATION_CLAHE":

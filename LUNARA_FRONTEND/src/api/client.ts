@@ -16,12 +16,17 @@ export interface SystemStatus {
 
 export interface ImageCondition {
   illumination_difference: string;
+  illumination_delta?: number;
   texture: string;
+  texture_variance?: number;
   shadow_coverage: number;
   resolution_difference: string;
   feature_density: string;
   overall_difficulty: string;
   recommended_method: string;
+  recommended_preprocessing?: string;
+  recommended_preprocessing_name?: string;
+  preprocessing_reason?: string;
   reason: string;
 }
 
@@ -61,6 +66,16 @@ export interface Experiment {
     rmse: number;
     coverage: number;
     runtime: number;
+    transformation?: number[][];
+  };
+  files?: {
+    registered_image?: string;
+    overlay_image?: string;
+    matches_viz?: string;
+    raw_reference?: string;
+    raw_moving?: string;
+    preprocessed_reference?: string;
+    preprocessed_moving?: string;
   };
 }
 

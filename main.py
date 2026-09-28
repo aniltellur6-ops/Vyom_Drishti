@@ -288,9 +288,19 @@ async def perform_matching(
         # Build response dictionary
         metrics["transformation"] = result.refined_matrix.tolist()
 
-        # Record in registry
+        files_dict = {
+            "registered_image": f"/api/v1/results/{job_id}/{prefix}_registered_moving.jpg",
+            "overlay_image": f"/api/v1/results/{job_id}/{prefix}_registration_overlay.jpg",
+            "matches_viz": f"/api/v1/results/{job_id}/{prefix}_matches_viz.jpg",
+            "raw_reference": f"/api/v1/results/{job_id}/raw_ref_{reference_img.filename}",
+            "raw_moving": f"/api/v1/results/{job_id}/raw_src_{source_img.filename}",
+            "preprocessed_reference": f"/api/v1/results/{job_id}/prep_ref.png",
+            "preprocessed_moving": f"/api/v1/results/{job_id}/prep_src.png",
+        }
+
+        # Record in registry with full provenance and file paths
         registry.record_experiment(
-            job_id=job_id, method=requested_method, status="Successful", metrics=metrics
+            job_id=job_id, method=requested_method, status="Successful", metrics=metrics, files=files_dict
         )
 
         return {
@@ -299,23 +309,9 @@ async def perform_matching(
             "method_used": result.method_used,
             "metrics": metrics,
             "preprocessing_metadata": result.preprocessing_metadata,
-            "files": {
-                "registered_image": f"/api/v1/results/{job_id}/{prefix}_registered_moving.jpg",
-                "overlay_image": f"/api/v1/results/{job_id}/{prefix}_registration_overlay.jpg",
-                "matches_viz": f"/api/v1/results/{job_id}/{prefix}_matches_viz.jpg",
-                "raw_reference": f"/api/v1/results/{job_id}/raw_ref_{reference_img.filename}",
-                "raw_moving": f"/api/v1/results/{job_id}/raw_src_{source_img.filename}",
-                "preprocessed_reference": f"/api/v1/results/{job_id}/prep_ref.png",
-                "preprocessed_moving": f"/api/v1/results/{job_id}/prep_src.png",
-            },
+            "files": files_dict,
         }
 
-    except HTTPException as he:
-        # Don't double-wrap HTTP exceptions
-        registry.record_experiment(
-            job_id=job_id, method=requested_method, status="Failed", metrics={}
-        )
-        raise he
     except HTTPException as he:
         # Don't double-wrap HTTP exceptions
         registry.record_experiment(

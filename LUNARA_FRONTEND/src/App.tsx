@@ -22,7 +22,7 @@ export default function App() {
   const [refFile, setRefFile] = useState<File | null>(null);
   const [srcFile, setSrcFile] = useState<File | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('auto');
-  const [selectedPreprocessing, setSelectedPreprocessing] = useState<string>('P6_ILLUMINATION_CLAHE');
+  const [selectedPreprocessing, setSelectedPreprocessing] = useState<string>('AUTO');
   const [selectedReferenceSensor, setSelectedReferenceSensor] = useState<string>('AUTO');
   const [selectedMovingSensor, setSelectedMovingSensor] = useState<string>('AUTO');
   
@@ -52,10 +52,14 @@ export default function App() {
       const condition = await LunaraClient.analyzeImages(refFile, srcFile);
       setAnalysisResult(condition);
       
-      showToast(`Method selected: ${condition.recommended_method}. Running matching...`, 'success');
-      
       const methodToRun = selectedMethod === 'auto' ? condition.recommended_method : selectedMethod;
-      const result = await LunaraClient.runMatching(refFile, srcFile, methodToRun, selectedPreprocessing, selectedReferenceSensor, selectedMovingSensor);
+      const prepToRun = (selectedPreprocessing === 'AUTO' || !selectedPreprocessing)
+        ? (condition.recommended_preprocessing || 'P6_ILLUMINATION_CLAHE')
+        : selectedPreprocessing;
+
+      showToast(`Method: ${condition.recommended_method} | Preprocessing: ${condition.recommended_preprocessing_name || prepToRun}. Running matching...`, 'success');
+      
+      const result = await LunaraClient.runMatching(refFile, srcFile, methodToRun, prepToRun, selectedReferenceSensor, selectedMovingSensor);
       setMatchResult(result);
       
       showToast(`Co-Registration Complete: RMSE = ${result.metrics.rmse.toFixed(2)} px.`, 'success');

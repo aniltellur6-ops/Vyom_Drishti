@@ -36,7 +36,7 @@ export const MethodologyView: React.FC = () => {
         <div>
           <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 text-xs font-mono font-bold mb-2">
             <Award className="w-3.5 h-3.5" />
-            SIH 2024 GRAND FINALE EVALUATION DOSSIER
+            SIH 2026 GRAND FINALE EVALUATION DOSSIER
           </div>
           <h2 className="text-xl font-bold text-slate-900 font-sans">
             Technical Defense &amp; Sub-Pixel Verification Report
@@ -65,7 +65,7 @@ export const MethodologyView: React.FC = () => {
         <div className="border-b border-slate-200 pb-5 flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="text-xs font-mono text-blue-600 font-bold uppercase tracking-wider">
-              Smart India Hackathon 2024 — Problem Statement #1624
+              Smart India Hackathon 2026 — Problem Statement #1624
             </div>
             <h1 className="text-2xl font-bold text-slate-900 mt-1">
               Autonomous Sub-Pixel Registration of Chandrayaan-2 OHRC with LRO NAC Imagery

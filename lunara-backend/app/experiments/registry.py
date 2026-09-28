@@ -23,7 +23,7 @@ class ExperimentRegistry:
         with open(self.registry_file, 'w') as f:
             json.dump(data, f, indent=4)
 
-    def record_experiment(self, job_id: str, method: str, status: str, metrics: Dict[str, Any]):
+    def record_experiment(self, job_id: str, method: str, status: str, metrics: Dict[str, Any], files: Dict[str, str] = None):
         data = self._read_registry()
         
         experiment = {
@@ -37,7 +37,15 @@ class ExperimentRegistry:
                 "inlier_ratio": metrics.get("inlier_ratio", 0.0),
                 "rmse": metrics.get("rmse", 0.0),
                 "coverage": metrics.get("coverage", 0.0),
-                "runtime": metrics.get("runtime", 0.0)
+                "runtime": metrics.get("runtime", 0.0),
+                "transformation": metrics.get("transformation", [])
+            },
+            "files": files or {
+                "registered_image": f"/api/v1/results/{job_id}/lunara_registered_moving.jpg",
+                "overlay_image": f"/api/v1/results/{job_id}/lunara_registration_overlay.jpg",
+                "matches_viz": f"/api/v1/results/{job_id}/lunara_matches_viz.jpg",
+                "preprocessed_reference": f"/api/v1/results/{job_id}/prep_ref.png",
+                "preprocessed_moving": f"/api/v1/results/{job_id}/prep_src.png"
             }
         }
         

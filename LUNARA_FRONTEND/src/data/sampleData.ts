@@ -142,7 +142,7 @@ export const SAMPLE_TIE_POINTS: TiePoint[] = [
 export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
   {
     id: 'EXP-042',
-    timestamp: '2024-10-24 14:32',
+    timestamp: '2026-09-24 14:32',
     target: 'Shackleton Crater Rim',
     sensor: 'LROC NAC L/R (89.9°S)',
     algorithm: 'RIFT2 (Phase Congruency)',
@@ -157,7 +157,7 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
   },
   {
     id: 'EXP-041',
-    timestamp: '2024-10-24 11:15',
+    timestamp: '2026-09-24 11:15',
     target: 'Malapert Mountain Plain',
     sensor: 'TMC-2 / OHRC (86.1°S)',
     algorithm: 'LoFTR (Transformer)',
@@ -172,7 +172,7 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
   },
   {
     id: 'EXP-040',
-    timestamp: '2024-10-23 18:40',
+    timestamp: '2026-09-23 18:40',
     target: 'Tycho Central Peak',
     sensor: 'LROC NAC (43.3°S)',
     algorithm: 'SIFT (Scale-Invariant)',
@@ -187,7 +187,7 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
   },
   {
     id: 'EXP-039',
-    timestamp: '2024-10-23 16:02',
+    timestamp: '2026-09-23 16:02',
     target: 'Mare Tranquillitatis',
     sensor: 'Apollo-17 / LROC (8.5°N)',
     algorithm: 'SuperPoint + SuperGlue',
@@ -202,7 +202,7 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
   },
   {
     id: 'EXP-038',
-    timestamp: '2024-10-22 09:12',
+    timestamp: '2026-09-22 09:12',
     target: 'Oceanus Procellarum',
     sensor: 'Synthetic Shadow Test (18.4°N)',
     algorithm: 'SIFT (Raw Baseline)',
@@ -220,7 +220,7 @@ export const SAMPLE_EXPERIMENTS: ExperimentRecord[] = [
 export const SAMPLE_BENCHMARKS: BenchmarkMethod[] = [
   {
     name: 'VYOM DRISHTI Adaptive Orchestrator (Ours)',
-    citation: 'Team Vyom Drishti, 2024',
+    citation: 'Team Vyom Drishti, 2026',
     featureType: 'Hybrid PC-LoFTR + Epipolar Mask',
     totalMatches: 544,
     inliers: 425,
