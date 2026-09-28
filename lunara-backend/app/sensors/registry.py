@@ -40,6 +40,21 @@ class SensorRegistry:
             preferred_clahe_clip_limit=2.5,
             preferred_tile_grid_size=(8, 8)
         ))
+
+        self.register(SensorConfig(
+            name="LROC",
+            default_preprocessing_method="P6_ILLUMINATION_CLAHE",
+            preferred_clahe_clip_limit=2.5,
+            preferred_tile_grid_size=(8, 8)
+        ))
+
+        # SELENE / Kaguya TC (Terrain Camera)
+        self.register(SensorConfig(
+            name="SELENE",
+            default_preprocessing_method="P5_CLAHE",
+            preferred_clahe_clip_limit=2.0,
+            preferred_tile_grid_size=(8, 8)
+        ))
         
     def register(self, config: SensorConfig):
         self._configs[config.name.upper()] = config

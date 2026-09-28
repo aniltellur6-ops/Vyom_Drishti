@@ -91,7 +91,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
       <div className="relative z-10 px-4 py-3.5 flex flex-wrap items-center justify-between gap-4">
         {/* Brand & Mission Badge */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectTab('overview')}>
-          <div className="w-14 h-14 bg-white/95 rounded-full flex items-center justify-center p-1.5 shadow-lg shadow-amber-500/30 ring-1 ring-white/60">
+          <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center p-0.5 shadow-lg shadow-amber-500/30 ring-1 ring-white/80 overflow-hidden">
             <img src="/logo.png" alt="Vyom Drishti Logo" className="w-full h-full object-contain" />
           </div>
           <div>
@@ -106,10 +106,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 Autonomous Lunar Correspondence Engine
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 font-mono flex items-center gap-2">
+            <div className="text-[11px] text-slate-400 font-mono flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <span className="text-slate-300 font-medium">Team Vyom Drishti</span>
               <span className="text-slate-600">•</span>
-              <span className="text-slate-400">ISRO SAC</span>
+              <span className="text-cyan-400 font-medium">ISRO Space Applications Centre (SAC)</span>
+              <span className="text-slate-600 hidden sm:inline">•</span>
+              <span className="text-slate-300">Designed for Scientists, Researchers & Students</span>
             </div>
           </div>
         </div>

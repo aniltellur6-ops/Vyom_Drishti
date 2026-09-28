@@ -112,6 +112,8 @@
   height: 100%;
   object-fit: cover;
   object-position: 85% center;
+  transform: scale(0.85);
+  transform-origin: 85% center;
   border: 0;
   opacity: 0.88;
   pointer-events: none;

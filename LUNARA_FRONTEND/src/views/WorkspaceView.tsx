@@ -124,10 +124,8 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   onChange={(e) => setSelectedReferenceSensor(e.target.value)}
                 >
                   <option value="AUTO">Automatic (Detect)</option>
-                  <option value="OHRC">Chandrayaan-2 OHRC</option>
-                  <option value="TMC-2">Chandrayaan-2 TMC-2</option>
-                  <option value="IIRS">Chandrayaan-2 IIRS</option>
                   <option value="LROC">LRO LROC (NAC)</option>
+                  <option value="SELENE">SELENE / Kaguya TC</option>
                 </select>
               </div>
               
@@ -142,7 +140,6 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   <option value="OHRC">Chandrayaan-2 OHRC</option>
                   <option value="TMC-2">Chandrayaan-2 TMC-2</option>
                   <option value="IIRS">Chandrayaan-2 IIRS</option>
-                  <option value="LROC">LRO LROC (NAC)</option>
                 </select>
               </div>
             </div>
