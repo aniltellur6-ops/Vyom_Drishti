@@ -59,17 +59,17 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
           <span className="text-xs font-mono font-bold text-slate-800 uppercase">
             Optical Tie-Point Correspondences
           </span>
-          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200">
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 border border-cyan-200">
             {tiePoints.length} GCPs
           </span>
         </div>
 
         <div className="flex items-center gap-2">
           {/* Filter Pills */}
-          <div className="flex items-center gap-1 bg-white p-0.5 rounded border border-slate-200 text-[11px] font-mono">
+          <div className="flex items-center gap-1 bg-white p-1 rounded-full border border-slate-200 text-[11px] font-mono">
             <button
               onClick={() => setFilter('all')}
-              className={`px-2 py-0.5 rounded ${
+              className={`px-3 py-0.5 rounded-full transition-all ${
                 filter === 'all' ? 'bg-cyan-300 text-slate-950 font-bold' : 'text-slate-600 hover:text-slate-800'
               }`}
             >
@@ -77,7 +77,7 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
             </button>
             <button
               onClick={() => setFilter('inliers')}
-              className={`px-2 py-0.5 rounded ${
+              className={`px-3 py-0.5 rounded-full transition-all ${
                 filter === 'inliers'
                   ? 'bg-emerald-300 text-slate-950 font-bold'
                   : 'text-slate-600 hover:text-emerald-800'
@@ -87,10 +87,10 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
             </button>
             <button
               onClick={() => setFilter('outliers')}
-              className={`px-2 py-0.5 rounded ${
+              className={`px-3 py-0.5 rounded-full transition-all ${
                 filter === 'outliers'
-                  ? 'bg-rose-600 text-slate-900 font-bold'
-                  : 'text-slate-600 hover:text-rose-300'
+                  ? 'bg-rose-600 text-white font-bold'
+                  : 'text-slate-600 hover:text-rose-500'
               }`}
             >
               Outliers ({tiePoints.filter((p) => p.status === 'outlier').length})
@@ -100,7 +100,7 @@ export const TiePointInspector: React.FC<TiePointInspectorProps> = ({
           {/* Export CSV */}
           <button
             onClick={exportCSV}
-            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-700 border border-slate-700"
+            className="p-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition-colors"
             title="Export CSV Tie-Points"
           >
             <Download className="w-3.5 h-3.5" />

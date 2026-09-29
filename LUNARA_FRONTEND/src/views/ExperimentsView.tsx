@@ -352,7 +352,7 @@ export const ExperimentsView: React.FC = () => {
           <button
             onClick={() => loadExperiments(true)}
             disabled={isSyncing}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-50 hover:bg-cyan-100 text-cyan-900 border border-cyan-300 text-xs font-semibold shadow-sm transition-all active:scale-95 cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-cyan-50 hover:bg-cyan-100 text-cyan-900 border border-cyan-300 text-xs font-semibold shadow-sm transition-all active:scale-95 cursor-pointer"
             title="Sync with Backend"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-cyan-700' : 'text-cyan-700'}`} />
@@ -362,7 +362,7 @@ export const ExperimentsView: React.FC = () => {
           {/* Reset Cache Button */}
           <button
             onClick={handleResetCache}
-            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-mono transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-mono transition-all cursor-pointer"
             title="Clear Cache & Reload"
           >
             <Database className="w-3.5 h-3.5 text-slate-500" />
@@ -373,7 +373,7 @@ export const ExperimentsView: React.FC = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'date' | 'accuracy')}
-            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-lg px-3 py-1.5 outline-none font-mono"
+            className="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-full px-3.5 py-1.5 outline-none font-mono"
           >
             <option value="date">Sort: Date &amp; Time</option>
             <option value="accuracy">Sort: Highest Accuracy</option>
@@ -462,7 +462,7 @@ export const ExperimentsView: React.FC = () => {
                         >
                           <button
                             onClick={() => downloadPdfReport(exp)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
                             title={`Download PDF Report (${exp.name}.pdf)`}
                           >
                             <FileText className="w-3.5 h-3.5 text-indigo-600" />
@@ -470,7 +470,7 @@ export const ExperimentsView: React.FC = () => {
                           </button>
                           <button
                             onClick={() => downloadJsonManifest(exp)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold shadow-xs transition-all active:scale-95 cursor-pointer"
                             title={`Download JSON Manifest (${exp.name}.json)`}
                           >
                             <Download className="w-3.5 h-3.5 text-emerald-600" />
@@ -507,7 +507,7 @@ export const ExperimentsView: React.FC = () => {
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => downloadPdfReport(selectedExp)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold rounded shadow-xs transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold rounded-full shadow-xs transition-all cursor-pointer"
                     title="Download Official PDF Report"
                   >
                     <FileText className="w-3 h-3" />
@@ -515,7 +515,7 @@ export const ExperimentsView: React.FC = () => {
                   </button>
                   <button
                     onClick={() => downloadJsonManifest(selectedExp)}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold rounded shadow-xs transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold rounded-full shadow-xs transition-all cursor-pointer"
                     title="Download JSON Results"
                   >
                     <Download className="w-3 h-3" />
@@ -523,7 +523,7 @@ export const ExperimentsView: React.FC = () => {
                   </button>
                   <button
                     onClick={copyManifest}
-                    className="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] rounded border border-slate-200 shadow-xs transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-slate-100 text-slate-700 text-[11px] rounded-full border border-slate-200 shadow-xs transition-all cursor-pointer"
                     title="Copy JSON"
                   >
                     <Copy className="w-3 h-3" />

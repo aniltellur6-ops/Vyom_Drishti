@@ -2,7 +2,6 @@ export type NavigationTab =
   | 'overview'
   | 'preprocessing'
   | 'workspace'
-  | 'comparison'
   | 'experiments';
 
 export type ViewportMode = 'dual' | '4quad' | 'split' | 'vector' | 'checker';

@@ -5,7 +5,6 @@ import { AppHeader } from './components/AppHeader';
 import { OverviewView } from './views/OverviewView';
 import { PreprocessingView } from './views/PreprocessingView';
 import { WorkspaceView } from './views/WorkspaceView';
-import { ComparisonView } from './views/ComparisonView';
 import { ExperimentsView } from './views/ExperimentsView';
 import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { LunaraClient, MatchingResult, ImageCondition } from './api/client';
@@ -165,12 +164,11 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'comparison' && <ComparisonView />}
         {currentTab === 'experiments' && <ExperimentsView />}
       </main>
 
       {toastMessage && (
-        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-2.5 rounded-lg border shadow-2xl font-mono text-xs animate-bounce ${toastMessage.type === 'error' ? 'bg-rose-950 text-rose-100 border-rose-500 shadow-rose-950' : 'bg-white/95 text-slate-100 border-cyan-500 shadow-cyan-950'}`}>
+        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-5 py-2.5 rounded-full border shadow-2xl font-mono text-xs animate-bounce ${toastMessage.type === 'error' ? 'bg-rose-950 text-rose-100 border-rose-500 shadow-rose-950' : 'bg-white/95 text-slate-100 border-cyan-500 shadow-cyan-950'}`}>
           {toastMessage.type === 'error' ? <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" /> : <CheckCircle2 className="w-4 h-4 text-cyan-700 shrink-0" />}
           <span>{toastMessage.msg}</span>
         </div>

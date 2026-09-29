@@ -93,7 +93,6 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     { id: 'overview', label: 'Executive Overview', icon: <Orbit className="w-4 h-4" /> },
     { id: 'preprocessing', label: 'Preprocessing Phase 1', icon: <Settings className="w-4 h-4" /> },
     { id: 'workspace', label: 'Registration Pipeline', icon: <Layers className="w-4 h-4" />, badge: 'LIVE' },
-    { id: 'comparison', label: 'Method Matrix', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'experiments', label: 'Experiment Ledger', icon: <BookOpen className="w-4 h-4" /> },
   ];
 
@@ -158,7 +157,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {/* Live Backend Connection Pill */}
           <button
             onClick={() => setIsConnModalOpen(true)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-all shadow-sm ${
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-mono transition-all shadow-sm ${
               connectionInfo?.isOnline
                 ? 'bg-emerald-950/70 border-emerald-600/60 text-emerald-300 hover:bg-emerald-900/70'
                 : connectionInfo?.isSimulation
@@ -189,7 +188,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <button
             onClick={onTriggerRun}
             disabled={isRunningPipeline}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold shadow transition-all ${
+            className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold shadow transition-all ${
               isRunningPipeline
                 ? 'bg-amber-600 text-white cursor-wait'
                 : 'bg-cyan-400 hover:bg-cyan-300 text-slate-950 active:scale-95 shadow-cyan-400/30'
@@ -209,6 +208,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             return (
               <button
                 key={tab.id}
+                role="tab"
+                aria-selected={isActive}
                 onClick={() => onSelectTab(tab.id)}
                 className={`flex-1 flex justify-center items-center gap-2 px-3 py-3 text-xs font-medium border-b-2 transition-all whitespace-nowrap ${
                   isActive

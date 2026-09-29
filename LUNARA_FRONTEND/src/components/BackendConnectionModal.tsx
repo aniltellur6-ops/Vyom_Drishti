@@ -113,7 +113,7 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
           </div>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800 transition-colors"
+            className="text-slate-400 hover:text-white p-1 rounded-full hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -122,7 +122,7 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
         {/* Content Body */}
         <div className="p-5 space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Status Alert Banner */}
-          <div className={`p-3.5 rounded-lg border flex items-start gap-3 ${
+          <div className={`p-3.5 rounded-xl border flex items-start gap-3 ${
             isOnline 
               ? 'bg-emerald-950/40 border-emerald-700/40 text-emerald-200' 
               : 'bg-amber-950/40 border-amber-700/40 text-amber-200'
@@ -147,18 +147,18 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
           </div>
 
           {/* Quick Start Command Box */}
-          <div className="bg-slate-950 rounded-lg p-3.5 border border-slate-800 space-y-2">
+          <div className="bg-slate-950 rounded-xl p-3.5 border border-slate-800 space-y-2">
             <div className="flex items-center justify-between text-xs text-slate-300">
               <span className="font-semibold flex items-center gap-1.5 text-cyan-400">
                 <Play className="w-3.5 h-3.5" /> 1-Click Launch Command
               </span>
               <span className="text-[11px] text-slate-400 font-mono">Run in project root</span>
             </div>
-            <div className="bg-slate-900 border border-slate-700/80 rounded p-2.5 flex items-center justify-between font-mono text-xs text-slate-200">
+            <div className="bg-slate-900 border border-slate-700/80 rounded-full px-3 py-2 flex items-center justify-between font-mono text-xs text-slate-200">
               <code>python start_pipeline.py</code>
               <button
                 onClick={() => copyCommand('python start_pipeline.py')}
-                className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-cyan-300 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-cyan-300 transition-colors"
                 title="Copy command"
               >
                 {copiedCmd ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -189,26 +189,26 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
                 placeholder="e.g. http://127.0.0.1:8000 or https://xyz.trycloudflare.com" 
                 value={customUrl}
                 onChange={(e) => setCustomUrl(e.target.value)}
-                className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400"
+                className="flex-1 bg-slate-950 border border-slate-700 rounded-full px-4 py-2 text-xs font-mono text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-400"
               />
               <button
                 onClick={handleSaveCustomUrl}
                 disabled={isTesting}
-                className="px-3.5 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 text-slate-950 font-semibold text-xs transition-colors flex items-center gap-1.5 shrink-0"
+                className="px-4 py-2 rounded-full bg-cyan-500 hover:bg-cyan-400 disabled:bg-slate-700 text-slate-950 font-semibold text-xs transition-colors flex items-center gap-1.5 shrink-0"
               >
                 {isTesting ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5" />}
                 <span>Test &amp; Connect</span>
               </button>
             </div>
             {testResult && (
-              <div className={`p-2 rounded text-xs font-mono ${testResult.ok ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800' : 'bg-rose-950/60 text-rose-300 border border-rose-800'}`}>
+              <div className={`p-2.5 rounded-full px-4 text-xs font-mono ${testResult.ok ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800' : 'bg-rose-950/60 text-rose-300 border border-rose-800'}`}>
                 {testResult.message}
               </div>
             )}
           </div>
 
           {/* Simulation Mode Toggle */}
-          <div className="p-3.5 rounded-lg bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-3">
+          <div className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between gap-3">
             <div className="space-y-0.5">
               <div className="text-xs font-bold text-white flex items-center gap-1.5">
                 <Zap className="w-3.5 h-3.5 text-amber-400" />
@@ -242,7 +242,7 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors"
+            className="px-5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition-colors"
           >
             Close
           </button>

@@ -8,6 +8,10 @@
     background-color: #f7f9fc;
     color: #191c1e;
   }
+
+  button:not([role="tab"]):not([class*="rounded-none"]) {
+    border-radius: 9999px;
+  }
 }
 
 .font-mono {

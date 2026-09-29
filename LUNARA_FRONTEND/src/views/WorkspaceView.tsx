@@ -174,7 +174,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
           <button
             onClick={onTriggerRun}
             disabled={isRunningPipeline || !refFile || !srcFile}
-            className={`w-full py-4 font-bold rounded-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg relative overflow-hidden ${
+            className={`w-full py-4 font-bold rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-lg relative overflow-hidden ${
               isRunningPipeline 
                 ? 'bg-amber-500 text-slate-950 border border-amber-200/80 shadow-[0_0_18px_rgba(245,158,11,0.45)] cursor-not-allowed' 
                 : 'bg-cyan-400 hover:bg-cyan-300 disabled:bg-slate-300 disabled:text-slate-500 text-slate-950 shadow-cyan-500/25'
@@ -284,7 +284,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                 {onResetWorkspace && (
                   <button
                     onClick={onResetWorkspace}
-                    className="px-3 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 rounded text-xs font-mono border border-cyan-200 font-medium transition-colors"
+                    className="px-4 py-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 rounded-full text-xs font-mono border border-cyan-200 font-medium transition-colors shadow-xs"
                   >
                     + New Run / Clear
                   </button>

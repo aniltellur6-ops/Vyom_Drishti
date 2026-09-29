@@ -81,17 +81,17 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
               onClick={() => onNavigate('workspace')}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold text-sm shadow-lg shadow-cyan-500/25 transition-all active:scale-95"
+              className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-semibold text-sm shadow-lg shadow-cyan-500/25 transition-all active:scale-95"
             >
               <span>+ New Registration</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
             <button
-              onClick={() => onNavigate('comparison')}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-semibold text-sm shadow-lg shadow-amber-500/25 transition-all active:scale-95"
+              onClick={() => onNavigate('experiments')}
+              className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-100 hover:bg-cyan-200 text-cyan-950 font-semibold text-sm border border-cyan-300 shadow-sm transition-all active:scale-95"
             >
-              <span>Compare Methods</span>
+              <span>View Experiment Ledger</span>
             </button>
           </div>
         </div>
