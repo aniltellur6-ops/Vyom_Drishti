@@ -56,16 +56,38 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
   if (!isOpen || typeof document === 'undefined') return null;
 
   const handleSaveCustomUrl = async () => {
+    const trimmed = customUrl.trim();
+    if (!trimmed) {
+      await handleResetToAuto();
+      return;
+    }
+
+    if (trimmed.startsWith('python') || trimmed.includes('.py')) {
+      setTestResult({
+        ok: false,
+        message: 'Notice: "python start_pipeline.py" is a command to run in your computer\'s terminal, not a web URL. Click "Reset to Auto-Discovery" to connect to the active tunnel.'
+      });
+      return;
+    }
+
+    if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+      setTestResult({
+        ok: false,
+        message: 'Please enter a valid URL starting with http:// or https:// (e.g. http://127.0.0.1:8000).'
+      });
+      return;
+    }
+
     setIsTesting(true);
     setTestResult(null);
     try {
-      LunaraClient.setCustomBackendUrl(customUrl.trim() || null);
+      LunaraClient.setCustomBackendUrl(trimmed);
       await onRefreshConnection();
       const updated = await LunaraClient.checkConnection();
       if (updated.isOnline) {
-        setTestResult({ ok: true, message: `Successfully connected to ${updated.url} (${updated.latencyMs}ms)` });
+        setTestResult({ ok: true, message: `Successfully connected to ${updated.url} (${updated.latencyMs}ms ping)` });
       } else {
-        setTestResult({ ok: false, message: `Could not reach ${customUrl || 'backend'}. Please check service.` });
+        setTestResult({ ok: false, message: `Could not reach ${trimmed}. Make sure the server is running.` });
       }
     } catch (e: any) {
       setTestResult({ ok: false, message: e.message || 'Connection test failed' });
@@ -78,8 +100,18 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
     setCustomUrl('');
     LunaraClient.setCustomBackendUrl(null);
     setIsTesting(true);
-    await onRefreshConnection();
-    setIsTesting(false);
+    setTestResult(null);
+    try {
+      await onRefreshConnection();
+      const updated = await LunaraClient.checkConnection();
+      if (updated.isOnline) {
+        setTestResult({ ok: true, message: `Auto-discovery connected: ${updated.url} (${updated.latencyMs}ms)` });
+      } else {
+        setTestResult({ ok: false, message: 'Auto-discovery ready. Start the backend with "python start_pipeline.py" or enable Demo Mode below.' });
+      }
+    } finally {
+      setIsTesting(false);
+    }
   };
 
   const handleToggleSimulation = (enabled: boolean) => {
