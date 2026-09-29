@@ -102,11 +102,11 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
             <h3 className="text-xs font-semibold text-slate-400 border-b border-slate-100 pb-1">IMAGE INPUTS</h3>
             <div className="text-xs">
               <label className="block text-slate-600 font-medium mb-1">Reference Image (A)</label>
-              <input type="file" onChange={e => setRefImg(e.target.files?.[0] || null)} className="w-full bg-slate-50 text-slate-700 p-2 rounded border border-slate-200" />
+              <input type="file" onChange={e => setRefImg(e.target.files?.[0] || null)} className="w-full bg-cyan-50/60 text-slate-800 p-2 rounded border border-cyan-200 text-xs focus:ring-1 focus:ring-cyan-400 cursor-pointer" />
             </div>
             <div className="text-xs">
               <label className="block text-slate-600 font-medium mb-1">Source Image (B)</label>
-              <input type="file" onChange={e => setSrcImg(e.target.files?.[0] || null)} className="w-full bg-slate-50 text-slate-700 p-2 rounded border border-slate-200" />
+              <input type="file" onChange={e => setSrcImg(e.target.files?.[0] || null)} className="w-full bg-cyan-50/60 text-slate-800 p-2 rounded border border-cyan-200 text-xs focus:ring-1 focus:ring-cyan-400 cursor-pointer" />
             </div>
           </div>
 
@@ -170,47 +170,61 @@ export const PreprocessingView: React.FC<PreprocessingViewProps> = ({ onTriggerR
 
       {/* Main View Area */}
       <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4 h-full min-h-[60vh]">
-        <div className="bg-white border border-slate-200 rounded-lg p-2 flex flex-col shadow-sm">
-           <div className="text-xs font-mono text-slate-500 mb-2 px-2 py-1 bg-slate-50 rounded flex justify-between border border-slate-100">
+        <div className="bg-white border border-cyan-200/80 rounded-lg p-2.5 flex flex-col shadow-xs">
+           <div className="text-xs font-mono text-cyan-950 mb-2 px-3 py-1.5 bg-cyan-100/70 rounded flex justify-between border border-cyan-200 font-bold">
               <span>REFERENCE PREVIEW</span>
               {previewRef ? (
                 <span className="text-emerald-700 font-bold">PROCESSED (PHASE 1)</span>
               ) : rawRefUrl ? (
-                <span className="text-slate-600 font-medium">RAW INPUT</span>
+                <span className="text-cyan-800 font-semibold">RAW INPUT</span>
               ) : null}
            </div>
-           <div className="flex-1 bg-slate-900 rounded flex items-center justify-center overflow-hidden border border-slate-200 relative min-h-[300px]">
+           <div className={`flex-1 rounded-lg flex items-center justify-center overflow-hidden border relative min-h-[300px] transition-colors ${
+             previewRef || rawRefUrl
+               ? 'bg-cyan-50/80 border-cyan-200/90 p-2'
+               : 'bg-cyan-50/80 border-2 border-dashed border-cyan-300 hover:border-cyan-400 text-cyan-950'
+           }`}>
              {previewRef ? (
-               <img src={previewRef} alt="Reference Preview" className="w-full h-full object-contain" />
+               <img src={previewRef} alt="Reference Preview" className="w-full h-full object-contain rounded" />
              ) : rawRefUrl ? (
-               <img src={rawRefUrl} alt="Reference Raw" className="w-full h-full object-contain" />
+               <img src={rawRefUrl} alt="Reference Raw" className="w-full h-full object-contain rounded" />
              ) : (
-               <div className="text-slate-400 text-sm flex flex-col items-center gap-2">
-                 <Upload className="w-6 h-6 opacity-50" />
-                 <span>Awaiting Input</span>
+               <div className="text-cyan-950 text-sm flex flex-col items-center gap-2.5 p-4 text-center">
+                 <div className="p-3 bg-cyan-100 border border-cyan-300 rounded-full shadow-xs">
+                   <Upload className="w-6 h-6 text-cyan-700" />
+                 </div>
+                 <span className="font-semibold font-mono tracking-wider text-cyan-950">Awaiting Input Image</span>
+                 <span className="text-xs text-cyan-800 font-mono">Upload reference image in left panel</span>
                </div>
              )}
            </div>
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-lg p-2 flex flex-col shadow-sm">
-           <div className="text-xs font-mono text-slate-500 mb-2 px-2 py-1 bg-slate-50 rounded flex justify-between border border-slate-100">
+        <div className="bg-white border border-cyan-200/80 rounded-lg p-2.5 flex flex-col shadow-xs">
+           <div className="text-xs font-mono text-cyan-950 mb-2 px-3 py-1.5 bg-cyan-100/70 rounded flex justify-between border border-cyan-200 font-bold">
               <span>SOURCE PREVIEW</span>
               {previewSrc ? (
                 <span className="text-emerald-700 font-bold">PROCESSED (PHASE 1)</span>
               ) : rawSrcUrl ? (
-                <span className="text-slate-600 font-medium">RAW INPUT</span>
+                <span className="text-cyan-800 font-semibold">RAW INPUT</span>
               ) : null}
            </div>
-           <div className="flex-1 bg-slate-900 rounded flex items-center justify-center overflow-hidden border border-slate-200 relative min-h-[300px]">
+           <div className={`flex-1 rounded-lg flex items-center justify-center overflow-hidden border relative min-h-[300px] transition-colors ${
+             previewSrc || rawSrcUrl
+               ? 'bg-cyan-50/80 border-cyan-200/90 p-2'
+               : 'bg-cyan-50/80 border-2 border-dashed border-cyan-300 hover:border-cyan-400 text-cyan-950'
+           }`}>
              {previewSrc ? (
-               <img src={previewSrc} alt="Source Preview" className="w-full h-full object-contain" />
+               <img src={previewSrc} alt="Source Preview" className="w-full h-full object-contain rounded" />
              ) : rawSrcUrl ? (
-               <img src={rawSrcUrl} alt="Source Raw" className="w-full h-full object-contain" />
+               <img src={rawSrcUrl} alt="Source Raw" className="w-full h-full object-contain rounded" />
              ) : (
-               <div className="text-slate-400 text-sm flex flex-col items-center gap-2">
-                 <Upload className="w-6 h-6 opacity-50" />
-                 <span>Awaiting Input</span>
+               <div className="text-cyan-950 text-sm flex flex-col items-center gap-2.5 p-4 text-center">
+                 <div className="p-3 bg-cyan-100 border border-cyan-300 rounded-full shadow-xs">
+                   <Upload className="w-6 h-6 text-cyan-700" />
+                 </div>
+                 <span className="font-semibold font-mono tracking-wider text-cyan-950">Awaiting Input Image</span>
+                 <span className="text-xs text-cyan-800 font-mono">Upload moving image in left panel</span>
                </div>
              )}
            </div>

@@ -71,18 +71,24 @@ export const ExperimentsView: React.FC = () => {
   const filteredExperiments = experiments
     .filter(
       (e) =>
-        e.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        e.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        e.method.toLowerCase().includes(searchQuery.toLowerCase())
+        (e.id || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (e.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (e.method || '').toLowerCase().includes(searchQuery.toLowerCase())
     )
     .sort((a, b) => {
       if (sortBy === 'accuracy') {
-        if (b.metrics.inlier_ratio !== a.metrics.inlier_ratio) {
-          return b.metrics.inlier_ratio - a.metrics.inlier_ratio;
+        const ratioA = a.metrics?.inlier_ratio ?? 0;
+        const ratioB = b.metrics?.inlier_ratio ?? 0;
+        if (ratioB !== ratioA) {
+          return ratioB - ratioA;
         }
-        return a.metrics.rmse - b.metrics.rmse;
+        const rmseA = a.metrics?.rmse ?? 999;
+        const rmseB = b.metrics?.rmse ?? 999;
+        return rmseA - rmseB;
       }
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return timeB - timeA;
     });
 
   // Download PDF Dossier Certificate
@@ -303,11 +309,11 @@ export const ExperimentsView: React.FC = () => {
         timestamp_utc: selectedExp.created_at,
         method: selectedExp.method,
         convergence_metrics: {
-          inliers: selectedExp.metrics.inliers,
-          inlier_ratio_percent: (selectedExp.metrics.inlier_ratio * 100).toFixed(2),
-          rmse_pixels: selectedExp.metrics.rmse,
-          spatial_coverage_percent: selectedExp.metrics.coverage,
-          runtime: selectedExp.metrics.runtime,
+          inliers: selectedExp.metrics?.inliers ?? 0,
+          inlier_ratio_percent: ((selectedExp.metrics?.inlier_ratio ?? 0) * 100).toFixed(2),
+          rmse_pixels: selectedExp.metrics?.rmse ?? 0,
+          spatial_coverage_percent: selectedExp.metrics?.coverage ?? 0,
+          runtime: selectedExp.metrics?.runtime ?? 0,
         },
         status: selectedExp.status,
       };
@@ -424,18 +430,18 @@ export const ExperimentsView: React.FC = () => {
                       </td>
                       <td className="py-3 px-3 text-slate-700 font-medium">{exp.method}</td>
                       <td className="py-3 px-3 text-center font-bold">
-                        {exp.metrics.inliers}
+                        {exp.metrics?.inliers ?? 0}
                         <div className="text-[10px] text-slate-500">
-                          ({(exp.metrics.inlier_ratio * 100).toFixed(1)}%)
+                          ({((exp.metrics?.inlier_ratio ?? 0) * 100).toFixed(1)}%)
                         </div>
                       </td>
                       <td className="py-3 px-3 text-center">
                         <span
                           className={`font-bold ${
-                            exp.metrics.rmse < 1.0 ? 'text-emerald-700' : 'text-amber-700'
+                            (exp.metrics?.rmse ?? 99) < 1.0 ? 'text-emerald-700' : 'text-amber-700'
                           }`}
                         >
-                          {exp.metrics.rmse.toFixed(2)} px
+                          {exp.metrics?.rmse != null ? exp.metrics.rmse.toFixed(2) : 'N/A'} px
                         </span>
                       </td>
                       <td className="py-3 px-3 text-center">
@@ -530,24 +536,24 @@ export const ExperimentsView: React.FC = () => {
                 <div className="grid grid-cols-2 gap-2 text-[11px]">
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
                     <span className="text-slate-500 block text-[10px]">INLIERS</span>
-                    <span className="font-bold text-cyan-700 text-sm">{selectedExp.metrics.inliers}</span>
+                    <span className="font-bold text-cyan-700 text-sm">{selectedExp.metrics?.inliers ?? 0}</span>
                   </div>
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
                     <span className="text-slate-500 block text-[10px]">INLIER RATIO</span>
                     <span className="font-bold text-emerald-700 text-sm">
-                      {(selectedExp.metrics.inlier_ratio * 100).toFixed(1)}%
+                      {((selectedExp.metrics?.inlier_ratio ?? 0) * 100).toFixed(1)}%
                     </span>
                   </div>
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
                     <span className="text-slate-500 block text-[10px]">RESIDUAL RMSE</span>
                     <span className="font-bold text-indigo-600 text-sm">
-                      {selectedExp.metrics.rmse.toFixed(2)} px
+                      {selectedExp.metrics?.rmse != null ? selectedExp.metrics.rmse.toFixed(2) : 'N/A'} px
                     </span>
                   </div>
                   <div className="bg-slate-50 p-2 rounded border border-slate-200">
                     <span className="text-slate-500 block text-[10px]">SPATIAL COVERAGE</span>
                     <span className="font-bold text-amber-700 text-sm">
-                      {selectedExp.metrics.coverage.toFixed(1)}%
+                      {selectedExp.metrics?.coverage != null ? selectedExp.metrics.coverage.toFixed(1) : 'N/A'}%
                     </span>
                   </div>
                 </div>

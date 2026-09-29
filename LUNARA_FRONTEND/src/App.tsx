@@ -26,14 +26,41 @@ export default function App() {
   const [selectedReferenceSensor, setSelectedReferenceSensor] = useState<string>('AUTO');
   const [selectedMovingSensor, setSelectedMovingSensor] = useState<string>('AUTO');
   
-  const [analysisResult, setAnalysisResult] = useState<ImageCondition | null>(null);
-  const [matchResult, setMatchResult] = useState<MatchingResult | null>(null);
+  const [analysisResult, setAnalysisResult] = useState<ImageCondition | null>(() => {
+    try {
+      const saved = localStorage.getItem('lunara_last_analysis_result');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [matchResult, setMatchResult] = useState<MatchingResult | null>(() => {
+    try {
+      const saved = localStorage.getItem('lunara_last_match_result');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const showToast = (msg: string, type: 'success'|'error' = 'success') => {
     setToastMessage({msg, type});
     setTimeout(() => {
       setToastMessage(null);
     }, 4000);
+  };
+
+  const handleResetWorkspace = () => {
+    setMatchResult(null);
+    setAnalysisResult(null);
+    setRefFile(null);
+    setSrcFile(null);
+    try {
+      localStorage.removeItem('lunara_last_match_result');
+      localStorage.removeItem('lunara_last_analysis_result');
+    } catch {}
+    showToast('Workspace reset for new registration.', 'success');
   };
 
   const handleTriggerRun = async () => {
@@ -51,6 +78,9 @@ export default function App() {
       showToast('Analyzing image conditions...', 'success');
       const condition = await LunaraClient.analyzeImages(refFile, srcFile);
       setAnalysisResult(condition);
+      try {
+        localStorage.setItem('lunara_last_analysis_result', JSON.stringify(condition));
+      } catch {}
       
       const methodToRun = selectedMethod === 'auto' 
         ? (condition.recommended_method_key || condition.recommended_method || 'lightglue') 
@@ -63,6 +93,9 @@ export default function App() {
       
       const result = await LunaraClient.runMatching(refFile, srcFile, methodToRun, prepToRun, selectedReferenceSensor, selectedMovingSensor);
       setMatchResult(result);
+      try {
+        localStorage.setItem('lunara_last_match_result', JSON.stringify(result));
+      } catch {}
       
       showToast(`Co-Registration Complete: RMSE = ${result.metrics.rmse.toFixed(2)} px.`, 'success');
       
@@ -92,7 +125,7 @@ export default function App() {
         onExportReport={handleExportReport}
       />
 
-      <main className="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-5 lg:p-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-5 lg:p-6">
         {currentTab === 'overview' && (
           <OverviewView
             onNavigate={(tab) => setCurrentTab(tab)}
@@ -128,6 +161,7 @@ export default function App() {
             setSelectedReferenceSensor={setSelectedReferenceSensor}
             selectedMovingSensor={selectedMovingSensor}
             setSelectedMovingSensor={setSelectedMovingSensor}
+            onResetWorkspace={handleResetWorkspace}
           />
         )}
 
@@ -143,7 +177,7 @@ export default function App() {
       )}
 
       <footer className="border-t border-slate-200/80 bg-[#f7f5ef] text-slate-600 text-xs py-3 px-4 sm:px-6">
-        <div className="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3 font-mono">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 font-mono">
           <div className="flex items-center gap-3">
             <span className="text-slate-800 font-bold">VYOM DRISHTI v2.0</span>
             <span className="text-slate-600">•</span>

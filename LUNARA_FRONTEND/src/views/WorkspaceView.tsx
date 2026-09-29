@@ -26,6 +26,7 @@ interface WorkspaceViewProps {
   setSelectedReferenceSensor: (m: string) => void;
   selectedMovingSensor: string;
   setSelectedMovingSensor: (m: string) => void;
+  onResetWorkspace?: () => void;
 }
 
 export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
@@ -44,7 +45,8 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
   selectedReferenceSensor,
   setSelectedReferenceSensor,
   selectedMovingSensor,
-  setSelectedMovingSensor
+  setSelectedMovingSensor,
+  onResetWorkspace
 }) => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, setter: (f: File | null) => void) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -69,14 +71,14 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">REFERENCE IMAGE (BASE)</label>
-                <div className="border-2 border-dashed border-slate-700 rounded-md p-4 text-center hover:bg-slate-800/50 transition-colors cursor-pointer relative">
+                <div className="border-2 border-dashed border-cyan-400/90 bg-cyan-50/70 hover:bg-cyan-100/70 rounded-md p-4 text-center transition-colors cursor-pointer relative shadow-xs">
                   <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={(e) => handleFileChange(e, setRefFile)} />
                   {refFile ? (
-                    <span className="text-emerald-700 font-mono text-sm">{refFile.name}</span>
+                    <span className="text-emerald-700 font-mono text-sm font-semibold">{refFile.name}</span>
                   ) : (
-                    <div className="flex flex-col items-center gap-2 text-slate-500">
-                      <UploadCloud className="w-6 h-6" />
-                      <span className="text-sm font-semibold">Upload Reference</span>
+                    <div className="flex flex-col items-center gap-2 text-cyan-800">
+                      <UploadCloud className="w-6 h-6 text-cyan-700" />
+                      <span className="text-sm font-semibold text-cyan-950">Upload Reference</span>
                     </div>
                   )}
                 </div>
@@ -84,14 +86,14 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
 
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">MOVING IMAGE (TARGET)</label>
-                <div className="border-2 border-dashed border-slate-700 rounded-md p-4 text-center hover:bg-slate-800/50 transition-colors cursor-pointer relative">
+                <div className="border-2 border-dashed border-cyan-400/90 bg-cyan-50/70 hover:bg-cyan-100/70 rounded-md p-4 text-center transition-colors cursor-pointer relative shadow-xs">
                   <input type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onChange={(e) => handleFileChange(e, setSrcFile)} />
                   {srcFile ? (
-                    <span className="text-cyan-700 font-mono text-sm">{srcFile.name}</span>
+                    <span className="text-cyan-800 font-mono text-sm font-semibold">{srcFile.name}</span>
                   ) : (
-                    <div className="flex flex-col items-center gap-2 text-slate-500">
-                      <UploadCloud className="w-6 h-6" />
-                      <span className="text-sm font-semibold">Upload Moving</span>
+                    <div className="flex flex-col items-center gap-2 text-cyan-800">
+                      <UploadCloud className="w-6 h-6 text-cyan-700" />
+                      <span className="text-sm font-semibold text-cyan-950">Upload Moving</span>
                     </div>
                   )}
                 </div>
@@ -105,7 +107,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">REFERENCE SENSOR</label>
                 <select 
-                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  className="w-full bg-slate-50 border border-slate-300 rounded p-2 text-sm text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                   value={selectedReferenceSensor}
                   onChange={(e) => setSelectedReferenceSensor(e.target.value)}
                 >
@@ -118,7 +120,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">MOVING SENSOR</label>
                 <select 
-                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  className="w-full bg-slate-50 border border-slate-300 rounded p-2 text-sm text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                   value={selectedMovingSensor}
                   onChange={(e) => setSelectedMovingSensor(e.target.value)}
                 >
@@ -137,7 +139,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">MATCHING METHOD</label>
                 <select 
-                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  className="w-full bg-slate-50 border border-slate-300 rounded p-2 text-sm text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                   value={selectedMethod}
                   onChange={(e) => setSelectedMethod(e.target.value)}
                 >
@@ -152,7 +154,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               <div>
                 <label className="block text-xs font-mono text-slate-600 mb-1">PREPROCESSING</label>
                 <select 
-                  className="w-full bg-slate-50 border border-slate-700 rounded p-2 text-sm text-slate-800"
+                  className="w-full bg-slate-50 border border-slate-300 rounded p-2 text-sm text-slate-800 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500"
                   value={selectedPreprocessing}
                   onChange={(e) => setSelectedPreprocessing(e.target.value)}
                 >
@@ -269,10 +271,26 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               </div>
             </div>
           )}
-
-          {/* Results View */}
+          {/* Results View */}
           {matchResult ? (
             <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+              <div className="flex items-center justify-between bg-white border border-slate-200 px-4 py-3 rounded-lg shadow-sm">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <span className="font-bold text-xs font-mono text-slate-800 uppercase tracking-wider">
+                    CO-REGISTRATION RECORD ({matchResult.job_id.slice(0, 10)})
+                  </span>
+                </div>
+                {onResetWorkspace && (
+                  <button
+                    onClick={onResetWorkspace}
+                    className="px-3 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 rounded text-xs font-mono border border-cyan-200 font-medium transition-colors"
+                  >
+                    + New Run / Clear
+                  </button>
+                )}
+              </div>
+
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono">
                 <div className="bg-white border border-slate-200 p-4 rounded-lg flex flex-col items-center justify-center text-center shadow-sm">
                   <span className="text-slate-500 text-xs mb-1">INLIERS</span>
@@ -326,7 +344,7 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                       PREPROCESSED IMAGES (INPUT TO CO-REGISTRATION PIPELINE)
                     </span>
                   </div>
-                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-50 text-cyan-800 border border-cyan-200 font-bold">
+                  <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-100 text-cyan-900 border border-cyan-300 font-bold">
                     USED FOR KEYPOINT MATCHING
                   </span>
                 </div>
@@ -335,12 +353,12 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden flex flex-col">
-                    <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-mono font-bold text-slate-700 flex justify-between items-center">
+                  <div className="bg-white border border-cyan-200/80 rounded-lg overflow-hidden flex flex-col shadow-xs">
+                    <div className="bg-cyan-100/70 px-3 py-2 border-b border-cyan-200 text-xs font-mono font-bold text-cyan-950 flex justify-between items-center">
                       <span>PREPROCESSED REFERENCE IMAGE</span>
-                      <span className="text-[10px] text-cyan-700 font-normal">Reference Tile</span>
+                      <span className="text-[10px] text-cyan-700 font-semibold">Reference Tile</span>
                     </div>
-                    <div className="bg-black flex-1 flex items-center justify-center min-h-[280px] p-1">
+                    <div className="bg-cyan-50/70 border border-cyan-200/90 rounded flex-1 flex items-center justify-center min-h-[280px] p-2">
                       <NgrokImage
                         src={LunaraClient.getResultUrl(matchResult.files.preprocessed_reference)}
                         alt="Preprocessed Reference"
@@ -349,12 +367,12 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="bg-slate-50 border border-slate-200 rounded-lg overflow-hidden flex flex-col">
-                    <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-mono font-bold text-slate-700 flex justify-between items-center">
+                  <div className="bg-white border border-cyan-200/80 rounded-lg overflow-hidden flex flex-col shadow-xs">
+                    <div className="bg-cyan-100/70 px-3 py-2 border-b border-cyan-200 text-xs font-mono font-bold text-cyan-950 flex justify-between items-center">
                       <span>PREPROCESSED MOVING IMAGE</span>
-                      <span className="text-[10px] text-amber-700 font-normal">Moving Tile</span>
+                      <span className="text-[10px] text-amber-800 font-semibold">Moving Tile</span>
                     </div>
-                    <div className="bg-black flex-1 flex items-center justify-center min-h-[280px] p-1">
+                    <div className="bg-cyan-50/70 border border-cyan-200/90 rounded flex-1 flex items-center justify-center min-h-[280px] p-2">
                       <NgrokImage
                         src={LunaraClient.getResultUrl(matchResult.files.preprocessed_moving)}
                         alt="Preprocessed Moving"
@@ -367,21 +385,31 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               
               {/* Visual Before/After Comparison */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-white border border-slate-200 rounded-lg overflow-hidden flex flex-col shadow-sm">
-                  <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-mono font-bold text-slate-700">
-                    ORIGINAL RAW MOVING IMAGE (PRE-ALIGNMENT)
+                <div className="bg-white border border-cyan-200/80 rounded-lg overflow-hidden flex flex-col shadow-xs">
+                  <div className="bg-cyan-100/70 px-3 py-2 border-b border-cyan-200 text-xs font-mono font-bold text-cyan-950 flex justify-between items-center">
+                    <span>ORIGINAL RAW MOVING IMAGE (PRE-ALIGNMENT)</span>
                   </div>
-                  <div className="bg-black flex-1 flex items-center justify-center relative min-h-[300px] p-1">
-                    {srcFile && <img src={URL.createObjectURL(srcFile)} alt="Original Moving" className="max-h-[500px] max-w-full object-contain" />}
+                  <div className="bg-cyan-50/70 border border-cyan-200/90 rounded flex-1 flex items-center justify-center relative min-h-[300px] p-2">
+                    {srcFile ? (
+                      <img src={URL.createObjectURL(srcFile)} alt="Original Moving" className="max-h-[500px] max-w-full object-contain" />
+                    ) : matchResult.files?.preprocessed_moving ? (
+                      <NgrokImage 
+                        src={LunaraClient.getResultUrl(matchResult.files.preprocessed_moving)} 
+                        alt="Original Moving" 
+                        className="max-h-[500px] max-w-full object-contain"
+                      />
+                    ) : (
+                      <span className="text-xs text-cyan-800 font-mono">Original moving image cached from session</span>
+                    )}
                   </div>
                 </div>
                 
-                <div className="bg-white border border-slate-200 rounded-lg overflow-hidden flex flex-col shadow-sm">
-                  <div className="bg-slate-100 px-3 py-2 border-b border-slate-200 text-xs font-mono font-bold text-slate-700 flex justify-between items-center">
+                <div className="bg-white border border-cyan-200/80 rounded-lg overflow-hidden flex flex-col shadow-xs">
+                  <div className="bg-cyan-100/70 px-3 py-2 border-b border-cyan-200 text-xs font-mono font-bold text-cyan-950 flex justify-between items-center">
                     <span>WARPED REGISTERED MOVING IMAGE</span>
                     <span className="text-emerald-700 font-bold">RMSE: {matchResult.metrics.rmse.toFixed(2)} px</span>
                   </div>
-                  <div className="bg-black flex-1 flex items-center justify-center relative min-h-[300px] p-1">
+                  <div className="bg-cyan-50/70 border border-cyan-200/90 rounded flex-1 flex items-center justify-center relative min-h-[300px] p-2">
                     <NgrokImage 
                       src={LunaraClient.getResultUrl(matchResult.files.registered_image)} 
                       alt="Registered" 
@@ -394,40 +422,49 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               <div className="bg-white border border-slate-200 p-5 rounded-lg shadow-sm">
                  <h2 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><Layers className="w-4 h-4 text-cyan-700" /> CO-REGISTRATION RESULT & OVERLAYS</h2>
                   <div className="flex flex-col gap-4">
-                    <div className="aspect-video bg-black rounded-lg border border-slate-200 overflow-hidden relative">
+                    <div className="aspect-video bg-cyan-50/70 rounded-lg border border-cyan-200/90 overflow-hidden relative">
                       <NgrokImage src={LunaraClient.getResultUrl(matchResult.files.overlay_image)} alt="Overlay" className="w-full h-full object-contain" />
-                      <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded text-xs font-mono text-cyan-800 border border-slate-200 font-bold shadow-sm">OVERLAY (50/50 BLEND)</div>
+                      <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded text-xs font-mono text-cyan-950 border border-cyan-200 font-bold shadow-sm">OVERLAY (50/50 BLEND)</div>
                     </div>
                     
-                    <div className="aspect-video bg-black rounded-lg border border-slate-200 overflow-hidden relative">
+                    <div className="aspect-video bg-cyan-50/70 rounded-lg border border-cyan-200/90 overflow-hidden relative">
                       <NgrokImage src={LunaraClient.getResultUrl(matchResult.files.matches_viz)} alt="Matches" className="w-full h-full object-contain" />
-                      <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded text-xs font-mono text-emerald-800 border border-slate-200 font-bold shadow-sm">INLIER CORRESPONDENCES ({matchResult.metrics.inliers} Inliers)</div>
+                      <div className="absolute top-2 left-2 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded text-xs font-mono text-emerald-950 border border-cyan-200 font-bold shadow-sm">INLIER CORRESPONDENCES ({matchResult.metrics.inliers} Inliers)</div>
                     </div>
-                 </div>
+                  </div>
               </div>
 
             </div>
           ) : (
-            <div className={`h-full min-h-[400px] border-2 border-dashed ${isRunningPipeline ? 'border-indigo-500/50 bg-indigo-950/10' : 'border-slate-200'} rounded-xl flex items-center justify-center font-mono text-sm relative overflow-hidden transition-all duration-700`}>
+            <div className={`h-full min-h-[420px] border-2 border-dashed ${
+              isRunningPipeline 
+                ? 'border-cyan-400 bg-cyan-50/90' 
+                : 'border-cyan-300 bg-gradient-to-br from-cyan-50/90 via-cyan-100/50 to-sky-50/80'
+            } rounded-xl flex items-center justify-center font-mono text-sm relative overflow-hidden transition-all duration-500 shadow-xs`}>
               {isRunningPipeline ? (
                 <>
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-indigo-500/10 to-transparent scanline-active pointer-events-none"></div>
-                  <div className="absolute inset-0 pulse-ring-effect rounded-full border-2 border-indigo-500/30 m-auto w-32 h-32 pointer-events-none"></div>
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/10 to-transparent scanline-active pointer-events-none"></div>
+                  <div className="absolute inset-0 pulse-ring-effect rounded-full border-2 border-cyan-500/30 m-auto w-32 h-32 pointer-events-none"></div>
                   <div className="relative z-10 flex flex-col items-center gap-4">
                     <div className="relative animate-float">
-                      <Target className="w-16 h-16 text-indigo-400 animate-spin-slow opacity-80" />
-                      <Layers className="w-6 h-6 text-cyan-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                      <Target className="w-16 h-16 text-cyan-600 animate-spin-slow opacity-80" />
+                      <Layers className="w-6 h-6 text-cyan-800 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
                     </div>
                     <div className="flex flex-col items-center text-center">
-                      <span className="text-indigo-400 animate-pulse tracking-[0.2em] text-lg font-bold shadow-indigo-500/50 drop-shadow-md">COMPUTING CORRESPONDENCES</span>
-                      <span className="text-indigo-300/70 text-xs mt-2 max-w-xs uppercase">Running RANSAC spatial validation and Homography estimation matrix</span>
+                      <span className="text-cyan-800 animate-pulse tracking-[0.2em] text-lg font-bold shadow-cyan-500/50 drop-shadow-md">COMPUTING CORRESPONDENCES</span>
+                      <span className="text-cyan-900/80 text-xs mt-2 max-w-xs uppercase">Running RANSAC spatial validation and Homography estimation matrix</span>
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="text-slate-500 flex flex-col items-center gap-3">
-                  <Layers className="w-10 h-10 text-slate-300" />
-                  <span className="tracking-widest opacity-80">AWAITING REGISTRATION REQUEST</span>
+                <div className="text-cyan-950 flex flex-col items-center gap-3.5 p-6 text-center max-w-md">
+                  <div className="p-4 bg-cyan-100 border border-cyan-300 rounded-2xl shadow-xs">
+                    <Layers className="w-10 h-10 text-cyan-700" />
+                  </div>
+                  <span className="tracking-widest font-bold text-cyan-950 text-base">AWAITING REGISTRATION REQUEST</span>
+                  <span className="text-xs text-cyan-800 leading-relaxed font-sans">
+                    Select reference and moving lunar imagery from the control panel, configure method &amp; sensors, then click RUN REGISTRATION.
+                  </span>
                 </div>
               )}
             </div>

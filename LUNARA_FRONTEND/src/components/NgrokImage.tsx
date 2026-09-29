@@ -39,7 +39,7 @@ export const NgrokImage = ({ src, alt, className }: { src: string; alt: string; 
 
   if (hasError) {
     return (
-      <div className={`bg-slate-900/60 flex items-center justify-center text-[10px] text-slate-500 font-mono ${className}`}>
+      <div className={`bg-cyan-100/60 border border-cyan-200/80 rounded flex items-center justify-center text-[10px] text-cyan-800 font-mono ${className}`}>
         IMAGE UNAVAILABLE
       </div>
     );
@@ -47,7 +47,7 @@ export const NgrokImage = ({ src, alt, className }: { src: string; alt: string; 
 
   if (!imgSrc) {
     return (
-      <div className={`animate-pulse bg-slate-900/50 flex items-center justify-center text-xs text-slate-500 font-mono ${className}`}>
+      <div className={`animate-pulse bg-cyan-100/40 border border-cyan-200/60 rounded flex items-center justify-center text-xs text-cyan-800 font-mono ${className}`}>
         LOADING IMAGE...
       </div>
     );

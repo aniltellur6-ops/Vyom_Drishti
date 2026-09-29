@@ -45,17 +45,17 @@ export const ComparisonView: React.FC = () => {
       (e) => e.name === 'EXP-2026-0911-138d' || e.id === '138ded32-0cf3-47b6-b230-98f790e79ab3'
     );
 
-    const inliers = benchmarkRun ? benchmarkRun.metrics.inliers : 860;
-    const inlierRatio = benchmarkRun 
+    const inliers = benchmarkRun?.metrics?.inliers ?? 860;
+    const inlierRatio = benchmarkRun?.metrics?.inlier_ratio != null 
       ? Number((benchmarkRun.metrics.inlier_ratio * 100).toFixed(1)) 
       : 83.7;
-    const spatialCoverage = benchmarkRun 
+    const spatialCoverage = benchmarkRun?.metrics?.coverage != null 
       ? Number(benchmarkRun.metrics.coverage.toFixed(1)) 
       : 93.6;
-    const latencySeconds = benchmarkRun 
+    const latencySeconds = benchmarkRun?.metrics?.runtime != null 
       ? Number(benchmarkRun.metrics.runtime.toFixed(2)) 
       : 3.94;
-    const totalMatches = Math.round(inliers / (inlierRatio / 100));
+    const totalMatches = Math.round(inliers / ((inlierRatio || 83.7) / 100));
 
     return SAMPLE_BENCHMARKS.map((b) => {
       if (b.name.includes('VYOM DRISHTI')) {
