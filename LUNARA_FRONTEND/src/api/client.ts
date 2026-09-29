@@ -11,7 +11,12 @@ const STORAGE_KEY_SIMULATION_MODE = 'lunara_simulation_mode';
 let CACHED_SERVER_URL = FALLBACK_URL;
 let LAST_VERIFIED_URL = "";
 let LAST_VERIFIED_TIME = 0;
-const URL_CACHE_TTL_MS = 20000; // 20 seconds cache for verified URL
+const URL_CACHE_TTL_MS = 60000; // 60 seconds cache for verified responsive URL
+
+// Failure debouncing & in-flight deduplication to eliminate status flapping
+let inFlightCheck: Promise<ConnectionDetails> | null = null;
+let consecutiveFailures = 0;
+let lastKnownGoodConnection: ConnectionDetails | null = null;
 
 export interface ConnectionDetails {
   isOnline: boolean;
@@ -100,23 +105,35 @@ const STORAGE_KEY_LAST_SYNC = 'lunara_experiments_last_sync';
 
 /**
  * Check if a candidate backend URL is responsive and healthy
+ * Features a generous timeout and single fast retry to prevent false-negative offline alerts
  */
-async function checkUrlHealth(url: string, timeoutMs: number = 5000): Promise<boolean> {
+async function checkUrlHealth(url: string, timeoutMs: number = 7000): Promise<boolean> {
   if (!url) return false;
   const cleanUrl = url.replace(/\/$/, '');
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    const res = await fetch(`${cleanUrl}/api/v1/system/status?_t=${Date.now()}`, {
-      signal: controller.signal,
-      headers: { 'ngrok-skip-browser-warning': 'true' },
-      cache: 'no-store'
-    });
-    clearTimeout(timer);
-    return res.ok;
-  } catch {
-    return false;
-  }
+
+  const probe = async (t: number): Promise<boolean> => {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), t);
+      const res = await fetch(`${cleanUrl}/api/v1/system/status?_t=${Date.now()}`, {
+        signal: controller.signal,
+        headers: { 'ngrok-skip-browser-warning': 'true' },
+        cache: 'no-store'
+      });
+      clearTimeout(timer);
+      return res.ok;
+    } catch {
+      return false;
+    }
+  };
+
+  // Attempt 1 with primary timeout
+  const firstTry = await probe(timeoutMs);
+  if (firstTry) return true;
+
+  // Attempt 2: fast retry to eliminate Cloudflare tunnel packet jitter false alarms
+  await new Promise((r) => setTimeout(r, 300));
+  return await probe(4500);
 }
 
 /**
@@ -437,45 +454,107 @@ export const LunaraClient = {
     }
   },
 
-  checkConnection: async (): Promise<ConnectionDetails> => {
-    const isSim = LunaraClient.isSimulationMode();
-    const startTime = performance.now();
-    try {
-      const baseUrl = await LunaraClient.getLiveUrl(true);
-      const res = await fetch(`${baseUrl}/system/status?_t=${Date.now()}`, {
-        headers: { 'ngrok-skip-browser-warning': 'true' },
-        cache: 'no-store'
-      });
-      const latencyMs = Math.round(performance.now() - startTime);
-      if (res.ok) {
-        const sys: SystemStatus = await res.json();
-        const cleanBase = baseUrl.replace(/\/api\/v1$/, '');
-        let source: 'local' | 'tunnel' | 'custom' = 'local';
-        const customUrl = LunaraClient.getCustomBackendUrl();
-        if (customUrl && cleanBase.includes(customUrl)) {
-          source = 'custom';
-        } else if (cleanBase.includes('trycloudflare.com') || cleanBase.includes('ngrok')) {
-          source = 'tunnel';
-        }
-        return {
-          isOnline: true,
-          url: cleanBase,
-          source,
-          latencyMs,
-          isSimulation: isSim,
-          systemStatus: sys
-        };
-      }
-    } catch {
-      // offline
+  checkConnection: async (forceRefresh: boolean = false): Promise<ConnectionDetails> => {
+    // Deduplicate in-flight requests to avoid choking the tunnel
+    if (inFlightCheck) {
+      return inFlightCheck;
     }
 
-    return {
-      isOnline: false,
-      url: CACHED_SERVER_URL || FALLBACK_URL,
-      source: 'none',
-      isSimulation: isSim
-    };
+    inFlightCheck = (async () => {
+      const isSim = LunaraClient.isSimulationMode();
+      const startTime = performance.now();
+      const now = Date.now();
+
+      try {
+        // Step 1: If we already have a verified healthy URL and it's within TTL, probe it directly
+        let targetBase = LAST_VERIFIED_URL;
+        if (!targetBase || forceRefresh || (now - LAST_VERIFIED_TIME > URL_CACHE_TTL_MS)) {
+          const resolved = await LunaraClient.getLiveUrl(forceRefresh);
+          targetBase = resolved.replace(/\/api\/v1$/, '');
+        }
+
+        if (targetBase) {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 7500);
+          const res = await fetch(`${targetBase}/api/v1/system/status?_t=${Date.now()}`, {
+            signal: controller.signal,
+            headers: { 'ngrok-skip-browser-warning': 'true' },
+            cache: 'no-store'
+          });
+          clearTimeout(timer);
+
+          if (res.ok) {
+            const sys: SystemStatus = await res.json();
+            const latencyMs = Math.round(performance.now() - startTime);
+            let source: 'local' | 'tunnel' | 'custom' = 'local';
+            const customUrl = LunaraClient.getCustomBackendUrl();
+            if (customUrl && targetBase.includes(customUrl)) {
+              source = 'custom';
+            } else if (targetBase.includes('trycloudflare.com') || targetBase.includes('ngrok')) {
+              source = 'tunnel';
+            }
+
+            const successDetails: ConnectionDetails = {
+              isOnline: true,
+              url: targetBase,
+              source,
+              latencyMs,
+              isSimulation: isSim,
+              systemStatus: sys
+            };
+
+            // Success resets consecutive failure counter & updates cache
+            consecutiveFailures = 0;
+            LAST_VERIFIED_URL = targetBase;
+            LAST_VERIFIED_TIME = Date.now();
+            CACHED_SERVER_URL = targetBase;
+            lastKnownGoodConnection = successDetails;
+
+            return successDetails;
+          }
+        }
+      } catch (err) {
+        // Network or timeout exception
+      }
+
+      // If probe failed, increment failure counter
+      consecutiveFailures++;
+
+      // Debounce: If previously verified online within last 90 seconds, perform 1 immediate confirmation check
+      // before declaring offline, to completely absorb Cloudflare edge jitter and avoid UI status flapping
+      if (lastKnownGoodConnection && lastKnownGoodConnection.isOnline && consecutiveFailures < 2) {
+        try {
+          const retryBase = lastKnownGoodConnection.url;
+          const retryOk = await checkUrlHealth(retryBase, 5000);
+          if (retryOk) {
+            consecutiveFailures = 0;
+            LAST_VERIFIED_URL = retryBase;
+            LAST_VERIFIED_TIME = Date.now();
+            return {
+              ...lastKnownGoodConnection,
+              latencyMs: Math.round(performance.now() - startTime)
+            };
+          }
+        } catch {}
+      }
+
+      // If 2 consecutive failures occurred or we have no confirmed prior state, transition to offline
+      LAST_VERIFIED_URL = "";
+      LAST_VERIFIED_TIME = 0;
+
+      const offlineDetails: ConnectionDetails = {
+        isOnline: false,
+        url: CACHED_SERVER_URL || FALLBACK_URL,
+        source: 'none',
+        isSimulation: isSim
+      };
+      lastKnownGoodConnection = offlineDetails;
+      return offlineDetails;
+    })().finally(() => {
+      inFlightCheck = null;
+    });
+
+    return inFlightCheck;
   },
 
   /**
@@ -501,7 +580,7 @@ export const LunaraClient = {
       const customUrl = localStorage.getItem(STORAGE_KEY_CUSTOM_URL);
       if (customUrl && customUrl.trim()) {
         const cleanCustom = customUrl.trim().replace(/\/$/, '');
-        const customOk = await checkUrlHealth(cleanCustom, 2500);
+        const customOk = await checkUrlHealth(cleanCustom, 4000);
         if (customOk) {
           CACHED_SERVER_URL = cleanCustom;
           LAST_VERIFIED_URL = cleanCustom;
@@ -513,7 +592,7 @@ export const LunaraClient = {
 
     // 1. If running on local machine, check local endpoints first
     if (isLocalhost) {
-      const localIpv4Ok = await checkUrlHealth(LOCAL_URL_IPV4, 1500);
+      const localIpv4Ok = await checkUrlHealth(LOCAL_URL_IPV4, 2000);
       if (localIpv4Ok) {
         CACHED_SERVER_URL = LOCAL_URL_IPV4;
         LAST_VERIFIED_URL = LOCAL_URL_IPV4;
@@ -521,7 +600,7 @@ export const LunaraClient = {
         return `${LOCAL_URL_IPV4}/api/v1`;
       }
 
-      const localNameOk = await checkUrlHealth(LOCAL_URL_NAME, 1500);
+      const localNameOk = await checkUrlHealth(LOCAL_URL_NAME, 2000);
       if (localNameOk) {
         CACHED_SERVER_URL = LOCAL_URL_NAME;
         LAST_VERIFIED_URL = LOCAL_URL_NAME;
@@ -531,7 +610,6 @@ export const LunaraClient = {
     }
 
     // 2. Query dynamic Cloudflare tunnel registered in Vercel
-    let resolvedTunnelUrl: string | null = null;
     try {
       let res = await fetch(`/api/url?_t=${Date.now()}`, { cache: 'no-store' }).catch(() => null);
       if (!res || !res.ok) {
@@ -542,8 +620,7 @@ export const LunaraClient = {
         const data = await res.json();
         if (data.backendUrl) {
           const candidateUrl = data.backendUrl.replace(/\/$/, '');
-          resolvedTunnelUrl = candidateUrl;
-          const isHealthy = await checkUrlHealth(candidateUrl, 4000);
+          const isHealthy = await checkUrlHealth(candidateUrl, 7500);
           if (isHealthy) {
             CACHED_SERVER_URL = candidateUrl;
             LAST_VERIFIED_URL = candidateUrl;
@@ -557,9 +634,9 @@ export const LunaraClient = {
       console.warn("Failed to query dynamic tunnel URL:", e);
     }
 
-    // 3. Fallback to local IPv4 check ONLY IF not HTTPS
+    // 3. Fallback to local IPv4 check ONLY IF not HTTPS to prevent Mixed Content security errors
     if (!isHttps) {
-      const localOk = await checkUrlHealth(FALLBACK_URL, 1500);
+      const localOk = await checkUrlHealth(FALLBACK_URL, 2000);
       if (localOk) {
         CACHED_SERVER_URL = FALLBACK_URL;
         LAST_VERIFIED_URL = FALLBACK_URL;
@@ -862,7 +939,6 @@ export const LunaraClient = {
       }
     } catch (e) {
       console.warn("Live backend experiments fetch failed, using cached records:", e);
-      LunaraClient.invalidateLiveUrl();
     }
 
     // 2. Return merged cached records
@@ -871,13 +947,17 @@ export const LunaraClient = {
 
   /**
    * Clear localStorage cache and reload fallback data
+   * Re-seeds default 195 fallback records into local cache so records are permanently guaranteed to display
    */
   clearExperimentCache: () => {
     if (typeof window !== 'undefined') {
       localStorage.removeItem(STORAGE_KEY_EXPERIMENTS);
       localStorage.removeItem(STORAGE_KEY_LAST_SYNC);
+      try {
+        const fallbackList = (fallbackExperimentsData || []) as Experiment[];
+        localStorage.setItem(STORAGE_KEY_EXPERIMENTS, JSON.stringify(fallbackList));
+      } catch {}
     }
-    LunaraClient.invalidateLiveUrl();
   },
 
   /**

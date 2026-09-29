@@ -48,7 +48,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   useEffect(() => {
     refreshConn();
-    const interval = setInterval(refreshConn, 15000);
+    const interval = setInterval(refreshConn, 25000);
     const handleConnChanged = () => refreshConn();
     const handleSimChanged = () => refreshConn();
 

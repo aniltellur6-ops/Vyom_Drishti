@@ -92,11 +92,11 @@ def tunnel_heartbeat():
     """Periodically re-registers active tunnel URL with Vercel to prevent cache expiration"""
     global CURRENT_TUNNEL_URL, SHUTDOWN_REQUESTED
     while not SHUTDOWN_REQUESTED:
-        time.sleep(45)
+        time.sleep(30)
         if CURRENT_TUNNEL_URL:
             try:
                 # Re-verify that tunnel is still responsive before refreshing
-                r = requests.get(f"{CURRENT_TUNNEL_URL}/api/v1/system/status", timeout=5)
+                r = requests.get(f"{CURRENT_TUNNEL_URL}/api/v1/system/status", timeout=8)
                 if r.status_code == 200:
                     register_url_with_vercel(CURRENT_TUNNEL_URL)
             except Exception:

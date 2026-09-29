@@ -37,7 +37,35 @@ export default function App() {
   const [matchResult, setMatchResult] = useState<MatchingResult | null>(() => {
     try {
       const saved = localStorage.getItem('lunara_last_match_result');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) return JSON.parse(saved);
+      // Auto-hydrate latest proven experiment so workspace is permanently populated with the previous record
+      const cached = LunaraClient.getCachedExperiments();
+      if (cached && cached.length > 0) {
+        const last = cached[0];
+        return {
+          job_id: last.id,
+          status: last.status === 'Successful' ? 'success' : 'error',
+          method_used: last.method,
+          metrics: {
+            inliers: last.metrics?.inliers ?? 0,
+            inlier_ratio: last.metrics?.inlier_ratio ?? 0,
+            rmse: last.metrics?.rmse ?? 0,
+            coverage: last.metrics?.coverage ?? 0,
+            runtime: last.metrics?.runtime ?? 0,
+            transformation: last.metrics?.transformation || [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+          },
+          files: {
+            registered_image: last.files?.registered_image || '',
+            overlay_image: last.files?.overlay_image || '',
+            matches_viz: last.files?.matches_viz || '',
+            raw_reference: last.files?.raw_reference || '',
+            raw_moving: last.files?.raw_moving || '',
+            preprocessed_reference: last.files?.preprocessed_reference || '',
+            preprocessed_moving: last.files?.preprocessed_moving || ''
+          }
+        };
+      }
+      return null;
     } catch {
       return null;
     }

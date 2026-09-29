@@ -275,21 +275,69 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
           {/* Results View */}
           {matchResult ? (
             <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
-              <div className="flex items-center justify-between bg-white border border-slate-200 px-4 py-3 rounded-lg shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white border border-slate-200 px-4 py-3 rounded-lg shadow-sm">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   <span className="font-bold text-xs font-mono text-slate-800 uppercase tracking-wider">
                     CO-REGISTRATION RECORD ({matchResult.job_id.slice(0, 10)})
                   </span>
                 </div>
-                {onResetWorkspace && (
-                  <button
-                    onClick={onResetWorkspace}
-                    className="px-4 py-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-900 rounded-full text-xs font-mono border border-cyan-200 font-medium transition-colors shadow-xs"
+
+                <div className="flex items-center gap-2">
+                  {/* Quick Previous Record Selector */}
+                  <select
+                    className="bg-cyan-50/80 border border-cyan-300 text-cyan-950 text-xs rounded-full px-3.5 py-1.5 font-mono font-medium outline-none cursor-pointer hover:bg-cyan-100/80 transition-colors shadow-xs"
+                    value={matchResult.job_id}
+                    title="Switch to another previous record"
+                    onChange={(e) => {
+                      const selectedId = e.target.value;
+                      const exps = LunaraClient.getCachedExperiments();
+                      const found = exps.find((x) => x.id === selectedId);
+                      if (found) {
+                        const restoredMatch: MatchingResult = {
+                          job_id: found.id,
+                          status: found.status === 'Successful' ? 'success' : 'error',
+                          method_used: found.method,
+                          metrics: {
+                            inliers: found.metrics.inliers,
+                            inlier_ratio: found.metrics.inlier_ratio,
+                            rmse: found.metrics.rmse,
+                            coverage: found.metrics.coverage,
+                            runtime: found.metrics.runtime,
+                            transformation: found.metrics.transformation || [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+                          },
+                          files: {
+                            registered_image: found.files?.registered_image || '',
+                            overlay_image: found.files?.overlay_image || '',
+                            matches_viz: found.files?.matches_viz || '',
+                            raw_reference: found.files?.raw_reference || '',
+                            raw_moving: found.files?.raw_moving || '',
+                            preprocessed_reference: found.files?.preprocessed_reference || '',
+                            preprocessed_moving: found.files?.preprocessed_moving || ''
+                          }
+                        };
+                        localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                        window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
+                      }
+                    }}
                   >
-                    + New Run / Clear
-                  </button>
-                )}
+                    <option value="" disabled>Load Previous Record...</option>
+                    {LunaraClient.getCachedExperiments().slice(0, 20).map((exp) => (
+                      <option key={exp.id} value={exp.id}>
+                        {exp.name} ({exp.method} · RMSE {exp.metrics.rmse.toFixed(2)}px)
+                      </option>
+                    ))}
+                  </select>
+
+                  {onResetWorkspace && (
+                    <button
+                      onClick={onResetWorkspace}
+                      className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-full text-xs font-mono border border-slate-300 font-medium transition-colors shadow-xs"
+                    >
+                      + New Run / Clear
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono">
@@ -472,38 +520,82 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                     const lastExperiment = cachedExperiments.length > 0 ? cachedExperiments[0] : null;
                     if (!lastExperiment) return null;
                     return (
-                      <button
-                        onClick={() => {
-                          const restoredMatch: MatchingResult = {
-                            job_id: lastExperiment.id,
-                            status: lastExperiment.status === 'Successful' ? 'success' : 'error',
-                            method_used: lastExperiment.method,
-                            metrics: {
-                              inliers: lastExperiment.metrics.inliers,
-                              inlier_ratio: lastExperiment.metrics.inlier_ratio,
-                              rmse: lastExperiment.metrics.rmse,
-                              coverage: lastExperiment.metrics.coverage,
-                              runtime: lastExperiment.metrics.runtime,
-                              transformation: lastExperiment.metrics.transformation || [[1,0,0],[0,1,0],[0,0,1]]
-                            },
-                            files: {
-                              registered_image: lastExperiment.files?.registered_image || '',
-                              overlay_image: lastExperiment.files?.overlay_image || '',
-                              matches_viz: lastExperiment.files?.matches_viz || '',
-                              raw_reference: lastExperiment.files?.raw_reference || '',
-                              raw_moving: lastExperiment.files?.raw_moving || '',
-                              preprocessed_reference: lastExperiment.files?.preprocessed_reference || '',
-                              preprocessed_moving: lastExperiment.files?.preprocessed_moving || ''
+                      <div className="flex flex-col items-center gap-2.5 mt-2 w-full max-w-sm">
+                        <button
+                          onClick={() => {
+                            const restoredMatch: MatchingResult = {
+                              job_id: lastExperiment.id,
+                              status: lastExperiment.status === 'Successful' ? 'success' : 'error',
+                              method_used: lastExperiment.method,
+                              metrics: {
+                                inliers: lastExperiment.metrics.inliers,
+                                inlier_ratio: lastExperiment.metrics.inlier_ratio,
+                                rmse: lastExperiment.metrics.rmse,
+                                coverage: lastExperiment.metrics.coverage,
+                                runtime: lastExperiment.metrics.runtime,
+                                transformation: lastExperiment.metrics.transformation || [[1,0,0],[0,1,0],[0,0,1]]
+                              },
+                              files: {
+                                registered_image: lastExperiment.files?.registered_image || '',
+                                overlay_image: lastExperiment.files?.overlay_image || '',
+                                matches_viz: lastExperiment.files?.matches_viz || '',
+                                raw_reference: lastExperiment.files?.raw_reference || '',
+                                raw_moving: lastExperiment.files?.raw_moving || '',
+                                preprocessed_reference: lastExperiment.files?.preprocessed_reference || '',
+                                preprocessed_moving: lastExperiment.files?.preprocessed_moving || ''
+                              }
+                            };
+                            localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                            window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
+                          }}
+                          className="w-full flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-cyan-50 text-cyan-950 font-semibold text-xs border border-cyan-300 shadow-sm transition-all active:scale-95 cursor-pointer font-sans"
+                        >
+                          <History className="w-3.5 h-3.5 text-cyan-700" />
+                          <span>Load Previous Record ({lastExperiment.name})</span>
+                        </button>
+
+                        <select
+                          className="w-full bg-cyan-100/60 hover:bg-cyan-100 border border-cyan-300 text-cyan-950 text-xs rounded-full px-4 py-2 font-mono font-medium outline-none cursor-pointer text-center shadow-xs transition-colors"
+                          defaultValue=""
+                          onChange={(e) => {
+                            const selectedId = e.target.value;
+                            const found = cachedExperiments.find((x) => x.id === selectedId);
+                            if (found) {
+                              const restoredMatch: MatchingResult = {
+                                job_id: found.id,
+                                status: found.status === 'Successful' ? 'success' : 'error',
+                                method_used: found.method,
+                                metrics: {
+                                  inliers: found.metrics.inliers,
+                                  inlier_ratio: found.metrics.inlier_ratio,
+                                  rmse: found.metrics.rmse,
+                                  coverage: found.metrics.coverage,
+                                  runtime: found.metrics.runtime,
+                                  transformation: found.metrics.transformation || [[1,0,0],[0,1,0],[0,0,1]]
+                                },
+                                files: {
+                                  registered_image: found.files?.registered_image || '',
+                                  overlay_image: found.files?.overlay_image || '',
+                                  matches_viz: found.files?.matches_viz || '',
+                                  raw_reference: found.files?.raw_reference || '',
+                                  raw_moving: found.files?.raw_moving || '',
+                                  preprocessed_reference: found.files?.preprocessed_reference || '',
+                                  preprocessed_moving: found.files?.preprocessed_moving || ''
+                                }
+                              };
+                              localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                              window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
                             }
-                          };
-                          localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
-                          window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
-                        }}
-                        className="mt-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-cyan-50 text-cyan-950 font-semibold text-xs border border-cyan-300 shadow-sm transition-all active:scale-95 cursor-pointer font-sans"
-                      >
-                        <History className="w-3.5 h-3.5 text-cyan-700" />
-                        <span>Load Previous Record ({lastExperiment.name})</span>
-                      </button>
+                          }}
+                        >
+                          <option value="" disabled>Or Select from All Historical Records...</option>
+                          {cachedExperiments.slice(0, 25).map((exp) => (
+                            <option key={exp.id} value={exp.id}>
+                              {exp.name} ({exp.method} · RMSE {exp.metrics.rmse.toFixed(2)}px)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     );
                   })()}
                 </div>

@@ -182,6 +182,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   <th className="pb-2 font-normal">Inliers</th>
                   <th className="pb-2 font-normal">RMSE</th>
                   <th className="pb-2 font-normal">Status</th>
+                  <th className="pb-2 font-normal text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 text-slate-700">
@@ -198,10 +199,46 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                                 <span className="text-rose-400 flex items-center gap-1.5"><XCircle className="w-3.5 h-3.5" /> Failed</span>
                             )}
                         </td>
+                        <td className="py-3 text-right">
+                          <button
+                            onClick={() => {
+                              const restoredMatch = {
+                                job_id: exp.id,
+                                status: exp.status === 'Successful' ? 'success' : 'error',
+                                method_used: exp.method,
+                                metrics: {
+                                  inliers: exp.metrics?.inliers ?? 0,
+                                  inlier_ratio: exp.metrics?.inlier_ratio ?? 0,
+                                  rmse: exp.metrics?.rmse ?? 0,
+                                  coverage: exp.metrics?.coverage ?? 0,
+                                  runtime: exp.metrics?.runtime ?? 0,
+                                  transformation: exp.metrics?.transformation || [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+                                },
+                                files: {
+                                  registered_image: exp.files?.registered_image || '',
+                                  overlay_image: exp.files?.overlay_image || '',
+                                  matches_viz: exp.files?.matches_viz || '',
+                                  raw_reference: exp.files?.raw_reference || '',
+                                  raw_moving: exp.files?.raw_moving || '',
+                                  preprocessed_reference: exp.files?.preprocessed_reference || '',
+                                  preprocessed_moving: exp.files?.preprocessed_moving || ''
+                                }
+                              };
+                              localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                              window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
+                              onNavigate('workspace');
+                            }}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-cyan-50 hover:bg-cyan-100 text-cyan-900 border border-cyan-300 text-xs font-semibold shadow-xs transition-all active:scale-95 cursor-pointer font-sans"
+                            title="Inspect this previous record in Registration Workspace"
+                          >
+                            <Layers className="w-3.5 h-3.5 text-cyan-700" />
+                            <span>Workspace</span>
+                          </button>
+                        </td>
                     </tr>
                 ))}
                 {recentExperiments.length === 0 && (
-                    <tr><td colSpan={5} className="py-4 text-center text-slate-500">No recent experiments found. Run a registration in the workspace.</td></tr>
+                    <tr><td colSpan={6} className="py-4 text-center text-slate-500">No recent experiments found. Run a registration in the workspace.</td></tr>
                 )}
               </tbody>
             </table>
