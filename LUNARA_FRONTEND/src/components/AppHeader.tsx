@@ -97,7 +97,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   ];
 
   return (
-    <header className="lunara-header text-white border-b border-slate-800 shadow-md sticky top-0 z-40 overflow-hidden select-none">
+    <>
+      <header className="lunara-header text-white border-b border-slate-800 shadow-md sticky top-0 z-40 overflow-hidden select-none">
       <div className="lunara-header-video pointer-events-none" aria-hidden="true">
         <video
           ref={videoRef}
@@ -241,13 +242,14 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           })}
         </div>
       </nav>
-
-      <BackendConnectionModal
-        isOpen={isConnModalOpen}
-        onClose={() => setIsConnModalOpen(false)}
-        connectionInfo={connectionInfo}
-        onRefreshConnection={refreshConn}
-      />
     </header>
+
+    <BackendConnectionModal
+      isOpen={isConnModalOpen}
+      onClose={() => setIsConnModalOpen(false)}
+      connectionInfo={connectionInfo}
+      onRefreshConnection={refreshConn}
+    />
+  </>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Server, 
   Wifi, 
@@ -43,7 +44,16 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
     }
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
+  if (!isOpen || typeof document === 'undefined') return null;
 
   const handleSaveCustomUrl = async () => {
     setIsTesting(true);
@@ -85,10 +95,13 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
 
   const isOnline = connectionInfo?.isOnline ?? false;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+  return createPortal(
+    <div 
+      className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200 pointer-events-auto"
+      onClick={onClose}
+    >
       <div 
-        className="bg-slate-900 border border-slate-700/80 rounded-xl shadow-2xl max-w-lg w-full text-slate-100 overflow-hidden flex flex-col font-sans"
+        className="bg-slate-900 border border-slate-700/90 rounded-2xl shadow-2xl max-w-lg w-full text-slate-100 overflow-hidden flex flex-col font-sans relative z-[1000000]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -200,6 +213,35 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
                 <span>Test &amp; Connect</span>
               </button>
             </div>
+
+            {/* Quick Presets */}
+            <div className="flex items-center gap-2 flex-wrap pt-1">
+              <span className="text-[11px] text-slate-400">Presets:</span>
+              <button
+                type="button"
+                onClick={() => setCustomUrl('http://127.0.0.1:8000')}
+                className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition-colors"
+              >
+                127.0.0.1:8000
+              </button>
+              <button
+                type="button"
+                onClick={() => setCustomUrl('http://localhost:8000')}
+                className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition-colors"
+              >
+                localhost:8000
+              </button>
+              {connectionInfo?.url && connectionInfo.url.includes('trycloudflare.com') && (
+                <button
+                  type="button"
+                  onClick={() => setCustomUrl(connectionInfo.url)}
+                  className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 transition-colors"
+                >
+                  Active Cloudflare Tunnel
+                </button>
+              )}
+            </div>
+
             {testResult && (
               <div className={`p-2.5 rounded-full px-4 text-xs font-mono ${testResult.ok ? 'bg-emerald-950/60 text-emerald-300 border border-emerald-800' : 'bg-rose-950/60 text-rose-300 border border-rose-800'}`}>
                 {testResult.message}
@@ -248,6 +290,7 @@ export const BackendConnectionModal: React.FC<BackendConnectionModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
