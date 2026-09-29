@@ -107,7 +107,7 @@
   overflow: hidden;
   pointer-events: none;
   user-select: none;
-  background: #080d19 url('/lunar-landing-poster.jpg?v=2.4.2') center center / contain no-repeat;
+  background: #080d19 url('/lunar-landing-poster.jpg') center center / cover no-repeat;
 }
 
 .lunara-header-video video {
@@ -115,10 +115,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain !important;
+  object-fit: cover;
   object-position: center center;
   border: 0;
-  opacity: 0.92;
+  opacity: 0.90;
   pointer-events: none;
   user-select: none;
   transition: opacity 0.4s ease-in-out;

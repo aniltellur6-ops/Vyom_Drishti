@@ -106,7 +106,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           loop
           playsInline
           preload="auto"
-          poster="/lunar-landing-poster.jpg?v=2.4.2"
+          poster="/lunar-landing-poster.jpg"
           onCanPlay={(e) => {
             e.currentTarget.play().catch(() => {});
           }}
@@ -117,8 +117,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             v.play().catch(() => {});
           }}
         >
-          <source src="/lunar-landing-header-mobile.mp4?v=2.4.2" type="video/mp4" media="(max-width: 768px)" />
-          <source src="/lunar-landing-header.mp4?v=2.4.2" type="video/mp4" />
+          <source src="/lunar-landing-header-mobile.mp4" type="video/mp4" media="(max-width: 768px)" />
+          <source src="/lunar-landing-header.mp4" type="video/mp4" />
         </video>
       </div>
       <div className="lunara-header-shade pointer-events-none" aria-hidden="true" />
