@@ -38,30 +38,32 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const [recentExperiments, setRecentExperiments] = useState<Experiment[]>(() => LunaraClient.getCachedExperiments());
 
   useEffect(() => {
-    LunaraClient.getSystemStatus()
-      .then(setSystemStatus)
-      .catch(e => console.warn("System status standby:", e));
-      
-    LunaraClient.getExperiments()
-      .then(setRecentExperiments)
-      .catch(e => console.warn("Experiments update standby:", e));
-
-    const handleNewExperiment = () => {
+    const refreshAll = () => {
+      LunaraClient.getSystemStatus()
+        .then(setSystemStatus)
+        .catch(e => console.warn("System status standby:", e));
+        
       LunaraClient.getExperiments()
         .then(setRecentExperiments)
         .catch(e => console.warn("Experiments update standby:", e));
     };
 
-    window.addEventListener('lunara_experiment_added', handleNewExperiment);
+    refreshAll();
+    window.addEventListener('lunara_experiment_added', refreshAll);
+    window.addEventListener('lunara_connection_changed', refreshAll);
+    window.addEventListener('lunara_simulation_changed', refreshAll);
     return () => {
-      window.removeEventListener('lunara_experiment_added', handleNewExperiment);
+      window.removeEventListener('lunara_experiment_added', refreshAll);
+      window.removeEventListener('lunara_connection_changed', refreshAll);
+      window.removeEventListener('lunara_simulation_changed', refreshAll);
     };
   }, []);
 
   const totalExperiments = recentExperiments.length;
-  const successfulExperiments = recentExperiments.filter(e => e.status === 'Successful').length;
+  const successfulList = recentExperiments.filter(e => e.status === 'Successful');
+  const successfulExperiments = successfulList.length;
   const avgRmse = successfulExperiments > 0 
-    ? (recentExperiments.reduce((acc, curr) => acc + (curr.metrics?.rmse || 0), 0) / successfulExperiments).toFixed(2)
+    ? (successfulList.reduce((acc, curr) => acc + (curr.metrics?.rmse || 0), 0) / successfulExperiments).toFixed(2)
     : "N/A";
 
   return (
@@ -106,10 +108,43 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <h3 className="text-sm font-bold text-slate-700 mb-4 flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-700"/> SYSTEM STATUS</h3>
             {systemStatus ? (
                 <div className="space-y-2 text-sm font-mono text-slate-600">
-                    <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-700"/> API Online</div>
-                    <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-700"/> {systemStatus.extractor} Ready</div>
-                    <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-700"/> {systemStatus.matcher} Ready</div>
-                    <div className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-emerald-700"/> GPU {systemStatus.gpu_available ? "Available" : "Unavailable"}</div>
+                    <div className="flex items-center gap-2">
+                      {systemStatus.status === 'Ready' ? (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-emerald-600"/>
+                          <span className="text-emerald-800 font-semibold">API Online (Ready)</span>
+                        </>
+                      ) : systemStatus.status === 'Simulation Ready' ? (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-amber-500"/>
+                          <span className="text-amber-700 font-semibold">Demo Mode (Simulation Active)</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="w-4 h-4 text-rose-500"/>
+                          <span className="text-rose-700 font-semibold">API Offline (Standby Cache)</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-600"/> {systemStatus.extractor} Feature Extractor
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-4 h-4 text-emerald-600"/> {systemStatus.matcher} Transformer Matcher
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {systemStatus.gpu_available ? (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-emerald-600"/>
+                          <span>GPU Acceleration (CUDA Active)</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4 text-cyan-700"/>
+                          <span>CPU Pipeline (PyTorch Multithreaded)</span>
+                        </>
+                      )}
+                    </div>
                 </div>
             ) : (
                 <div className="text-slate-500 text-sm font-mono animate-pulse">Connecting to backend...</div>

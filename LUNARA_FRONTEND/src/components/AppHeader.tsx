@@ -158,30 +158,42 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <button
             onClick={() => setIsConnModalOpen(true)}
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-mono transition-all shadow-sm ${
-              connectionInfo?.isOnline
-                ? 'bg-emerald-950/70 border-emerald-600/60 text-emerald-300 hover:bg-emerald-900/70'
-                : connectionInfo?.isSimulation
+              connectionInfo === null
+                ? 'bg-slate-900/80 border-slate-700/80 text-cyan-300 hover:bg-slate-800/80'
+                : connectionInfo.isSimulation
                 ? 'bg-amber-950/70 border-amber-600/60 text-amber-300 hover:bg-amber-900/70'
+                : connectionInfo.isOnline
+                ? 'bg-emerald-950/70 border-emerald-600/60 text-emerald-300 hover:bg-emerald-900/70'
                 : 'bg-rose-950/70 border-rose-600/60 text-rose-300 hover:bg-rose-900/70 animate-pulse'
             }`}
             title="Click to manage backend connection and mode"
           >
             <span className={`w-2 h-2 rounded-full ${
-              connectionInfo?.isOnline
-                ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
-                : connectionInfo?.isSimulation
+              connectionInfo === null
+                ? 'bg-cyan-400 animate-ping'
+                : connectionInfo.isSimulation
                 ? 'bg-amber-400 shadow-[0_0_8px_#fbbf24]'
+                : connectionInfo.isOnline
+                ? 'bg-emerald-400 shadow-[0_0_8px_#34d399]'
                 : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'
             }`} />
             <span className="font-semibold hidden sm:inline">
-              {connectionInfo?.isOnline
-                ? `API: Online ${connectionInfo.latencyMs ? `(${connectionInfo.latencyMs}ms)` : ''}`
-                : connectionInfo?.isSimulation
-                ? 'Demo Mode'
-                : 'API: Offline'}
+              {connectionInfo === null
+                ? 'Checking API...'
+                : connectionInfo.isSimulation
+                ? 'Demo Mode (Simulation)'
+                : connectionInfo.isOnline
+                ? `API: Online (${connectionInfo.source === 'local' ? 'Local' : connectionInfo.source === 'tunnel' ? 'Tunnel' : 'Remote'}${connectionInfo.latencyMs ? ` · ${connectionInfo.latencyMs}ms` : ''})`
+                : 'API: Offline (Click to Connect)'}
             </span>
             <span className="font-semibold sm:hidden">
-              {connectionInfo?.isOnline ? 'Online' : 'Offline'}
+              {connectionInfo === null
+                ? 'Checking...'
+                : connectionInfo.isSimulation
+                ? 'Demo Mode'
+                : connectionInfo.isOnline
+                ? 'Online'
+                : 'Offline'}
             </span>
           </button>
 

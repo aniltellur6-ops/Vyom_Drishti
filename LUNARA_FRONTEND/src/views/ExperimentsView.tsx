@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Experiment, LunaraClient } from '../api/client';
+import { Experiment, LunaraClient, MatchingResult } from '../api/client';
 import { jsPDF } from 'jspdf';
 import {
   BookOpen,
@@ -505,6 +505,39 @@ export const ExperimentsView: React.FC = () => {
                 </span>
 
                 <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => {
+                      const restoredMatch: MatchingResult = {
+                        job_id: selectedExp.id,
+                        status: selectedExp.status === 'Successful' ? 'success' : 'error',
+                        method_used: selectedExp.method,
+                        metrics: {
+                          inliers: selectedExp.metrics.inliers,
+                          inlier_ratio: selectedExp.metrics.inlier_ratio,
+                          rmse: selectedExp.metrics.rmse,
+                          coverage: selectedExp.metrics.coverage,
+                          runtime: selectedExp.metrics.runtime,
+                          transformation: selectedExp.metrics.transformation || [[1,0,0],[0,1,0],[0,0,1]]
+                        },
+                        files: {
+                          registered_image: selectedExp.files?.registered_image || '',
+                          overlay_image: selectedExp.files?.overlay_image || '',
+                          matches_viz: selectedExp.files?.matches_viz || '',
+                          raw_reference: selectedExp.files?.raw_reference || '',
+                          raw_moving: selectedExp.files?.raw_moving || '',
+                          preprocessed_reference: selectedExp.files?.preprocessed_reference || '',
+                          preprocessed_moving: selectedExp.files?.preprocessed_moving || ''
+                        }
+                      };
+                      localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                      window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
+                    }}
+                    className="inline-flex items-center gap-1 px-3 py-1 bg-cyan-600 hover:bg-cyan-500 text-white text-[11px] font-bold rounded-full shadow-xs transition-all cursor-pointer"
+                    title="View and inspect this record in Registration Pipeline workspace"
+                  >
+                    <Layers className="w-3 h-3" />
+                    <span>Workspace</span>
+                  </button>
                   <button
                     onClick={() => downloadPdfReport(selectedExp)}
                     className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-bold rounded-full shadow-xs transition-all cursor-pointer"

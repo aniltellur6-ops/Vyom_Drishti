@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TiePoint } from '../types';
-import { Play, UploadCloud, FileImage, Settings, Target, Layers } from 'lucide-react';
+import { Play, UploadCloud, FileImage, Settings, Target, Layers, History } from 'lucide-react';
 import { ImageCondition, MatchingResult, LunaraClient } from '../api/client';
 import { NgrokImage } from '../components/NgrokImage';
 
@@ -271,7 +271,8 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
               </div>
             </div>
           )}
-          {/* Results View */}
+
+          {/* Results View */}
           {matchResult ? (
             <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center justify-between bg-white border border-slate-200 px-4 py-3 rounded-lg shadow-sm">
@@ -465,6 +466,46 @@ export const WorkspaceView: React.FC<WorkspaceViewProps> = ({
                   <span className="text-xs text-cyan-800 leading-relaxed font-sans">
                     Select reference and moving lunar imagery from the control panel, configure method &amp; sensors, then click RUN REGISTRATION.
                   </span>
+
+                  {(() => {
+                    const cachedExperiments = LunaraClient.getCachedExperiments();
+                    const lastExperiment = cachedExperiments.length > 0 ? cachedExperiments[0] : null;
+                    if (!lastExperiment) return null;
+                    return (
+                      <button
+                        onClick={() => {
+                          const restoredMatch: MatchingResult = {
+                            job_id: lastExperiment.id,
+                            status: lastExperiment.status === 'Successful' ? 'success' : 'error',
+                            method_used: lastExperiment.method,
+                            metrics: {
+                              inliers: lastExperiment.metrics.inliers,
+                              inlier_ratio: lastExperiment.metrics.inlier_ratio,
+                              rmse: lastExperiment.metrics.rmse,
+                              coverage: lastExperiment.metrics.coverage,
+                              runtime: lastExperiment.metrics.runtime,
+                              transformation: lastExperiment.metrics.transformation || [[1,0,0],[0,1,0],[0,0,1]]
+                            },
+                            files: {
+                              registered_image: lastExperiment.files?.registered_image || '',
+                              overlay_image: lastExperiment.files?.overlay_image || '',
+                              matches_viz: lastExperiment.files?.matches_viz || '',
+                              raw_reference: lastExperiment.files?.raw_reference || '',
+                              raw_moving: lastExperiment.files?.raw_moving || '',
+                              preprocessed_reference: lastExperiment.files?.preprocessed_reference || '',
+                              preprocessed_moving: lastExperiment.files?.preprocessed_moving || ''
+                            }
+                          };
+                          localStorage.setItem('lunara_last_match_result', JSON.stringify(restoredMatch));
+                          window.dispatchEvent(new CustomEvent('lunara_restore_match', { detail: restoredMatch }));
+                        }}
+                        className="mt-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-cyan-50 text-cyan-950 font-semibold text-xs border border-cyan-300 shadow-sm transition-all active:scale-95 cursor-pointer font-sans"
+                      >
+                        <History className="w-3.5 h-3.5 text-cyan-700" />
+                        <span>Load Previous Record ({lastExperiment.name})</span>
+                      </button>
+                    );
+                  })()}
                 </div>
               )}
             </div>

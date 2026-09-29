@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationTab, TiePoint } from './types';
 import { SAMPLE_TIE_POINTS } from './data/sampleData';
 import { AppHeader } from './components/AppHeader';
@@ -42,6 +42,20 @@ export default function App() {
       return null;
     }
   });
+
+  useEffect(() => {
+    const handleRestoreMatch = (e: any) => {
+      if (e.detail) {
+        setMatchResult(e.detail);
+        setCurrentTab('workspace');
+        showToast(`Loaded run: ${e.detail.job_id.slice(0, 8)}`, 'success');
+      }
+    };
+    window.addEventListener('lunara_restore_match', handleRestoreMatch);
+    return () => {
+      window.removeEventListener('lunara_restore_match', handleRestoreMatch);
+    };
+  }, []);
 
   const showToast = (msg: string, type: 'success'|'error' = 'success') => {
     setToastMessage({msg, type});

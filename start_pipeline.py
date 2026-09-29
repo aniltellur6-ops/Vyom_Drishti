@@ -79,7 +79,7 @@ def register_url_with_vercel(url):
                 timeout=8
             )
             if res.status_code == 200:
-                print(f"[✓] Vercel Synced Successfully: {res.json()}")
+                print(f"[+] Vercel Synced Successfully: {res.json()}")
                 return True
             else:
                 print(f"[!] Vercel returned status {res.status_code}: {res.text}")
